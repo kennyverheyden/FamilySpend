@@ -1,0 +1,36 @@
+<div th:fragment="signup">
+
+
+<!-- Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h4>Create your account</h4>
+
+     
+	<div style="width: 600px; text-align: right; padding: 5px; font-family: verdana;">
+		<form action="/signup" method="post">
+		Email (userID)
+		<input type="text" name="userEmail"><br><br>
+		Name
+		<input type="text" name="name"><br><br>
+		First name
+		<input type="text" name="firstName"><br><br>
+		New Password
+		<input type="password" name="secret"><br><br>
+		Confirm password
+		<input type="password" name="confirmSecret"><br><br>
+		<button type="submit">Submit</button>
+		</form>
+		
+		<br>
+<p>
+<strong th:text="${message}"></strong>
+</p>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>

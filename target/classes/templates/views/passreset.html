@@ -1,0 +1,37 @@
+<div th:fragment="passreset">
+    
+  
+<!-- Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h4>Reset your password</h4>
+     
+
+<div style="width:600px; text-align:left; padding:16px;  font-family: sans-serif; letter-spacing: 4px;">
+
+<form action="/passreset" method="post">
+<input type="hidden" name="userEmail" th:value="${userEmail}">
+<p>Old password:<br>
+<input type="password" name="oldSecret"></p>
+<p>New password:<br>
+<input type="password" name="secret"></p>
+<p>Confirm password:<br>
+<input type="password" name="confirmSecret"></p>
+<br>
+<button type="submit">Reset</button>
+</form>
+
+<br>
+<p>
+<strong th:text="${message}"></strong>
+</p>
+
+</div>
+
+</div>
+</div>  
+</div> 
+    
+
+</div>
