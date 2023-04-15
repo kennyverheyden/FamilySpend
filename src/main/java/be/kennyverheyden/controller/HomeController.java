@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
 	@GetMapping("/") //
-	public String selectGet(Model model) {
+	public String homeGet(Model model) {
 		model.addAttribute("content", "home");
 		return "index";
 	}

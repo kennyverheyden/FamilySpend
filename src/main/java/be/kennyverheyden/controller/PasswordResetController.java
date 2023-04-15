@@ -20,7 +20,7 @@ public class PasswordResetController {
 	public PasswordResetController() {}
 
 	@GetMapping("/passreset") // get request
-	public String selectGet(Model model) {
+	public String passResetGet(Model model) {
 
 		// When user is not logged on, the String is null
 		if(userService.getUserEmail()==null)
@@ -37,7 +37,7 @@ public class PasswordResetController {
 	}
 
 	@PostMapping("/passreset") 
-	public String commentPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
+	public String passResetPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
 
 		if(userService.getSecret().equals(oldSecret))
 		{		

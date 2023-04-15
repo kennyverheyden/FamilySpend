@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity(name="tblGroup")
 public class Group {
@@ -15,6 +17,17 @@ public class Group {
 
 	@Column(name="groupName")
 	private String groupName;
+	
+	@OneToOne
+	@JoinColumn(name="userFK")
+	User user;
+	
+	public Group(){}
+	
+	public Group(String groupName)
+	{
+		this.groupName=groupName;
+	}
 
 	public long getGroupID() {
 		return groupID;
@@ -30,6 +43,14 @@ public class Group {
 
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 }

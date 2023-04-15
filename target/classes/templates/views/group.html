@@ -1,0 +1,32 @@
+<div th:fragment="group">
+
+
+<!-- Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h4>My groups</h4>
+
+<div class="table">
+<div class="tr" th:each="group: ${groups}">
+
+<span class="w3-text-grey td" th:text="${group.groupName}"></span>
+
+
+</div>
+</div>
+
+
+
+
+    </div>
+    
+    <br>
+
+
+</div>
+</div>
+
+
+
+</div>

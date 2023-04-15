@@ -4,26 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.UserService;
 
 
 @Controller
-public class MainController {
+public class CategoryController {
 
+	@Autowired
+	private CategoryService categoryService;
 	@Autowired
 	private UserService userService;
 
-	public MainController() {}
+	public CategoryController() {}
 
-	@GetMapping("/main")
-	public String mainGet(@RequestParam(required = false)String logout, Model model)
+	@GetMapping("/category")
+	public String categorieGet(Model model)
 	{
-		if(logout != null) {
-			userService.setUserEmail(null);
-			userService.setSecret(null);
-		}
 
 		String userEmail = userService.getUserEmail();
 		// When user is not logged on, the String is null
@@ -33,9 +31,8 @@ public class MainController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
-
-		// When user is logged in, the user will be directed to another page
-		model.addAttribute("content", "main");
+		model.addAttribute("categories",categoryService.findCategoryByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
+		model.addAttribute("content", "category");
 		return "index";
 	}
 

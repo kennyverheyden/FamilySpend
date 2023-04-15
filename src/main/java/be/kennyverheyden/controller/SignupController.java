@@ -22,7 +22,7 @@ public class SignupController {
 	public SignupController() {}
 	
 	@GetMapping("/signup") // get request
-	public String loginGet(Model model) {
+	public String signupGet(Model model) {
 		String userEmail = userService.getUserEmail();
 
 
@@ -31,7 +31,7 @@ public class SignupController {
 	}
 
 	@PostMapping("/signup") 
-	public String createUser(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
+	public String signupUserPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
 
 		Long role=2L; // 2 = user
 		if(!userEmail.equals("") && !secret.equals("") && !confirmSecret.equals("") && !name.equals("") && !firstName.equals(""))
@@ -43,7 +43,7 @@ public class SignupController {
 					boolean loggedIn = false;
 					
 					// Register user
-					userService.createUser(userEmail, secret, name, firstName, role);
+					userService.signupUser(userEmail, secret, name, firstName, role);
 					
 					loginProcessor.setUserEmail(userEmail);
 					loginProcessor.setSecret(secret);

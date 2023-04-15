@@ -11,5 +11,7 @@ import be.kennyverheyden.models.Group;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 	List<Group> findGroupByGroupName(String groupName);
+	Group findGroupByGroupID(Long groupID);
+	List<Group> findGroupByUserUserID(Long userID);
 
 }

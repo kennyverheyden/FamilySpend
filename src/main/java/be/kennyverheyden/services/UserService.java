@@ -23,6 +23,11 @@ public class UserService{
 	private  UserRepository userRepository;
 	@Autowired
 	private  UserRoleRepository userRoleRepository;
+	@Autowired
+	private  CategoryService categoryService;
+	@Autowired
+	private  GroupService groupService;
+	
 	private  PasswordEncoder passwordEncoder;
 
 	private String userEmail;
@@ -60,7 +65,9 @@ public class UserService{
 		userRepository.save(user);
 	}
 
-	public void createUser(String userEmail, String secret, String name, String firstName, Long role) {
+	// create user
+	// set template content
+	public void signupUser(String userEmail, String secret, String name, String firstName, Long role) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();  
 		User user = new User();
@@ -73,6 +80,8 @@ public class UserService{
 		user.setCreation(dtf.format(now));
 		userRepository.findAll().add(user);
 		userRepository.save(user);
+		groupService.createGroupSampleData(user);
+		categoryService.createCategorySampleData(user);
 	}
 
 	public void deleteUser(String userEmail)
