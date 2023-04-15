@@ -7,15 +7,22 @@
     <div class="w3-twothird">
       <h4>My groups</h4>
 
+
 <div class="table">
 <div class="tr" th:each="group: ${groups}">
 
-<span class="w3-text-grey td" th:text="${group.groupName}"></span>
-
+<form action="/group/update" method="post">
+<span class="w3-text-grey td">
+<input th:value="${group.groupID}" name="groupID" type="hidden"></input>
+<input th:value="${group.groupName}" name="groupName" style="width:150px;"></input>
+</span>
+<span class="w3-text-grey td">
+<button type="submit" style="width:100px;">Edit</button>
+</span>
+</form>
 
 </div>
 </div>
-
 
 
 

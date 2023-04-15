@@ -73,12 +73,29 @@ public class CategoryService {
 		categories.get(11).setGroup(groupService.getGroups().get(4));
 		categories.add(new Category("Restaurant"));
 		categories.get(12).setGroup(groupService.getGroups().get(7));
+		// Assign user (foreign key)
 		for(int i=0;i<categories.size();i++)
 		{
 			categories.get(i).setUser(user);
-			System.out.println(categories.get(i).getGroup().getGroupName());
 		}
 		this.categories=categories;
 		categoryRepository.saveAll(categories);
+	}
+
+	public void updateCategory(Long categoryID, String categoryName, Long userID)
+	{
+		// Collect categories from specific user
+		categories = categoryRepository.findCategoryByUserUserID(userID);
+
+		// Search the category by categoryName
+		for(Category categorie:categories)
+		{
+			if(categorie.getCategoryID()==categoryID)
+			{
+				categorie.setCategoryName(categoryName);
+				categoryRepository.save(categorie);
+			}
+		}
+
 	}
 }

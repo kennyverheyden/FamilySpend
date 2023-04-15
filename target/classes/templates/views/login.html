@@ -9,7 +9,7 @@
      
 
 <!--  Login form -->
-<div style="width:300px; text-align:right; padding:16px;">
+<div style="max-width:400px; text-align:right; padding:16px;">
 <form action="/login" method="post">
 Email: <input type="text" name="userEmail"><br><br>
 Password:  <input type="password" name="secret"><br>
@@ -20,6 +20,9 @@ Password:  <input type="password" name="secret"><br>
 <p>
 <strong th:text="${message}"></strong>
 </p>
+
+<h4 style="text-align:left">New user? <a href="/signup" class="w3-text-grey;">Create your account here</a></h4>
+
 </div>
    
 

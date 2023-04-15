@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.GroupRepository;
@@ -60,6 +61,23 @@ public class GroupService {
 		}
 		this.groups=groups;
 		groupRepository.saveAll(groups);
+	}
+
+	public void updateGroup(Long groupID, String groupName, Long userID)
+	{
+		// Collect groups from specific user
+		groups = groupRepository.findGroupByUserUserID(userID);
+
+		// Search the group by groupName
+		for(Group group:groups)
+		{
+			if(group.getGroupID()==groupID)
+			{
+				group.setGroupName(groupName);
+				groupRepository.save(group);
+			}
+		}
+
 	}
 
 	public List<Group> getGroups() {

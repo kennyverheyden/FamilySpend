@@ -42,6 +42,8 @@ public class LoginProcessor {
 				return true;
 			}
 		}
+		userService.setUserEmail(null);
+		userService.setSecret(null);
 		return false;
 	}
 

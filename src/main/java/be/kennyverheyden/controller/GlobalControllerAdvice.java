@@ -15,12 +15,11 @@ public class GlobalControllerAdvice {
 	public GlobalControllerAdvice() {}
 
 	
-	// Check logged in status
+	// Check loggedIn status
 	@ModelAttribute("isLoggedIn")
 	public boolean isLoggedIn()
 	{
-
-		if(userService.getUserEmail()!=null && userService.getSecret()!=null)
+		if(userService.getUserEmail()!=null || userService.getSecret()!=null)
 		{
 			return true;
 		}
