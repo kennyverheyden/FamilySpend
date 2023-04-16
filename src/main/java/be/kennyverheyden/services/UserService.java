@@ -83,7 +83,7 @@ public class UserService{
 		groupService.createGroupSampleData(user);
 		categoryService.createCategorySampleData(user);
 	}
-
+	
 	public void deleteUser(String userEmail)
 	{
 		User user = this.findUserByeMail(userEmail);

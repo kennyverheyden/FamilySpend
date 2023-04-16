@@ -61,7 +61,7 @@ public class CategoryController {
 			else
 			{
 				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Category already exist");
+				rm.addFlashAttribute("message","Category with same group already exist");
 				return "redirect:/category";
 			}
 
@@ -78,48 +78,57 @@ public class CategoryController {
 	@PostMapping("/category/add") 
 	public String addCategoryPost(@RequestParam String categoryName, String groupName, Model model, RedirectAttributes rm)
 	{
-		if(categoryName!="")
+		if(categoryService.getCategories().size()<50) // Allow 50 per user
 		{
-			if(groupName!="")
+			if(categoryName!="")
 			{
-				String checkDuplicat = giveDuplicateIfExist(categoryName);
-				if(!categoryName.equalsIgnoreCase(checkDuplicat))
+				if(groupName!="")
 				{
-					categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
-					model.addAttribute("content", "category");
-					rm.addFlashAttribute("message","Category succesfully added");
-					return "redirect:/category";
+					String checkDuplicat = giveDuplicateIfExist(categoryName);
+					if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+					{
+						categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+						model.addAttribute("content", "category");
+						rm.addFlashAttribute("message","Category succesfully added");
+						return "redirect:/category";
+					}
+					else
+					{
+						model.addAttribute("content", "category");
+						rm.addFlashAttribute("message","Category already exist");
+						return "redirect:/category";
+					}
 				}
 				else
 				{
 					model.addAttribute("content", "category");
-					rm.addFlashAttribute("message","Category already exist");
+					rm.addFlashAttribute("message","Select a group name");
 					return "redirect:/category";
 				}
 			}
 			else
 			{
 				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Select a group name");
+				rm.addFlashAttribute("message","Fill in a category name");
 				return "redirect:/category";
 			}
 		}
 		else
 		{
 			model.addAttribute("content", "category");
-			rm.addFlashAttribute("message","Fill in a category name");
+			rm.addFlashAttribute("message","Max amount categories reached");
 			return "redirect:/category";
 		}
 	}
-	
+
 	@PostMapping("/category/delete") 
 	public String deleteGroupPost(@RequestParam Long categoryID, Model model, RedirectAttributes rm)
 	{
-				categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
-				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Category succesfully deleted");
-				return "redirect:/category";
-			
+		categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
+		model.addAttribute("content", "category");
+		rm.addFlashAttribute("message","Category succesfully deleted");
+		return "redirect:/category";
+
 	}
 
 	public String giveDuplicateIfExist(String categoryName)

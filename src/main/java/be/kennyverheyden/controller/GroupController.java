@@ -75,27 +75,36 @@ public class GroupController {
 	@PostMapping("/group/add") 
 	public String addGroupPost(@RequestParam String groupName, Model model, RedirectAttributes rm)
 	{
-		if(groupName!="")
+		if(groupService.getGroups().size()<50) // Max amount groups per user
 		{
-			String checkDuplicat = giveDuplicateIfExist(groupName);
-			if(!groupName.equalsIgnoreCase(checkDuplicat))
+			if(groupName!="")
 			{
-				groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
-				model.addAttribute("content", "group");
-				rm.addFlashAttribute("message","Group succesfully added");
-				return "redirect:/group";
+				String checkDuplicat = giveDuplicateIfExist(groupName);
+				if(!groupName.equalsIgnoreCase(checkDuplicat))
+				{
+					groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
+					model.addAttribute("content", "group");
+					rm.addFlashAttribute("message","Group succesfully added");
+					return "redirect:/group";
+				}
+				else
+				{
+					model.addAttribute("content", "group");
+					rm.addFlashAttribute("message","Group already exist");
+					return "redirect:/group";
+				}
 			}
 			else
 			{
 				model.addAttribute("content", "group");
-				rm.addFlashAttribute("message","Group already exist");
+				rm.addFlashAttribute("message","Fill in a group name");
 				return "redirect:/group";
 			}
 		}
 		else
 		{
 			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Fill in a group name");
+			rm.addFlashAttribute("message","Max amount groups reached");
 			return "redirect:/group";
 		}
 	}

@@ -33,22 +33,22 @@ public class CategoryService {
 	}
 
 	public Category findCategoryByCategoryName (String categoryName, User user) {
-		List<Category>categoryByName =categoryRepository.findCategoryByCategoryName(categoryName);
 		Category categoryByNamePerUser = null;
 		// Filter per User
-		for(Category i:categoryByName)
+		for(Category i:categories)
 		{
-			if(i.getUser().getUserID()==user.getUserID())
+			if(i.getUser().getUserID()==user.getUserID() && (i.getCategoryName().equalsIgnoreCase(categoryName)))
 			{
 				categoryByNamePerUser=i;
-			}
+			} 
 		}
 		return categoryByNamePerUser;
 	}
 
 	public boolean categoryHasGroup(Long GroupID, String userEmail)
 	{
-		for(Category i:categories)
+		List<Category> cats = categoryRepository.findAll();
+		for(Category i:cats)
 		{
 			if(i.getGroup().getGroupID()==GroupID && i.getUser().geteMail().equals(userEmail))
 			{
@@ -159,6 +159,10 @@ public class CategoryService {
 	{
 		categories.remove(category);
 		categoryRepository.delete(category);
+	}
+
+	public List<Category> getCategories() {
+		return categories;
 	}
 
 }

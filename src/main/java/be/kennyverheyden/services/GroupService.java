@@ -1,5 +1,6 @@
 package be.kennyverheyden.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class GroupService {
 		// Filter per User
 		for(Group i:groups)
 		{
-			if(i.getUser().getUserID()==user.getUserID() && (i.getGroupName().equals(groupName)))
+			if(i.getUser().getUserID()==user.getUserID() && (i.getGroupName().equalsIgnoreCase(groupName)))
 			{
 				groupByNamePerUser=i;
 			}
@@ -57,6 +58,7 @@ public class GroupService {
 
 	public void createGroupSampleData(User user)
 	{
+		List<Group> groups = new ArrayList();
 		groups.add(new Group("Income"));
 		groups.add(new Group("General"));
 		groups.add(new Group("Car"));
@@ -69,6 +71,7 @@ public class GroupService {
 		{
 			i.setUser(user); // A group is linked to an user
 		}
+		this.groups=groups;
 		groupRepository.saveAll(groups);
 	}
 
@@ -95,10 +98,11 @@ public class GroupService {
 		groups.add(group);
 		groupRepository.save(group);
 	}
-	
+
 	public void deleteGroup(Group group)
 	{
 		// Check if linked
+		//List<Group> groups = this.getGroups();
 		groups.remove(group);
 		groupRepository.delete(group);
 	}

@@ -44,7 +44,6 @@ public class SignupController {
 					
 					// Register user
 					userService.signupUser(userEmail, secret, name, firstName, role);
-					
 					loginProcessor.setUserEmail(userEmail);
 					loginProcessor.setSecret(secret);
 					loggedIn = loginProcessor.login();
