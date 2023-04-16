@@ -1,12 +1,9 @@
 package be.kennyverheyden.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.GroupRepository;
@@ -30,12 +27,11 @@ public class GroupService {
 	}
 
 	public Group findGroupByGroupName (String groupName, User user) {
-		List<Group> groupByName =groupRepository.findGroupByGroupName(groupName);
 		Group groupByNamePerUser = null;
 		// Filter per User
-		for(Group i:groupByName)
+		for(Group i:groups)
 		{
-			if(i.getUser().getUserID()==user.getUserID())
+			if(i.getUser().getUserID()==user.getUserID() && (i.getGroupName().equals(groupName)))
 			{
 				groupByNamePerUser=i;
 			}
@@ -61,7 +57,6 @@ public class GroupService {
 
 	public void createGroupSampleData(User user)
 	{
-		List<Group> groups = new ArrayList(); // Make group list from user
 		groups.add(new Group("Income"));
 		groups.add(new Group("General"));
 		groups.add(new Group("Car"));
@@ -72,9 +67,8 @@ public class GroupService {
 		groups.add(new Group("Various"));
 		for(Group i:groups)
 		{
-			i.setUser(user);
+			i.setUser(user); // A group is linked to an user
 		}
-		this.groups=groups;
 		groupRepository.saveAll(groups);
 	}
 
@@ -100,6 +94,13 @@ public class GroupService {
 		group.setUser(user);
 		groups.add(group);
 		groupRepository.save(group);
+	}
+	
+	public void deleteGroup(Group group)
+	{
+		// Check if linked
+		groups.remove(group);
+		groupRepository.delete(group);
 	}
 
 	public List<Group> getGroups() {

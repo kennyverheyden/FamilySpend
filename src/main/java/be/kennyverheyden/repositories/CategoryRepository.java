@@ -13,5 +13,6 @@ import be.kennyverheyden.models.Group;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	List<Category> findCategoryByCategoryName(String categoryName);
 	List<Category> findCategoryByUserUserID(Long userID);
+	Category findCategoryByCategoryID(Long categoryID);
 
 }

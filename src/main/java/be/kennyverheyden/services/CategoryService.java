@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import be.kennyverheyden.models.Category;
+import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
@@ -31,12 +32,55 @@ public class CategoryService {
 		return categories;
 	}
 
-	public List<Category> findCategoryByCategoryName (String categoryName) {
-		return categoryRepository.findCategoryByCategoryName(categoryName);
+	public Category findCategoryByCategoryName (String categoryName, User user) {
+		List<Category>categoryByName =categoryRepository.findCategoryByCategoryName(categoryName);
+		Category categoryByNamePerUser = null;
+		// Filter per User
+		for(Category i:categoryByName)
+		{
+			if(i.getUser().getUserID()==user.getUserID())
+			{
+				categoryByNamePerUser=i;
+			}
+		}
+		return categoryByNamePerUser;
 	}
+
+	public boolean categoryHasGroup(Long GroupID, String userEmail)
+	{
+		for(Category i:categories)
+		{
+			if(i.getGroup().getGroupID()==GroupID && i.getUser().geteMail().equals(userEmail))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	public List<Category> findCategoryByUserUserID (Long userID) {
 		return categoryRepository.findCategoryByUserUserID(userID);
+	}
+
+	public Category findCategoryByCategoryID (Long userID) {
+		return categoryRepository.findCategoryByCategoryID(userID);
+	}
+
+	public boolean groupInCategoryIsEqual (String categoryName, User user, String groupName) {
+		List<Category>categoryByName =categoryRepository.findCategoryByCategoryName(categoryName);
+
+		for(Category i:categoryByName)
+		{
+			if(i.getUser().getUserID()==user.getUserID())
+			{
+				if(i.getGroup().getGroupName().equals(groupName))
+				{
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void loadCategories(User user)
@@ -87,15 +131,16 @@ public class CategoryService {
 		categoryRepository.saveAll(categories);
 	}
 
-	public void updateCategory(Long categoryID, String categoryName, User user)
+	public void updateCategory(Long categoryID, String categoryName, String groupName, User user)
 	{
 		// Search the category by categoryName
-		for(Category categorie:categories)
+		for(Category category:categories)
 		{
-			if(categorie.getCategoryID()==categoryID)
+			if(category.getCategoryID()==categoryID)
 			{
-				categorie.setCategoryName(categoryName);
-				categoryRepository.save(categorie);
+				category.setCategoryName(categoryName);
+				category.setGroup(groupService.findGroupByGroupName(groupName,user));
+				categoryRepository.save(category);
 			}
 		}
 	}
@@ -108,6 +153,12 @@ public class CategoryService {
 		category.setGroup(groupService.findGroupByGroupName(groupName,user));
 		categories.add(category);
 		categoryRepository.save(category);
+	}
+
+	public void deleteCategory(Category category)
+	{
+		categories.remove(category);
+		categoryRepository.delete(category);
 	}
 
 }

@@ -35,6 +35,7 @@ public class MainController {
 		}
 
 		// When user is logged in, the user will be directed to another page
+		model.addAttribute("welcomeName",userService.findUserByeMail(userEmail).getFirstName());
 		model.addAttribute("content", "main");
 		return "index";
 	}

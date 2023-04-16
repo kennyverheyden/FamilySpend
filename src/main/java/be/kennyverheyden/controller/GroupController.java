@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.Group;
+import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
 import be.kennyverheyden.services.UserService;
 
@@ -18,6 +19,8 @@ public class GroupController {
 
 	@Autowired
 	private GroupService groupService;
+	@Autowired
+	CategoryService categoryService;
 	@Autowired
 	private UserService userService;
 
@@ -44,14 +47,80 @@ public class GroupController {
 	@PostMapping("/group/update") 
 	public String updateGroupPost(@RequestParam Long groupID, @RequestParam String groupName, Model model, RedirectAttributes rm)
 	{
-		groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
-		model.addAttribute("content", "group");
-		rm.addFlashAttribute("message","Information succesfully updated");
-		return "redirect:/group";
+		if(groupName!="")
+		{
+			String checkDuplicat = giveDuplicateIfExist(groupName);
+			if(!groupName.equalsIgnoreCase(checkDuplicat))
+			{
+				groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
+				model.addAttribute("content", "group");
+				rm.addFlashAttribute("message","Information succesfully updated");
+				return "redirect:/group";
+			}
+			else
+			{
+				model.addAttribute("content", "group");
+				rm.addFlashAttribute("message","Group already exist");
+				return "redirect:/group";
+			}
+		}
+		else
+		{
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Fill in a group name");
+			return "redirect:/group";
+		}
 	}
 
 	@PostMapping("/group/add") 
 	public String addGroupPost(@RequestParam String groupName, Model model, RedirectAttributes rm)
+	{
+		if(groupName!="")
+		{
+			String checkDuplicat = giveDuplicateIfExist(groupName);
+			if(!groupName.equalsIgnoreCase(checkDuplicat))
+			{
+				groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
+				model.addAttribute("content", "group");
+				rm.addFlashAttribute("message","Group succesfully added");
+				return "redirect:/group";
+			}
+			else
+			{
+				model.addAttribute("content", "group");
+				rm.addFlashAttribute("message","Group already exist");
+				return "redirect:/group";
+			}
+		}
+		else
+		{
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Fill in a group name");
+			return "redirect:/group";
+		}
+	}
+
+	@PostMapping("/group/delete") 
+	public String deleteGroupPost(@RequestParam Long groupID, Model model, RedirectAttributes rm)
+	{
+
+		if(!categoryService.categoryHasGroup(groupID, userService.getUserEmail()))
+		{
+			groupService.deleteGroup(groupService.findGroupByGroupID(groupID));
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Group succesfully deleted");
+			return "redirect:/group";
+		}
+		else
+		{
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Not deleted because group has one or more categories");
+			return "redirect:/group";
+		}
+
+	}
+
+	public String giveDuplicateIfExist(String groupName)
 	{
 		// Check if groupName already exist
 		String checkDuplicat = null;
@@ -59,20 +128,7 @@ public class GroupController {
 		{
 			checkDuplicat = groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userService.getUserEmail())).getGroupName().toString();
 		}
-
-		if(!groupName.equalsIgnoreCase(checkDuplicat))
-		{
-			groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
-			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Group succesfully added");
-			return "redirect:/group";
-		}
-		else
-		{
-			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Group already exist");
-			return "redirect:/group";
-		}
+		return checkDuplicat;
 	}
 
 }

@@ -46,21 +46,91 @@ public class CategoryController {
 	}
 
 	@PostMapping("/category/update") 
-	public String updateCategoryPost(@RequestParam Long categoryID, @RequestParam String categoryName, Model model, RedirectAttributes rm)
+	public String updateCategoryPost(@RequestParam Long categoryID, @RequestParam String categoryName, String groupName, Model model, RedirectAttributes rm)
 	{
-		categoryService.updateCategory(categoryID,categoryName,userService.findUserByeMail(userService.getUserEmail()));
-		model.addAttribute("content", "category");
-		rm.addFlashAttribute("message","Information succesfully updated");
-		return "redirect:/category";
+		if(categoryName!="")
+		{
+			String checkDuplicat = giveDuplicateIfExist(categoryName);
+			if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+			{
+				categoryService.updateCategory(categoryID,categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+				model.addAttribute("content", "category");
+				rm.addFlashAttribute("message","Information succesfully updated");
+				return "redirect:/category";
+			}
+			else
+			{
+				model.addAttribute("content", "category");
+				rm.addFlashAttribute("message","Category already exist");
+				return "redirect:/category";
+			}
+
+		}
+		else
+		{
+			model.addAttribute("content", "category");
+			rm.addFlashAttribute("message","Fill in a category name");
+			return "redirect:/category";
+		}
+
 	}
 
 	@PostMapping("/category/add") 
 	public String addCategoryPost(@RequestParam String categoryName, String groupName, Model model, RedirectAttributes rm)
 	{
-		categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
-		model.addAttribute("content", "category");
-		rm.addFlashAttribute("message","Category succesfully added");
-		return "redirect:/category";
+		if(categoryName!="")
+		{
+			if(groupName!="")
+			{
+				String checkDuplicat = giveDuplicateIfExist(categoryName);
+				if(!categoryName.equalsIgnoreCase(checkDuplicat))
+				{
+					categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+					model.addAttribute("content", "category");
+					rm.addFlashAttribute("message","Category succesfully added");
+					return "redirect:/category";
+				}
+				else
+				{
+					model.addAttribute("content", "category");
+					rm.addFlashAttribute("message","Category already exist");
+					return "redirect:/category";
+				}
+			}
+			else
+			{
+				model.addAttribute("content", "category");
+				rm.addFlashAttribute("message","Select a group name");
+				return "redirect:/category";
+			}
+		}
+		else
+		{
+			model.addAttribute("content", "category");
+			rm.addFlashAttribute("message","Fill in a category name");
+			return "redirect:/category";
+		}
+	}
+	
+	@PostMapping("/category/delete") 
+	public String deleteGroupPost(@RequestParam Long categoryID, Model model, RedirectAttributes rm)
+	{
+				categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
+				model.addAttribute("content", "category");
+				rm.addFlashAttribute("message","Category succesfully deleted");
+				return "redirect:/category";
+			
+	}
+
+	public String giveDuplicateIfExist(String categoryName)
+	{
+		// Check if categoryName already exist
+		String checkDuplicat = null;
+		if(categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userService.getUserEmail()))!=null)
+		{
+			checkDuplicat = categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userService.getUserEmail())).getCategoryName().toString();
+		}
+		return checkDuplicat;
 	}
 
 }

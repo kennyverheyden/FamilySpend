@@ -27,7 +27,7 @@ public class UserService{
 	private  CategoryService categoryService;
 	@Autowired
 	private  GroupService groupService;
-	
+
 	private  PasswordEncoder passwordEncoder;
 
 	private String userEmail;
@@ -88,6 +88,13 @@ public class UserService{
 	{
 		User user = this.findUserByeMail(userEmail);
 		userRepository.delete(user);
+	}
+
+	public void updateAccount(String email, String name, String firstname) {
+		User user = this.findUserByeMail(email);
+		user.setName(name);
+		user.setFirstName(firstname);
+		userRepository.save(user);
 	}
 
 	// Getters and Setters

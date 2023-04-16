@@ -1,0 +1,33 @@
+<div th:fragment="account">
+
+
+<!-- Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h4>Update user details</h4>
+      <p><span th:text="${email}"></span></p>
+     
+<div style="width:300px;text-align:right;">
+	<form action="/account" method="post">
+			<input type="hidden" name="email" th:value="${email}"><br>
+			Name: <input type="text" name="name" th:value="${name}" style="width:150px;"><br><br>
+			First name: <input type="text" name="firstName" th:value="${firstName}" style="width:150px;"><br><br>
+			<button type="submit">Update your profile</button>
+	<p>
+		<strong th:text="${message}"></strong>
+	</p>
+	</form>
+	</div>
+	<br>
+
+    
+    <br>
+
+</div>
+</div>
+</div>
+
+
+
+</div>
