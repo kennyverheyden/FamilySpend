@@ -13,14 +13,47 @@
 
 <form action="/category/update" method="post">
 <span class="w3-text-grey td">
-<input th:value="${category.categoryID}" name="categoryID" type="hidden"></input>
-<input th:value="${category.categoryName}" name="categoryName" style="width:150px;"></input>
+<input th:value="${category.categoryID}" name="categoryID" type="hidden">
+<input th:value="${category.categoryName}" name="categoryName" style="width:150px;">
+</span>
+<span class="w3-text-grey td">
+<select name="groupName" style="width:130px;">
+    <option
+            th:each="groupName : ${groups}"
+            th:text="${groupName.getGroupName}"
+            th:value="${groupName.getGroupName}" th:selected="${ #strings.equals(groupName.getGroupName, category.getGroup.getGroupName)}">
+    </option>
+</select>
 </span>
 <span class="w3-text-grey td">
 <button type="submit" style="width:100px;">Edit</button>
 </span>
 </form>
 
+</div>
+</div>
+
+
+<h5>Add category</h5>
+<div class="table">
+<div class="tr">
+<form action="/category/add" method="post">
+<span class="w3-text-grey td">
+<input type="text" name="categoryName" style="width:150px;">
+</span><span class="w3-text-grey td">
+<select name="groupName" style="width:130px;">
+<option selected value="">Select group</option>
+    <option
+            th:each="groupName : ${groups}"
+            th:text="${groupName.getGroupName}"
+            th:value="${groupName.getGroupName}">
+    </option>
+</select>
+</span>
+<span class="w3-text-grey td">
+<button type="submit" style="width:100px;">Add category</button>
+</span>
+</form>
 </div>
 </div>
 

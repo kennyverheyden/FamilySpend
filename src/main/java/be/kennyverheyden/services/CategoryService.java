@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import be.kennyverheyden.models.Category;
-import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.CategoryRepository;
-import be.kennyverheyden.repositories.GroupRepository;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -19,6 +17,8 @@ public class CategoryService {
 
 	@Autowired
 	private CategoryRepository categoryRepository;
+	@Autowired
+	GroupService userService;
 	@Autowired
 	private GroupService groupService;
 
@@ -39,6 +39,11 @@ public class CategoryService {
 		return categoryRepository.findCategoryByUserUserID(userID);
 	}
 
+	public void loadCategories(User user)
+	{
+		// Collect categories from specific user
+		categories = categoryRepository.findCategoryByUserUserID(user.getUserID());
+	}
 
 	// Create Sample categories for one specific user
 	// Assign a group to a category
@@ -82,11 +87,8 @@ public class CategoryService {
 		categoryRepository.saveAll(categories);
 	}
 
-	public void updateCategory(Long categoryID, String categoryName, Long userID)
+	public void updateCategory(Long categoryID, String categoryName, User user)
 	{
-		// Collect categories from specific user
-		categories = categoryRepository.findCategoryByUserUserID(userID);
-
 		// Search the category by categoryName
 		for(Category categorie:categories)
 		{
@@ -96,6 +98,16 @@ public class CategoryService {
 				categoryRepository.save(categorie);
 			}
 		}
-
 	}
+
+	public void addCategory(String categoryName, String groupName, User user)
+	{
+		Category category = new Category();
+		category.setCategoryName(categoryName);
+		category.setUser(user);
+		category.setGroup(groupService.findGroupByGroupName(groupName,user));
+		categories.add(category);
+		categoryRepository.save(category);
+	}
+
 }

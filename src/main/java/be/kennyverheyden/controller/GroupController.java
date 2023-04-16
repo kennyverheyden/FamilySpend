@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import be.kennyverheyden.models.Group;
 import be.kennyverheyden.services.GroupService;
 import be.kennyverheyden.services.UserService;
 
@@ -34,18 +35,44 @@ public class GroupController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
+		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load groups from specific user
 		model.addAttribute("groups",groupService.findGroupByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
 		model.addAttribute("content", "group");
 		return "index";
 	}
-	
+
 	@PostMapping("/group/update") 
 	public String updateGroupPost(@RequestParam Long groupID, @RequestParam String groupName, Model model, RedirectAttributes rm)
 	{
-		groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()).getUserID());
+		groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
 		model.addAttribute("content", "group");
 		rm.addFlashAttribute("message","Information succesfully updated");
 		return "redirect:/group";
+	}
+
+	@PostMapping("/group/add") 
+	public String addGroupPost(@RequestParam String groupName, Model model, RedirectAttributes rm)
+	{
+		// Check if groupName already exist
+		String checkDuplicat = null;
+		if(groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userService.getUserEmail()))!=null)
+		{
+			checkDuplicat = groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userService.getUserEmail())).getGroupName().toString();
+		}
+
+		if(!groupName.equalsIgnoreCase(checkDuplicat))
+		{
+			groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Group succesfully added");
+			return "redirect:/group";
+		}
+		else
+		{
+			model.addAttribute("content", "group");
+			rm.addFlashAttribute("message","Group already exist");
+			return "redirect:/group";
+		}
 	}
 
 }

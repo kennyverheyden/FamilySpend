@@ -18,8 +18,6 @@ public class GroupService {
 
 	@Autowired
 	private GroupRepository groupRepository;
-	//	@Autowired
-	//	private UserService userService;
 
 	// Specific groups by current user;
 	private List<Group> groups;
@@ -31,8 +29,18 @@ public class GroupService {
 		return groups;
 	}
 
-	public List<Group> findGroupByGroupName (String groupName) {
-		return groupRepository.findGroupByGroupName(groupName);
+	public Group findGroupByGroupName (String groupName, User user) {
+		List<Group> groupByName =groupRepository.findGroupByGroupName(groupName);
+		Group groupByNamePerUser = null;
+		// Filter per User
+		for(Group i:groupByName)
+		{
+			if(i.getUser().getUserID()==user.getUserID())
+			{
+				groupByNamePerUser=i;
+			}
+		}
+		return groupByNamePerUser;
 	}
 
 	public Group findGroupByGroupID (Long groupID)
@@ -42,6 +50,13 @@ public class GroupService {
 
 	public List<Group> findGroupByUserUserID (Long userID) {
 		return groupRepository.findGroupByUserUserID(userID);
+	}
+
+	public void loadGroups(User user)
+	{
+		// Collect groups from specific user
+		groups = groupRepository.findGroupByUserUserID(user.getUserID());
+
 	}
 
 	public void createGroupSampleData(User user)
@@ -63,10 +78,8 @@ public class GroupService {
 		groupRepository.saveAll(groups);
 	}
 
-	public void updateGroup(Long groupID, String groupName, Long userID)
+	public void updateGroup(Long groupID, String groupName, User user)
 	{
-		// Collect groups from specific user
-		groups = groupRepository.findGroupByUserUserID(userID);
 
 		// Search the group by groupName
 		for(Group group:groups)
@@ -78,6 +91,15 @@ public class GroupService {
 			}
 		}
 
+	}
+
+	public void addGroup(String groupName, User user)
+	{	
+		Group group = new Group();
+		group.setGroupName(groupName);
+		group.setUser(user);
+		groups.add(group);
+		groupRepository.save(group);
 	}
 
 	public List<Group> getGroups() {

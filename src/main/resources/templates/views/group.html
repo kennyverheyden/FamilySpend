@@ -13,8 +13,8 @@
 
 <form action="/group/update" method="post">
 <span class="w3-text-grey td">
-<input th:value="${group.groupID}" name="groupID" type="hidden"></input>
-<input th:value="${group.groupName}" name="groupName" style="width:150px;"></input>
+<input th:value="${group.groupID}" name="groupID" type="hidden">
+<input th:value="${group.groupName}" name="groupName" style="width:150px;">
 </span>
 <span class="w3-text-grey td">
 <button type="submit" style="width:100px;">Edit</button>
@@ -24,7 +24,22 @@
 </div>
 </div>
 
+<br>
+<div class="table">
+<div class="tr">
+<form action="/group/add" method="post">
+<span class="w3-text-grey td">
+<input type="text" name="groupName" style="width:150px;">
+</span><span class="w3-text-grey td">
+<button type="submit" style="width:100px;">Add group</button>
+</span>
+</form>
+</div>
+</div>
 
+<strong>
+		<span th:text="${message}"></span>
+	</strong><br>
 
     </div>
     
