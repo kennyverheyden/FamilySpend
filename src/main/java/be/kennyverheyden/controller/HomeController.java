@@ -33,7 +33,7 @@ public class HomeController {
 		model.addAttribute("content", "home");
 
 		// ***** AUTO LOGIN test account *****
-		if(doAutoTestLogin(true))
+		if(doAutoTestLogin(false))
 			return "redirect:/";
 		// ***********************************
 
