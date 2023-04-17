@@ -27,16 +27,30 @@ FORM.tr, DIV.tr
     padding-top:3px;
     padding-bottom:3px;
     text-align:left;
-    vertical-align:top;
+    vertical-align:bottom;
 }
 SPAN.td
 {
     display:table-cell;
     padding: 0px;
+    padding-right:10px;
+    padding-left:12px;
     text-align:left;
-    width:200px;
+    vertical-align:bottom;
 }
 </style>
+<script>
+function show_alert() {
+	
+	  	if(confirm("Do you really want to delete this item?")) {
+			  return true;
+		  }
+	  		else
+	  		{
+	  return false
+		}
+}
+</script>
 </head>
 <body>
 

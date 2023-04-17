@@ -7,8 +7,78 @@
     <div class="w3-twothird">
       <h4>Book</h4>
      
-<p class="w3-text-grey">text</p>
 
+ <h5>Add record</h5>
+<div class="table">
+<div class="tr">
+<form action="/book/add" method="post">
+<span class="w3-text-grey td">
+Amount<br>
+<input type="text" name="amount" style="width:70px;">
+</span><span class="w3-text-grey td">
+Description <span style="font-size:10px;">(not required)</span><br>
+<input type="text" name="description" style="width:150px;">
+</span><span class="w3-text-grey td">
+
+<select name="categoryName" style="width:130px;">
+<option selected value="">Select category</option>
+    <option
+            th:each="categoryName : ${categories}"
+            th:text="${categoryName.getCategoryName}"
+            th:value="${categoryName.getCategoryName}">
+    </option>
+</select>
+
+</span>
+<span class="w3-text-grey td">
+<button type="submit" style="width:100px;">Add record</button>
+</span>
+</form>
+</div>
+</div>
+
+<strong>
+		<span th:text="${message}"></span>
+	</strong><br><br>
+
+
+
+
+<div class="table">
+<div class="tr" th:each="book: ${books}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+
+<form action="/book/update" method="post">
+
+<input th:value="${book.bookID}" name="bookID" type="hidden">
+<span class="w3-text-grey td">
+<input th:value="${book.date}" name="date" style="width:125px;">
+</span><span class="w3-text-grey td">
+<input th:value="${book.amount}" name="amount" style="width:70px;">
+</span><span class="w3-text-grey td">
+<input th:value="${book.description}" name="description" style="width:150px;">
+</span>
+<span class="w3-text-grey td">
+<select name="categoryName" style="width:130px;">
+    <option
+            th:each="categoryName : ${categories}"
+            th:text="${categoryName.getCategoryName}"
+            th:value="${categoryName.getCategoryName}" th:selected="${ #strings.equals(categoryName.getCategoryName, book.getCategory.getCategoryName)}">
+    </option>
+</select>
+</span>
+<span class="w3-text-grey td" style="width:110px">
+<button type="submit" style="width:70px">Edit</button>
+</span>
+</form>
+
+<form action="/book/delete" method="post">
+<input th:value="${book.bookID}" name="bookID" type="hidden">
+<button type="submit" style="width:70px;">Delete</button>
+</form>
+
+
+</div>
+</div>
 
 
 
