@@ -38,19 +38,18 @@ SPAN.td
     text-align:left;
     vertical-align:bottom;
 }
-</style>
-<script>
-function show_alert() {
-	
-	  	if(confirm("Do you really want to delete this item?")) {
-			  return true;
-		  }
-	  		else
-	  		{
-	  return false
-		}
+/* Turn Off Number Input Spinners */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
-</script>
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
+</style>
+<script th:src="@{/actions.js}"></script>
 </head>
 <body>
 

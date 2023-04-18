@@ -45,30 +45,53 @@ public class GroupController {
 	}
 
 	@PostMapping("/group/update") 
-	public String updateGroupPost(@RequestParam Long groupID, @RequestParam String groupName, Model model, RedirectAttributes rm)
+	public String updateGroupPost(@RequestParam Long groupID, @RequestParam String groupName, Boolean delete, Model model, RedirectAttributes rm)
 	{
-		if(groupName!="")
+		if(delete==null) // avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
-			String checkDuplicat = giveDuplicateIfExist(groupName);
-			if(!groupName.equalsIgnoreCase(checkDuplicat))
+			delete=false;
+		}
+
+		if(delete)
+		{
+			if(!categoryService.categoryHasGroup(groupID, userService.getUserEmail()))
 			{
-				groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
+				groupService.deleteGroup(groupService.findGroupByGroupID(groupID));
 				model.addAttribute("content", "group");
-				rm.addFlashAttribute("message","Information succesfully updated");
+				rm.addFlashAttribute("message","Group succesfully deleted");
 				return "redirect:/group";
 			}
 			else
 			{
 				model.addAttribute("content", "group");
-				rm.addFlashAttribute("message","Group already exist");
+				rm.addFlashAttribute("message","Not deleted because group has one or more categories");
 				return "redirect:/group";
 			}
 		}
 		else
 		{
-			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Fill in a group name");
-			return "redirect:/group";
+			if(groupName!="")
+			{
+				String checkDuplicat = giveDuplicateIfExist(groupName);
+				if(!groupName.equalsIgnoreCase(checkDuplicat))
+				{
+					groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
+					model.addAttribute("content", "group");
+					rm.addFlashAttribute("message","Information succesfully updated");
+					return "redirect:/group";
+				}
+				else
+				{
+					model.addAttribute("content", "group");
+					return "redirect:/group";
+				}
+			}
+			else
+			{
+				model.addAttribute("content", "group");
+				rm.addFlashAttribute("message","Fill in a group name");
+				return "redirect:/group";
+			}	
 		}
 	}
 
@@ -107,26 +130,6 @@ public class GroupController {
 			rm.addFlashAttribute("message","Max amount groups reached");
 			return "redirect:/group";
 		}
-	}
-
-	@PostMapping("/group/delete") 
-	public String deleteGroupPost(@RequestParam Long groupID, Model model, RedirectAttributes rm)
-	{
-
-		if(!categoryService.categoryHasGroup(groupID, userService.getUserEmail()))
-		{
-			groupService.deleteGroup(groupService.findGroupByGroupID(groupID));
-			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Group succesfully deleted");
-			return "redirect:/group";
-		}
-		else
-		{
-			model.addAttribute("content", "group");
-			rm.addFlashAttribute("message","Not deleted because group has one or more categories");
-			return "redirect:/group";
-		}
-
 	}
 
 	public String giveDuplicateIfExist(String groupName)

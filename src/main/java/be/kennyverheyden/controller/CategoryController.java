@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
 import be.kennyverheyden.services.UserService;
@@ -22,6 +23,8 @@ public class CategoryController {
 	private GroupService groupService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private BookService bookService;
 
 	public CategoryController() {}
 
@@ -46,33 +49,56 @@ public class CategoryController {
 	}
 
 	@PostMapping("/category/update") 
-	public String updateCategoryPost(@RequestParam Long categoryID, @RequestParam String categoryName, String groupName, Model model, RedirectAttributes rm)
+	public String updateCategoryPost(@RequestParam Long categoryID, @RequestParam String categoryName, String groupName, Boolean delete, Model model, RedirectAttributes rm)
 	{
-		if(categoryName!="")
+		if(delete==null) // avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
-			String checkDuplicat = giveDuplicateIfExist(categoryName);
-			if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+			delete=false;
+		}
+
+		if(delete)
+		{
+			if(!bookService.bookingHasCategory(categoryID, userService.getUserEmail()))
 			{
-				categoryService.updateCategory(categoryID,categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+				categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
 				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Information succesfully updated");
+				rm.addFlashAttribute("message","Category succesfully deleted");
 				return "redirect:/category";
 			}
 			else
 			{
 				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Category with same group already exist");
+				rm.addFlashAttribute("message","Not deleted because category has one or more bookings");
 				return "redirect:/category";
 			}
-
 		}
 		else
 		{
-			model.addAttribute("content", "category");
-			rm.addFlashAttribute("message","Fill in a category name");
-			return "redirect:/category";
-		}
+			if(categoryName!="")
+			{
+				String checkDuplicat = giveDuplicateIfExist(categoryName);
+				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+				{
+					categoryService.updateCategory(categoryID,categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+					model.addAttribute("content", "category");
+					rm.addFlashAttribute("message","Information succesfully updated");
+					return "redirect:/category";
+				}
+				else
+				{
+					model.addAttribute("content", "category");
+					rm.addFlashAttribute("message","Category with same group already exist");
+					return "redirect:/category";
+				}
 
+			}
+			else
+			{
+				model.addAttribute("content", "category");
+				rm.addFlashAttribute("message","Fill in a category name");
+				return "redirect:/category";
+			}
+		}
 	}
 
 	@PostMapping("/category/add") 
@@ -119,16 +145,6 @@ public class CategoryController {
 			rm.addFlashAttribute("message","Max amount categories reached");
 			return "redirect:/category";
 		}
-	}
-
-	@PostMapping("/category/delete") 
-	public String deleteGroupPost(@RequestParam Long categoryID, Model model, RedirectAttributes rm)
-	{
-		categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
-		model.addAttribute("content", "category");
-		rm.addFlashAttribute("message","Category succesfully deleted");
-		return "redirect:/category";
-
 	}
 
 	public String giveDuplicateIfExist(String categoryName)

@@ -20,27 +20,26 @@
 </div>
 </div>
 
+<br>
 <strong>
 		<span th:text="${message}"></span>
 	</strong><br><br>
 
 <div class="table">
-<div class="tr" th:each="group: ${groups}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
+<div class="tr" th:each="group, index: ${groups}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
 
 <form action="/group/update" method="post">
 <span class="w3-text-grey td">
 <input th:value="${group.groupID}" name="groupID" type="hidden">
 <input th:value="${group.groupName}" name="groupName" style="width:150px;">
-</span>
-<span class="w3-text-grey td" style="width:110px">
-<button type="submit" style="width:70px;">Edit</button>
+</span><span class="w3-text-grey td">
+<strong>Delete</strong><br>
+ &nbsp; &nbsp;<input type="checkbox" th:id="${index.index}"  name="delete" th:onclick="'javascript:changeSubmitButton(' + ${index.index} + ')'">
+</span><span class="w3-text-grey td" style="width:110px">
+<button type="submit" th:id="${'submit'+index.index}" th:onclick="'javascript:show_alert(' + ${index.index} + ')'" style="width:100px;">Edit</button>
 </span>
 </form>
 
-<form action="/group/delete" method="post">
-<input th:value="${group.groupID}" name="groupID" type="hidden">
-<button type="submit" style="width:70px;">Delete</button>
-</form>
 </div>
 </div>
 

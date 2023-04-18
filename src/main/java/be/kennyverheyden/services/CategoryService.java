@@ -19,8 +19,6 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	@Autowired
-	GroupService userService;
-	@Autowired
 	private GroupService groupService;
 
 	private List<Category> categories;

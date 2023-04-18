@@ -36,6 +36,19 @@ public class BookService {
 		return bookRepository.findBookBybookID(bookID);
 	}
 
+	public boolean bookingHasCategory(Long catID, String userEmail)
+	{
+		List<Book> books = bookRepository.findAll();
+		for(Book i:books)
+		{
+			if(i.getCategory().getCategoryID()==catID && i.getUser().geteMail().equals(userEmail))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void loadBooks(User user)
 	{
 		// Collect books from specific user
@@ -43,7 +56,7 @@ public class BookService {
 	}
 
 	public void updateBook(Long bookID, String date, float amount, String description, String categoryName, User user) {
-		System.out.println(categoryName);
+		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
 		Book book = this.findBookBybookID(bookID);
 		book.setDate(date);
 		book.setAmount(amount);
@@ -54,7 +67,7 @@ public class BookService {
 
 	public void addBook(float amount, String description, String categoryName, User user)
 	{
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");  
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
 		Book book = new Book();
 		book.setDate(dtf.format(now));
