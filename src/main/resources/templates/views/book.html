@@ -14,7 +14,7 @@
 <form action="/book/add" method="post">
 <span class="w3-text-grey td">
 Amount <span>€</span><br>
-<input name="amount" style="width:95px;text-align:right" type="number" step="0.01">
+<input name="amount" style="width:85px;text-align:right" type="number" step="0.01">
 </span><span class="w3-text-grey td">
 IN/OUT<br>
 <select name="inout" style="width:60px;">
@@ -62,7 +62,7 @@ Date<br>
 <input th:value="${book.date}" name="date" type="text" style="width:80px;">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Amount €<br>
-<input type="number" th:value="${book.amount}" name="amount" style="width:95px; text-align:right">
+<input type="number" th:value="${book.amount}" name="amount" style="width:85px; text-align:right">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>
 <select name="categoryName" style="width:130px;">
