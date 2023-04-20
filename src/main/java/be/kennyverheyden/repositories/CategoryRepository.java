@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.Group;
+import be.kennyverheyden.models.User;
 
 
 @Repository

@@ -81,6 +81,7 @@ public class CategoryService {
 		return false;
 	}
 
+
 	public void loadCategories(User user)
 	{
 		// Collect categories from specific user
