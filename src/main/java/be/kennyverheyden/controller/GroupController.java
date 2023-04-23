@@ -1,5 +1,7 @@
 package be.kennyverheyden.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.Group;
+import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
+import be.kennyverheyden.services.GroupedGroupService;
 import be.kennyverheyden.services.UserService;
 
 
@@ -23,6 +27,8 @@ public class GroupController {
 	CategoryService categoryService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private GroupedGroupService groupedGroupService;
 
 	public GroupController() {}
 
@@ -41,6 +47,25 @@ public class GroupController {
 		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load groups from specific user
 		model.addAttribute("groups",groupService.findGroupByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
 		model.addAttribute("content", "group");
+		return "index";
+	}
+	
+	@GetMapping("/grouptotals")
+	public String groupTotalsGet(Model model)
+	{
+		String userEmail = userService.getUserEmail();
+		// When user is not logged on, the String is null
+
+		if(userEmail==null)
+		{
+			model.addAttribute("content", "login");
+			return "redirect:/";
+		}
+		
+		// Get group by groups and totals
+		List<GroupedGroup> groupedGroups = groupedGroupService.groupedGroups();
+		model.addAttribute("groupedGroups", groupedGroups);
+		model.addAttribute("content", "grouptotals");
 		return "index";
 	}
 

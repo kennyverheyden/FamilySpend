@@ -33,7 +33,6 @@ public class BookController {
 	@GetMapping("/book")
 	public String bookGet(Model model)
 	{
-
 		String userEmail = userService.getUserEmail();
 		//	When user is not logged on, the String is null
 

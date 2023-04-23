@@ -3,12 +3,9 @@ package be.kennyverheyden.services;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import be.kennyverheyden.models.Book;
-import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.BookRepository;
 import jakarta.transaction.Transactional;
