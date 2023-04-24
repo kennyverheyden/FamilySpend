@@ -62,7 +62,7 @@ Date<br>
 <input th:value="${book.date}" name="date" type="text" style="width:80px;">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Amount €<br>
-<input type="number" th:value="${book.amount}" name="amount" style="width:85px; text-align:right">
+<input type="number" step="0.01" th:value="${book.amount}" name="amount" style="width:85px; text-align:right">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>
 <select name="categoryName" style="width:130px;">

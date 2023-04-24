@@ -2,10 +2,13 @@ package be.kennyverheyden.services;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import be.kennyverheyden.models.Book;
+import be.kennyverheyden.models.GroupedCategory;
+import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.BookRepository;
 import jakarta.transaction.Transactional;
@@ -44,6 +47,48 @@ public class BookService {
 			}
 		}
 		return false;
+	}
+
+	public List<GroupedCategory> bookGroupByCategoryMonth(Long userID,String month)
+	{
+		List<Book> books = bookRepository.findBookByUserUserID(userID);
+		List<GroupedCategory> groupedCategories = new ArrayList();
+		String subString = "/"+month+"/";
+		for(Book line:books)
+		{
+			if(line.getDate().toString().contains(subString)) {
+
+				// Check if category already exists
+				int i=0;
+				boolean duplicate=false;
+				while(i<groupedCategories.size())
+				{
+					if(line.getCategory().getCategoryName().equals(groupedCategories.get(i).getCategoryName()))
+					{
+						duplicate=true;
+						break;
+					}
+					i++;
+				}
+				if(duplicate)
+				{
+					// If item exist, add total
+					System.out.println();
+					groupedCategories.get(i).addAmount(line.getAmount());
+				}
+				else
+				{
+					// If item not exist, create one
+					groupedCategories.add(new GroupedCategory(line.getCategory().getCategoryName(),line.getAmount()));
+				}
+			}
+		}
+		return groupedCategories;
+	}
+
+	public List<GroupedGroup> bookGroupByGroupMonth(Long userID, String month)
+	{
+		return null;
 	}
 
 	public void loadBooks(User user)

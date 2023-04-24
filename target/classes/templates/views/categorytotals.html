@@ -10,13 +10,36 @@
  <p class="w3-text-grey"><a href="/category"><strong>Edit categories</strong></a></p>    
  <br>
  
- <div class="table">
+ 
+<form action="/categorytotals/totals" method="post">
+<select name="month">
+	<option value="00">Select month</option>
+    <option value="01">January</option>
+    <option value="02">February</option>
+    <option value="03">March</option>
+    <option value="04">April</option>
+    <option value="05">May</option>
+    <option value="06">June</option>
+    <option value="07">July</option>
+    <option value="08">August</option>
+    <option value="09">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+    </select>&nbsp;
+<button type="submit" style="width:100px;">Submit</button>
+</form>
+<br><br>
+
+<h4 th:text="${month_long}"></h4>
+
+<div class="table">
 <div class="tr"  th:each="category : ${groupedCategories}">
 
 <span class="td"  th:text="${category.getCategoryName}">
 </span>
 
-<span class="td"  th:text="${category.getTotal}">
+<span class="td" style="text-align:right;" th:text="${category.getTotal}">
 </span>
 
 </div>
@@ -25,7 +48,7 @@
 
 
 
-
+</div>
 </div>
 </div>
 

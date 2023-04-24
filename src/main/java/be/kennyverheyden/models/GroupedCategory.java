@@ -12,11 +12,11 @@ public class GroupedCategory {
 	private String categoryName;
 	private float total;
 	
-	GroupedCategory()
+	public GroupedCategory()
 	{
 	}
 	
-	GroupedCategory(String categoryName, float total)
+	public GroupedCategory(String categoryName, float total)
 	{
 		this.categoryName=categoryName;
 		this.total=total;
@@ -38,4 +38,7 @@ public class GroupedCategory {
 		this.total = total;
 	}
 	
+	public void addAmount(float amount) {
+		this.total = total+amount;
+	}
 }

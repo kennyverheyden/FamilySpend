@@ -1,5 +1,7 @@
 package be.kennyverheyden.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
-import be.kennyverheyden.services.GroupedCategoryService;
 import be.kennyverheyden.services.UserService;
 
 
@@ -29,8 +29,6 @@ public class CategoryController {
 	private UserService userService;
 	@Autowired
 	private BookService bookService;
-	@Autowired
-	private GroupedCategoryService groupedCategoryService;
 
 	public CategoryController() {}
 
@@ -53,7 +51,7 @@ public class CategoryController {
 		model.addAttribute("content", "category");
 		return "index";
 	}
-	
+
 	@GetMapping("/categorytotals")
 	public String categorieTotalsGet(Model model)
 	{
@@ -65,9 +63,59 @@ public class CategoryController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
-		List<GroupedCategory> groupedCategories = groupedCategoryService.groupedCategories();
+		// Get current month in MM format
+		Date date = new Date();
+		String monthDateFormat = "MM";
+		String monthDateFormat_long = "MMMM";
+		SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
+		String month = mdf.format(date);
+		SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
+		String month_long = mdf_long.format(date);
+		// Get Category by group by and totals
+		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
 		model.addAttribute("groupedCategories",groupedCategories);
+		model.addAttribute("month_long",month_long);
 		model.addAttribute("content", "categorytotals");
+		return "index";
+	}
+
+	@PostMapping("/categorytotals/totals") 
+	public String categoryTotalsPost(@RequestParam String month, Model model, RedirectAttributes rm)
+	{
+		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
+		String month_long="";
+		switch(month) {
+		case "01": month_long="January";
+		break;
+		case "02": month_long="February";
+		break;
+		case "03": month_long="March";
+		break;
+		case "04": month_long="April";
+		break;
+		case "05": month_long="May";
+		break;
+		case "06": month_long="June";
+		break;
+		case "07": month_long="July";
+		break;
+		case "08": month_long="August";
+		break;
+		case "09": month_long="September";
+		break;
+		case "10": month_long="October";
+		break;
+		case "11": month_long="November";
+		break;
+		case "12": month_long="December";
+		break;
+		default: month="00";
+		}
+		model.addAttribute("content", "categorytotals");
+		model.addAttribute("month_long",month_long);
+		model.addAttribute("groupedCategories", groupedCategories);
 		return "index";
 	}
 

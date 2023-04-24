@@ -1,7 +1,10 @@
 package be.kennyverheyden.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.exception.JDBCConnectionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,12 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedGroup;
+import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
-import be.kennyverheyden.services.GroupedGroupService;
 import be.kennyverheyden.services.UserService;
 
 
@@ -28,7 +30,7 @@ public class GroupController {
 	@Autowired
 	private UserService userService;
 	@Autowired
-	private GroupedGroupService groupedGroupService;
+	private BookService bookService;
 
 	public GroupController() {}
 
@@ -49,7 +51,7 @@ public class GroupController {
 		model.addAttribute("content", "group");
 		return "index";
 	}
-	
+
 	@GetMapping("/grouptotals")
 	public String groupTotalsGet(Model model)
 	{
@@ -61,12 +63,29 @@ public class GroupController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
-		
+
+//		// Get current month in MM format
+//		Date date = new Date();
+//		String monthDateFormat = "MM";
+//		SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
+//		String month = mdf.format(date);
+		String month="0";
 		// Get group by groups and totals
-		List<GroupedGroup> groupedGroups = groupedGroupService.groupedGroups();
+		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month);
 		model.addAttribute("groupedGroups", groupedGroups);
 		model.addAttribute("content", "grouptotals");
 		return "index";
+	}
+
+	@PostMapping("/grouptotals/totals") 
+	public String groupTotalsPost(@RequestParam String month, Model model, RedirectAttributes rm)
+	{
+		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month);
+		model.addAttribute("content", "grouptotals");
+		model.addAttribute("groupedGroups", groupedGroups);
+		return "redirect:/grouptotals";
 	}
 
 	@PostMapping("/group/update") 

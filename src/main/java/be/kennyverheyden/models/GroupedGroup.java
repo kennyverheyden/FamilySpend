@@ -13,11 +13,11 @@ public class GroupedGroup {
 	private String groupName;
 	private float total;
 	
-	GroupedGroup()
+	public GroupedGroup()
 	{
 	}
 	
-	GroupedGroup(String groupName, float total)
+	public GroupedGroup(String groupName, float total)
 	{
 		this.groupName=groupName;
 		this.total=total;
@@ -37,6 +37,10 @@ public class GroupedGroup {
 
 	public void setTotal(float total) {
 		this.total = total;
+	}
+	
+	public void addAmount(float amount) {
+		this.total = total+amount;
 	}
 	
 }
