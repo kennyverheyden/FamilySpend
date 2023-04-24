@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import be.kennyverheyden.models.Book;
+import be.kennyverheyden.models.Category;
+import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.models.User;
@@ -21,6 +23,8 @@ public class BookService {
 	private BookRepository bookRepository;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private GroupService groupService;
 	@Autowired
 	private UserService userService;
 
@@ -73,7 +77,6 @@ public class BookService {
 				if(duplicate)
 				{
 					// If item exist, add total
-					System.out.println();
 					groupedCategories.get(i).addAmount(line.getAmount());
 				}
 				else
@@ -88,7 +91,46 @@ public class BookService {
 
 	public List<GroupedGroup> bookGroupByGroupMonth(Long userID, String month)
 	{
-		return null;
+		List<GroupedCategory> groupedCategories =  bookGroupByCategoryMonth(userID, month);
+		List<GroupedGroup> groupedGroups = new ArrayList();
+		List<Category> cats = categoryService.findCategoryByUserUserID(userID);
+
+		for(GroupedCategory line:groupedCategories)
+		{	
+			int i=0;
+
+			while(i<cats.size())
+			{
+				if(line.getCategoryName().equals(cats.get(i).getCategoryName()))
+				{
+					int j=0;
+					boolean duplicate=false;
+					while(j<groupedGroups.size())
+					{
+						if(cats.get(i).getGroup().getGroupName().equals(groupedGroups.get(j).getGroupName()))
+						{
+							duplicate=true;
+							break;
+						}
+						j++;
+					}
+
+					if(duplicate)
+					{
+						// If item exist, add total
+						groupedGroups.get(j).addAmount(line.getTotal());
+					}
+					else
+					{
+						// If item not exist, create one
+						groupedGroups.add(new GroupedGroup(cats.get(i).getGroup().getGroupName(),line.getTotal()));
+					}
+					break;
+				}
+				i++;
+			}
+		}
+		return groupedGroups;
 	}
 
 	public void loadBooks(User user)

@@ -64,16 +64,19 @@ public class GroupController {
 			return "redirect:/";
 		}
 
-//		// Get current month in MM format
-//		Date date = new Date();
-//		String monthDateFormat = "MM";
-//		SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
-//		String month = mdf.format(date);
-		String month="0";
+		// Get current month in MM format
+		Date date = new Date();
+		String monthDateFormat = "MM";
+		String monthDateFormat_long = "MMMM";
+		SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
+		String month = mdf.format(date);
+		SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
+		String month_long = mdf_long.format(date);
 		// Get group by groups and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month);
 		model.addAttribute("groupedGroups", groupedGroups);
+		model.addAttribute("month_long",month_long);
 		model.addAttribute("content", "grouptotals");
 		return "index";
 	}
@@ -83,9 +86,37 @@ public class GroupController {
 	{
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month);
+		String month_long="";
+		switch(month) {
+		case "01": month_long="january";
+		break;
+		case "02": month_long="february";
+		break;
+		case "03": month_long="march";
+		break;
+		case "04": month_long="april";
+		break;
+		case "05": month_long="may";
+		break;
+		case "06": month_long="june";
+		break;
+		case "07": month_long="july";
+		break;
+		case "08": month_long="august";
+		break;
+		case "09": month_long="september";
+		break;
+		case "10": month_long="october";
+		break;
+		case "11": month_long="november";
+		break;
+		case "12": month_long="december";
+		break;
+		}
 		model.addAttribute("content", "grouptotals");
+		model.addAttribute("month_long",month_long);
 		model.addAttribute("groupedGroups", groupedGroups);
-		return "redirect:/grouptotals";
+		return "index";
 	}
 
 	@PostMapping("/group/update") 
