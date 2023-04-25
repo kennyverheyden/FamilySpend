@@ -7,11 +7,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.kennyverheyden.models.GroupedCategory;
+import be.kennyverheyden.models.Month;
 import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
@@ -30,6 +32,14 @@ public class CategoryController {
 	@Autowired
 	private BookService bookService;
 
+	Date date = new Date();
+	String monthDateFormat = "MM";
+	String monthDateFormat_long = "MMMM";
+	SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
+	String month = mdf.format(date);
+	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
+	String month_long = StringUtils.capitalize(mdf_long.format(date));
+	
 	public CategoryController() {}
 
 	@GetMapping("/category")
@@ -63,19 +73,13 @@ public class CategoryController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
-		// Get current month in MM format
-		Date date = new Date();
-		String monthDateFormat = "MM";
-		String monthDateFormat_long = "MMMM";
-		SimpleDateFormat mdf = new SimpleDateFormat(monthDateFormat);
-		String month = mdf.format(date);
-		SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
-		String month_long = mdf_long.format(date);
+		
 		// Get Category by group by and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
 		model.addAttribute("groupedCategories",groupedCategories);
-		model.addAttribute("month_long",month_long);
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
+		model.addAttribute("month", month);
 		model.addAttribute("content", "categorytotals");
 		return "index";
 	}
@@ -85,35 +89,10 @@ public class CategoryController {
 	{
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
-		String month_long="";
-		switch(month) {
-		case "01": month_long="january";
-		break;
-		case "02": month_long="february";
-		break;
-		case "03": month_long="march";
-		break;
-		case "04": month_long="april";
-		break;
-		case "05": month_long="may";
-		break;
-		case "06": month_long="june";
-		break;
-		case "07": month_long="july";
-		break;
-		case "08": month_long="august";
-		break;
-		case "09": month_long="september";
-		break;
-		case "10": month_long="october";
-		break;
-		case "11": month_long="november";
-		break;
-		case "12": month_long="december";
-		break;
-		}
+	
 		model.addAttribute("content", "categorytotals");
-		model.addAttribute("month_long",month_long);
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
+		model.addAttribute("month",month);
 		model.addAttribute("groupedCategories", groupedCategories);
 		return "index";
 	}

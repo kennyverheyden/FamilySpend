@@ -19,7 +19,7 @@ public class Category {
 	private String categoryName;
 
 	@Column(name="income")
-	private int income; // 0 or 1 for false or true
+	private int income; // Boolean - 0 or 1 for false or true
 
 	@OneToOne
 	@JoinColumn(name="userFK")

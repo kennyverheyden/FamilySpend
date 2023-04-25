@@ -22,8 +22,6 @@ public class User {
 	private String firstName;
 	@Column(name="secret")
 	private String Secret;
-	@Column(name="block")
-	private String block;
 	@Column(name="creation")
 	private String creation;
 	@OneToOne
@@ -59,12 +57,6 @@ public class User {
 	}
 	public void setSecret(String secret) {
 		Secret = secret;
-	}
-	public String getBlock() {
-		return block;
-	}
-	public void setBlock(String block) {
-		this.block = block;
 	}
 	public String getCreation() {
 		return creation;

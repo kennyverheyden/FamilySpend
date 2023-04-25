@@ -32,14 +32,57 @@ public class BookService {
 
 	public BookService() {}
 
+	// Find all book lines from a specific user
 	public List<Book> findBookByUserUserID (Long userID) {
 		return bookRepository.findBookByUserUserID(userID);
 	}
 
+	// Find a book line from a specific user
 	public Book findBookBybookID (Long bookID) {
 		return bookRepository.findBookBybookID(bookID);
 	}
 
+	// Find book lines from a specific user per month
+	public List<Book> findBookByUserUserIDperMonth (Long userID, String month) {
+		List<Book> books = bookRepository.findBookByUserUserID(userID); // Load book lines from specific user
+		List<Book> filteredBooks = new ArrayList(); // New list for storing filtered book lines
+		String subString = "/"+month+"/"; // Store month /MM/ for month filter (substring)
+		for(Book line:books)
+		{
+			if(line.getDate().contains(subString)) // Date contains specific month /MM/
+			{
+				filteredBooks.add(line); // Add to new list
+			}
+		}
+		return filteredBooks;
+	}
+
+	// Shows the result
+	public String monthResult(Long userID, String month)
+	{
+		List<Book> filteredBooks = findBookByUserUserIDperMonth (userID, month); // Get list by user and month
+		float income=0;
+		float spending=0;
+		float result=0;
+		for(Book line:filteredBooks)
+		{
+			// Spendings are recognized by the negative number (-) 
+			if(line.getAmount() > 0) // > = income
+			{
+				income+=line.getAmount();
+			}
+			else
+			{
+				spending+=line.getAmount();
+			}
+		}
+		spending=Math.abs(spending);
+		result=income-spending; // Make total
+		return "Income: "+String.format("%.2f", income)+" | Spending: "+String.format("%.2f", spending)+" | Result: "+String.format("%.2f", result);
+	}
+
+	// Check if booking has category
+	// If a category is assigned to a booking, user cannot delete category
 	public boolean bookingHasCategory(Long catID, String userEmail)
 	{
 		List<Book> books = bookRepository.findAll();
@@ -53,19 +96,20 @@ public class BookService {
 		return false;
 	}
 
+	// Totals on category page
 	public List<GroupedCategory> bookGroupByCategoryMonth(Long userID,String month)
 	{
-		List<Book> books = bookRepository.findBookByUserUserID(userID);
-		List<GroupedCategory> groupedCategories = new ArrayList();
-		String subString = "/"+month+"/";
-		for(Book line:books)
+		List<Book> books = bookRepository.findBookByUserUserID(userID); // Load book lines from specifiek user
+		List<GroupedCategory> groupedCategories = new ArrayList(); // New list for storing "group by" categories
+		String subString = "/"+month+"/"; // Store month /MM/ for month filter (substring)
+		for(Book line:books) // Read book lines
 		{
-			if(line.getDate().toString().contains(subString)) {
+			if(line.getDate().toString().contains(subString)) { // Month filter: Check if date contains month /04/
 
-				// Check if category already exists
+				// Check if category already exists in new grouped by category list
 				int i=0;
 				boolean duplicate=false;
-				while(i<groupedCategories.size())
+				while(i<groupedCategories.size()) // Check new grouped by category list
 				{
 					if(line.getCategory().getCategoryName().equals(groupedCategories.get(i).getCategoryName()))
 					{
@@ -89,24 +133,25 @@ public class BookService {
 		return groupedCategories;
 	}
 
+	// Totals on group page
 	public List<GroupedGroup> bookGroupByGroupMonth(Long userID, String month)
 	{
-		List<GroupedCategory> groupedCategories =  bookGroupByCategoryMonth(userID, month);
-		List<GroupedGroup> groupedGroups = new ArrayList();
-		List<Category> cats = categoryService.findCategoryByUserUserID(userID);
+		List<GroupedCategory> groupedCategories =  bookGroupByCategoryMonth(userID, month); // Load from (grouped by) Category totals, already used on category page
+		List<GroupedGroup> groupedGroups = new ArrayList(); // New list for "grouped by" groups
+		List<Category> cats = categoryService.findCategoryByUserUserID(userID); // Load existing categories from specific user
 
-		for(GroupedCategory line:groupedCategories)
+		for(GroupedCategory line:groupedCategories) // Read totals from category page
 		{	
 			int i=0;
-
-			while(i<cats.size())
+			while(i<cats.size()) // Read category list
 			{
 				if(line.getCategoryName().equals(cats.get(i).getCategoryName()))
 				{
 					int j=0;
 					boolean duplicate=false;
-					while(j<groupedGroups.size())
+					while(j<groupedGroups.size()) // Check new list "grouped by" groups
 					{
+						// Check if existing used group name is already added or not (duplicate)
 						if(cats.get(i).getGroup().getGroupName().equals(groupedGroups.get(j).getGroupName()))
 						{
 							duplicate=true;
@@ -114,15 +159,14 @@ public class BookService {
 						}
 						j++;
 					}
-
 					if(duplicate)
 					{
-						// If item exist, add total
+						// If Group exist, add total
 						groupedGroups.get(j).addAmount(line.getTotal());
 					}
 					else
 					{
-						// If item not exist, create one
+						// If Group not exist, create en add to "grouped by" groups list
 						groupedGroups.add(new GroupedGroup(cats.get(i).getGroup().getGroupName(),line.getTotal()));
 					}
 					break;
@@ -154,12 +198,12 @@ public class BookService {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();
 		Book book = new Book();
-		book.setDate(dtf.format(now));
+		book.setDate(dtf.format(now)); // Add date
 		book.setAmount(amount);
 		book.setDescription(description);
 		book.setUser(user);
 		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
-		book.setCategory(categoryService.findCategoryByCategoryName(categoryName,user));
+		book.setCategory(categoryService.findCategoryByCategoryName(categoryName,user)); // Find and add category name
 		books.add(book);
 		bookRepository.save(book);
 	}
