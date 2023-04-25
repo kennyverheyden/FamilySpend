@@ -17,8 +17,20 @@ public class UserTest {
 	
 	@Test
 	void findUserByeMail() {
-		User users = testUserService.findUserByeMail("test@test.com");
-		assertEquals("TestName", users.getName());
+		User user = testUserService.findUserByeMail("test@test.com");
+		assertEquals("Verheyden", user.getName());
+	}
+	
+	@Test
+	void findUserID() {
+		User user = testUserService.findUserByeMail("test@test.com");
+		assertEquals(9, user.getUserID());
+	}
+	
+	@Test
+	void checkUserRole() {
+		User user = testUserService.findUserByeMail("test@test.com");
+		assertEquals("User",user.getUserRole().getRoleName());
 	}
 	
 }
