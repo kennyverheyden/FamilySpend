@@ -52,7 +52,7 @@ public class BookController {
 
 		if(userEmail==null)
 		{
-			model.addAttribute("content", "login");
+			model.addAttribute("content", "home");
 			return "redirect:/";
 		}
 		

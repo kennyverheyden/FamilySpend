@@ -25,7 +25,7 @@ public class PasswordResetController {
 		// When user is not logged on, the String is null
 		if(userService.getUserEmail()==null)
 		{
-			model.addAttribute("content", "login");
+			model.addAttribute("content", "home");
 			return "index";
 		}
 

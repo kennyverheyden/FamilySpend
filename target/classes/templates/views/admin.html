@@ -1,0 +1,85 @@
+<div th:fragment="admin">
+
+
+<!-- Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+    <div class="w3-twothird">
+
+
+<p>Search users</p>
+
+<!-- Search box -->
+<div class="table">
+<form action="/admin/find" method="post" name="findUser" class="tr">
+<span class="td">Email (Username)<br><input type="text" name="email" style="width:170px"><br>
+Name<br><input type="text" name="name" style="width:170px"><br>
+Firstname<br><input type="text" name="firstName" style="width:170px"><br>
+Rolename<br>
+<select name="roleName">
+<option selected value="">Select role</option>
+    <option
+            th:each="roleName : ${roles}"
+            th:text="${roleName.getRoleName}"
+            th:value="${roleName.getRoleName}">
+    </option>
+</select><br>
+</span>
+<span class="td"><br><button type="submit">Search</button></span>
+</form>
+</div><br>
+<!--  End search box -->
+
+<!--  Output message -->
+<strong>
+		<span th:text="${message}"></span>
+	</strong><br>
+<!--  End output message -->
+	
+<br>
+
+<!-- Users list -->     
+<span style="font-size:12px;"><strong>* Only 10 users are preloaded, use the search button to find users </strong></span>
+<div class="table">
+
+<form action="/admin/users" style="border:1px solid #000000;" method="post" class="tr" th:each="user, index: ${users}" th:unless="${index.index > 9}">
+
+<span class="td" style="padding:12px;vertical-align:top;">
+<strong>Username/role</strong><br>
+<span th:text="${user.geteMail}" style="display:block; width:180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size:11px"></span><input th:value="${user.geteMail}" type="hidden" name="email">
+<select name="userRole">
+    <option
+            th:each="role : ${roles}"
+            th:text="${role.getRoleName}"
+            th:value="${role.getRoleName}"  th:selected="${ #strings.equals(role.getRoleName, user.getUserRole.getRoleName)}">
+    </option>
+</select><br><br>
+<strong>Password</strong><br>
+<input type="password" name="secret">
+</span>
+
+<span class="td" style="padding:12px;vertical-align:top;">
+<strong>Name/First name</strong><br>
+<input th:value="${user.getName}" type="text" name="name"><br>
+<input th:value="${user.getFirstName}" type="text" name="firstName"><br><br>
+<strong>Delete?</strong>
+ &nbsp; &nbsp;<input type="checkbox" th:id="${index.index}"  name="delete" th:onclick="'javascript:changeSubmitButton(' + ${index.index} + ')'">
+</span>
+
+<span class="td" style="padding:12px;vertical-align:bottom;">
+<br>
+<button type="submit" th:id="${'submit'+index.index}" th:onclick="'javascript:show_alert(' + ${index.index} + ')'" style="width:100px;">Update details</button>
+</span>
+
+</form>
+
+</div>
+<!-- End users list -->
+
+
+</div>
+</div>
+</div>
+
+
+</div>

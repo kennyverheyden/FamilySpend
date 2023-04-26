@@ -53,7 +53,7 @@ public class GroupController {
 
 		if(userEmail==null)
 		{
-			model.addAttribute("content", "login");
+			model.addAttribute("content", "home");
 			return "redirect:/";
 		}
 		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load groups from specific user

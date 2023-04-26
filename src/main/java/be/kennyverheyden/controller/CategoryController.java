@@ -51,7 +51,7 @@ public class CategoryController {
 
 		if(userEmail==null)
 		{
-			model.addAttribute("content", "login");
+			model.addAttribute("content", "home");
 			return "redirect:/";
 		}
 		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user

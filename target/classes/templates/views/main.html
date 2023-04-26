@@ -8,6 +8,7 @@
       <h4>Welcome <span th:text="${welcomeName}"></span></h4>
 <p class="w3-text-grey"><a href="/account">User details</a></p>    
 <p class="w3-text-grey"><a href="/passreset">Password reset</a></p>
+<p class="w3-text-grey" th:if="${isAdmin}==true"><a href="/admin">Admin</a></p>
 <p class="w3-text-grey"><strong>
 <a href="/main?logout">Log out</a>
 </strong></p>

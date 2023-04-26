@@ -2,7 +2,6 @@ package be.kennyverheyden.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +33,28 @@ public class GlobalControllerAdvice {
 		}
 	}
 
+	@ModelAttribute("isAdmin")
+	public boolean isAdmin() {
+
+		// Check if user is logged in, to avoid error
+		if(userService.getUserEmail()!=null)
+		{
+			// Check if user is Admin
+			if(userService.findUserByeMail(userService.getUserEmail()).getUserRole().getRoleID()==1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	// Used for html select option text and values
 	@ModelAttribute("months")
 	public List<Month> Months()
@@ -53,7 +74,6 @@ public class GlobalControllerAdvice {
 		months.add(new Month("December","12"));
 		return months;
 	}
-
 
 }
 
