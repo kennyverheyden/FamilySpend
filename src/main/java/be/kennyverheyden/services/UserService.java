@@ -53,7 +53,7 @@ public class UserService{
 		return userRepository.findUserByeMail(eMail);
 	}
 
-	public boolean userExist(String username)
+	public boolean userExist(String userEmail)
 	{
 		for (User user:userRepository.findAll())
 		{
