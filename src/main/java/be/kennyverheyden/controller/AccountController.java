@@ -1,6 +1,8 @@
 package be.kennyverheyden.controller;
 
 
+import javax.swing.JOptionPane;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +24,7 @@ public class AccountController {
 
 
 	@GetMapping("/account") // get request
-	public String selectGet(Model model) {
+	public String accountGet(Model model) {
 
 
 		if(userService.getUserEmail()==null)
@@ -41,7 +43,7 @@ public class AccountController {
 	}
 
 	@PostMapping("/account") 
-	public String updateAccount(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
+	public String updateAccountPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
 
 		if(!name.equals("") && !firstName.equals(""))
 		{
@@ -58,6 +60,13 @@ public class AccountController {
 			rm.addFlashAttribute("message","Fill in all fields");
 			return "redirect:account";
 		}
+	}
+
+	@PostMapping("/account/delete") 
+	public String deleteAccountPost(Model model, RedirectAttributes rm){
+		userService.deleteUser(userService.getUserEmail());
+		model.addAttribute("content", "account");
+		return "redirect:/main?logout";
 	}
 
 }

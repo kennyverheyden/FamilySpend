@@ -23,6 +23,11 @@
 
     
     <br>
+    <div th:if="${isAdmin}==false" style="text-align:left;">
+    <form action="/account/delete" method="post" id="deleteForm">
+    <button type="submit"  th:onclick="if(!(confirm('Are you sure you want to delete your account and data?' ) )) return false" >Delete my account</button>
+    </form>
+    </div>
 
 </div>
 </div>

@@ -100,7 +100,7 @@ public class CategoryService {
 		categories.get(1).setGroup(groupService.getGroups().get(0));
 		categories.add(new Category("Hypotheek"));
 		categories.get(2).setGroup(groupService.getGroups().get(4));
-		categories.add(new Category("Other incomes"));
+		categories.add(new Category("Other income"));
 		categories.get(3).setGroup(groupService.getGroups().get(0));
 		categories.add(new Category("Other expenses"));
 		categories.get(4).setGroup(groupService.getGroups().get(7));

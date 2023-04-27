@@ -75,7 +75,7 @@ input[type=number] {
     <a th:if="${isLoggedIn}==true" href="/group" class="w3-bar-item w3-button w3-padding-large">Group</a>
     <a th:if="${isLoggedIn}==false" href="/login" class="w3-bar-item w3-button w3-padding-large">Login</a>
     <a th:if="${isLoggedIn}==true" href="/main" class="w3-bar-item w3-button w3-padding-large">Account</a>
-   	<a th:if="${isAdmin}==true"href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
+   	<a th:if="${isAdmin}==true" href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
     <a th:if="${isLoggedIn}==true" href="/main?logout" class="w3-bar-item w3-button w3-padding-large">Log out</a>
   </div>
 </div>

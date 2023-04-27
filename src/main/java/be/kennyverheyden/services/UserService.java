@@ -27,9 +27,9 @@ public class UserService{
 	@Autowired
 	private  UserRoleRepository userRoleRepository;
 	@Autowired
-	private  CategoryService categoryService;
-	@Autowired
 	private  GroupService groupService;
+	@Autowired
+	private CategoryService categoryService;
 
 	private  PasswordEncoder passwordEncoder;
 
@@ -68,10 +68,6 @@ public class UserService{
 	// Used for searching users by admin // eMail = username
 	public List<User> findUsers(String eMail, String name, String firstName, String roleName)
 	{
-		System.out.println(eMail);
-		System.out.println(name);
-		System.out.println(firstName);
-		System.out.println(roleName);
 		List<User> userList = new ArrayList<>();
 		for (User i:userRepository.findAll())
 		{
@@ -173,6 +169,7 @@ public class UserService{
 		return 0;
 	}
 
+	// Change password
 	public void updateSecret(String userEmail, String secret) {
 		User user = this.findUserByeMail(userEmail);
 		String encodedPassword = this.passwordEncoder.encode(secret);
@@ -199,10 +196,17 @@ public class UserService{
 		categoryService.createCategorySampleData(user);
 	}
 
+
+	// Delete the user and all his content in the DB
 	public void deleteUser(String userEmail)
 	{
 		User user = this.findUserByeMail(userEmail);
+		userRepository.deleteBookingsFromUser(user.getUserID());
+		userRepository.deleteCategoriesFromUser(user.getUserID());
+		userRepository.deleteGroupsFromUser(user.getUserID());
 		userRepository.delete(user);
+		this.userEmail=null;
+		this.secret=null;
 	}
 
 	// Update account by user

@@ -12,4 +12,5 @@ import be.kennyverheyden.models.GroupedCategory;
 public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Book> findBookByUserUserID(Long userID);
 	Book findBookBybookID(Long bookID);
+	
 }
