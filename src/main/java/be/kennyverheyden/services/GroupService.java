@@ -61,11 +61,12 @@ public class GroupService {
 		List<Group> groups = new ArrayList();
 		groups.add(new Group("Income"));
 		groups.add(new Group("General"));
-		groups.add(new Group("Car"));
+		groups.add(new Group("Transport"));
 		groups.add(new Group("Children"));
-		groups.add(new Group("House"));
+		groups.add(new Group("Home"));
 		groups.add(new Group("Shopping"));
 		groups.add(new Group("Insurance"));
+		groups.add(new Group("Debts"));
 		groups.add(new Group("Various"));
 		for(Group i:groups)
 		{

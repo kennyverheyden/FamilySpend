@@ -78,8 +78,8 @@ public class GroupController {
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month);
 		model.addAttribute("groupedGroups", groupedGroups);
-		model.addAttribute("month_long",month_long);
-		model.addAttribute("month", month);
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
+		model.addAttribute("month",month);
 		model.addAttribute("content", "grouptotals");
 		return "index";
 	}
