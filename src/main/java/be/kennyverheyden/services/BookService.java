@@ -61,9 +61,10 @@ public class BookService {
 	public String monthResult(Long userID, String month)
 	{
 		List<Book> filteredBooks = findBookByUserUserIDperMonth (userID, month); // Get list by user and month
-		float income=0;
-		float spending=0;
-		float result=0;
+		double income=0;
+		double spending=0;
+		double result=0;
+		String currency=userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol(); // Get currency from user
 		for(Book line:filteredBooks)
 		{
 			// Spendings are recognized by the negative number (-) 
@@ -78,7 +79,7 @@ public class BookService {
 		}
 		spending=Math.abs(spending);
 		result=income-spending; // Make total
-		return "Income: "+String.format("%.2f", income)+" | Spending: "+String.format("%.2f", spending)+" | Result: "+String.format("%.2f", result);
+		return "Income: "+currency+String.format("%.2f", income)+" | Spending: "+currency+String.format("%.2f", spending)+" | Result: "+currency+String.format("%.2f", result);
 	}
 
 	// Check if booking has category
@@ -183,7 +184,7 @@ public class BookService {
 		books = bookRepository.findBookByUserUserID(user.getUserID());
 	}
 
-	public void updateBook(Long bookID, String date, float amount, String description, String categoryName, User user) {
+	public void updateBook(Long bookID, String date, Double amount, String description, String categoryName, User user) {
 		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
 		Book book = this.findBookBybookID(bookID);
 		book.setDate(date);
@@ -193,7 +194,7 @@ public class BookService {
 		bookRepository.save(book);
 	}
 
-	public void addBook(float amount, String description, String categoryName, User user)
+	public void addBook(double amount, String description, String categoryName, User user)
 	{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
 		LocalDateTime now = LocalDateTime.now();

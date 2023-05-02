@@ -1,9 +1,12 @@
 package be.kennyverheyden.controller;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +35,7 @@ public class BookController {
 	private UserService userService;
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	// Get current month
 	Date date = new Date();
 	String monthDateFormat = "MM";
@@ -55,7 +58,7 @@ public class BookController {
 			model.addAttribute("content", "home");
 			return "redirect:/";
 		}
-		
+
 		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
 		//List bookings = bookService.findBookByUserUserID(user.getUserID());
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month); // Get filtered book lines from user per month
@@ -63,13 +66,14 @@ public class BookController {
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
-		model.addAttribute("month_long",month_long);
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
+		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
 		model.addAttribute("result", bookService.monthResult(user.getUserID(), month));
 		model.addAttribute("content", "book");
 		return "index";
 	}
-	
+
 	@PostMapping("/book/filter")
 	public String bookFilterPost(@RequestParam (required = false) String month, Model model, RedirectAttributes rm)
 	{
@@ -82,12 +86,13 @@ public class BookController {
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
 		model.addAttribute("result", bookService.monthResult(user.getUserID(), month));
+		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
 		model.addAttribute("content", "book");
 		return "index";
 	}
 
 	@PostMapping("/book/update")
-	public String bookUpdatePost(@RequestParam (required = false) Long bookID, @RequestParam (required = false) String date, @RequestParam (required = false) float amount, @RequestParam (required = false) String description, Boolean delete, @RequestParam (required = false) String categoryName, Model model, RedirectAttributes rm)
+	public String bookUpdatePost(@RequestParam (required = false) Long bookID, @RequestParam (required = false) String date, @RequestParam (required = false) String stramount, @RequestParam (required = false) String description, Boolean delete, @RequestParam (required = false) String categoryName, Model model, RedirectAttributes rm) throws ParseException
 	{
 		if(delete==null) // Avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
@@ -103,6 +108,9 @@ public class BookController {
 		}
 		else
 		{	
+			NumberFormat format =  NumberFormat.getInstance(Locale.getDefault());
+			Number number = format.parse(stramount);
+			double amount = number.doubleValue();
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
 				User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information

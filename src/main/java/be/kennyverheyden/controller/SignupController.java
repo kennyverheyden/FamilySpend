@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.processors.LoginProcessor;
+import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
 @Controller
@@ -18,6 +19,8 @@ public class SignupController {
 	private UserService userService;
 	@Autowired
 	private LoginProcessor loginProcessor;
+	@Autowired
+	private CurrencyService currencyService; // Ask preferred currency
 
 	public SignupController() {}
 	
@@ -25,13 +28,13 @@ public class SignupController {
 	public String signupGet(Model model) {
 		String userEmail = userService.getUserEmail();
 
-
+		model.addAttribute("currencies",currencyService.findAllCurrencies()); // Option for currency
 		model.addAttribute("content", "signup");
 		return "index";
 	}
 
 	@PostMapping("/signup") 
-	public String signupUserPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
+	public String signupUserPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) Long currencyFK, Model model, RedirectAttributes rm){
 
 		Long role=2L; // 2 = user
 		if(!userEmail.equals("") && !secret.equals("") && !confirmSecret.equals("") && !name.equals("") && !firstName.equals(""))
@@ -43,7 +46,7 @@ public class SignupController {
 					boolean loggedIn = false;
 					
 					// Register user
-					userService.signupUser(userEmail, secret, name, firstName, role);
+					userService.signupUser(userEmail, secret, name, firstName, role, currencyFK);
 					loginProcessor.setUserEmail(userEmail);
 					loginProcessor.setSecret(secret);
 					loggedIn = loginProcessor.login();

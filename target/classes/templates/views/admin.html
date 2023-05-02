@@ -65,9 +65,16 @@ Rolename<br>
 <strong>Delete?</strong>
  &nbsp; &nbsp;<input type="checkbox" th:id="${index.index}"  name="delete" th:onclick="'javascript:changeSubmitButton(' + ${index.index} + ')'">
 </span>
-
-<span class="td" style="padding:12px;vertical-align:bottom;">
-<br>
+<span class="td" style="padding:12px;vertical-align:top;">
+			<strong>Currency:</strong><br>
+			<select name="currencyFK" style="width:40px;">
+   			 <option
+            th:each="c : ${currencies}"
+            th:text="${c.currencySymbol}"
+            th:value="${c.currencyID}" th:selected="${user.getCurrency.getCurrencyID==c.currencyID}"  th:label="' '+${c.currencySymbol}">
+    		</option>
+    		</select>
+<br><br><br><br>
 <button type="submit" th:id="${'submit'+index.index}" th:onclick="'javascript:show_alert(' + ${index.index} + ')'" style="width:100px;">Edit</button>
 </span>
 

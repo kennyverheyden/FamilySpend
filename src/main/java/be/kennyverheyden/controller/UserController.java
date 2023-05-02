@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.models.UserRole;
+import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
 @Controller
@@ -19,6 +20,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private CurrencyService currencyService;
 
 	public UserController() {}
 	
@@ -37,6 +40,7 @@ public class UserController {
 
 		model.addAttribute("users",users);  // map content to html elements
 		model.addAttribute("roles",roles);  // map content to html elements
+		model.addAttribute("currencies",currencyService.findAllCurrencies());
 		model.addAttribute("content", "admin");
 		return "index";
 	}
@@ -49,13 +53,14 @@ public class UserController {
 		List<UserRole> roles = userService.findUserRoles(); // List is used for dropdown select box
 		model.addAttribute("roles",roles);  // map content to html elements
 		model.addAttribute("users",foundUsers);  // map content to html elements
+		model.addAttribute("currencies",currencyService.findAllCurrencies());
 		model.addAttribute("content", "admin"); 
 		return "index";
 	}
 	
 	// Admin can edit users
 	@PostMapping("/admin/users") 
-	public String updateUserPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String secret, @RequestParam (required = false) String userRole, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm){
+	public String updateUserPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String secret, @RequestParam (required = false) String userRole, @RequestParam (required = false) Long currencyFK, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm){
 
 		if(delete==null) // Avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
@@ -100,7 +105,7 @@ public class UserController {
 				else
 				{
 					// Update user
-					userService.updateUser(email, name, firstName, secret, userRole);
+					userService.updateUser(email, name, firstName, secret, userRole, currencyFK);
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","Information succesfully updated");
 					return "redirect:/admin";

@@ -27,6 +27,9 @@ public class User {
 	@OneToOne
 	@JoinColumn(name="userRoleFK")
 	UserRole userRole;
+	@OneToOne
+	@JoinColumn(name="currencyFK")
+	Currency currency;
 	
 	public Long getUserID() {
 		return userID;
@@ -69,6 +72,12 @@ public class User {
 	}
 	public void setUserRole(UserRole userRole) {
 		this.userRole = userRole;
+	}
+	public Currency getCurrency() {
+		return currency;
+	}
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 	
 }

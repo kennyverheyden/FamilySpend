@@ -18,6 +18,14 @@
 		<input type="text" name="name"><br><br>
 		First name:
 		<input type="text" name="firstName"><br><br>
+		Currency:
+			<select name="currencyFK" style="width:40px;">
+   			 <option
+            th:each="c : ${currencies}"
+            th:text="${c.currencySymbol}"
+            th:value="${c.currencyID}" th:selected="${currencyID==1}" th:label="' '+${c.currencySymbol}">
+    		</option>
+    		</select><br><br>
 		New Password:
 		<input type="password" name="secret"><br><br>
 		Confirm password:

@@ -16,7 +16,7 @@
 <form action="/book/add" method="post">
 <span class="w3-text-grey td">
 Amount <br>
-<input name="amount" style="width:85px;text-align:right" type="number" step="0.01">
+<span th:text="${currency}"></span> <input name="amount" style="width:85px;text-align:right" type="number" step="0.01">
 </span><span class="w3-text-grey td">
 IN/OUT<br>
 <select name="inout" style="width:65px;">
@@ -76,7 +76,9 @@ Description <span style="font-size:10px;">(not required)</span><br>
 </div><br>
 <!--  End filter input -->
 
-<p th:text="${result}" style="font-weight:bold;"></p>
+<p>
+<span th:text="${result}" style="font-weight:bold;"></span>
+<p>
 
 <h5 th:text="${month_long}"></h5>
 
@@ -89,10 +91,10 @@ Description <span style="font-size:10px;">(not required)</span><br>
 <input th:value="${book.bookID}" name="bookID" type="hidden">
 <span class="w3-text-grey td">
 Date<br>
-<input th:value="${book.date}" name="date" type="text" style="width:80px;">
+<input th:value="${book.date}" name="date" type="text" style="width:100px;">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
-Amount <br>
-<input type="number" th:value="${book.amount}" name="amount" style="width:80px; text-align:right">
+Amount <span th:text="${currency}"></span>
+<br><input type="text" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:70px; text-align:right">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>
 <select name="categoryName" style="width:130px;">

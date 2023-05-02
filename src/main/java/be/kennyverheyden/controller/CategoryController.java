@@ -80,6 +80,7 @@ public class CategoryController {
 		model.addAttribute("groupedCategories",groupedCategories);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
+		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
 		model.addAttribute("content", "categorytotals");
 		return "index";
 	}
@@ -93,6 +94,7 @@ public class CategoryController {
 		model.addAttribute("content", "categorytotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
+		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
 		model.addAttribute("groupedCategories", groupedCategories);
 		return "index";
 	}

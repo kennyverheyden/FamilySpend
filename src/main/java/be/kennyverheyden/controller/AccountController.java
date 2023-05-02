@@ -1,8 +1,5 @@
 package be.kennyverheyden.controller;
 
-
-import javax.swing.JOptionPane;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
+import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
 @Controller
@@ -19,6 +17,8 @@ public class AccountController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private CurrencyService currencyService;
 
 	public AccountController() {}
 
@@ -36,19 +36,21 @@ public class AccountController {
 		User user = userService.findUserByeMail(userService.getUserEmail());
 
 		model.addAttribute("content", "account");
-		model.addAttribute("email",user.geteMail());  // map content to html elements
+		model.addAttribute("email",user.geteMail());  // Map content to html elements
 		model.addAttribute("firstName",user.getFirstName());  
 		model.addAttribute("name",user.getName());
+		model.addAttribute("currencies",currencyService.findAllCurrencies()); // Option for currency
+		model.addAttribute("currencyID",user.getCurrency().getCurrencyID());
 		return "index";
 	}
 
 	@PostMapping("/account") 
-	public String updateAccountPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
+	public String updateAccountPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) Long currencyFK, @RequestParam (required = false) String firstName, Model model, RedirectAttributes rm){
 
 		if(!name.equals("") && !firstName.equals(""))
 		{
 			// Update user
-			userService.updateAccount(email, name, firstName);
+			userService.updateAccount(email, name, firstName, currencyFK);
 			model.addAttribute("content", "account");
 			rm.addFlashAttribute("message","Information succesfully updated");
 			return "redirect:account";

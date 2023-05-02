@@ -60,7 +60,7 @@ public class GlobalControllerAdvice {
 	public List<Month> Months()
 	{
 		List<Month> months = new ArrayList();
-		months.add(new Month("Januari","01"));
+		months.add(new Month("January","01"));
 		months.add(new Month("February","02"));
 		months.add(new Month("March","03"));
 		months.add(new Month("April","04"));

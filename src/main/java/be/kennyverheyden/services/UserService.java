@@ -30,6 +30,8 @@ public class UserService{
 	private  GroupService groupService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private CurrencyService currencyService;
 
 	private  PasswordEncoder passwordEncoder;
 
@@ -179,7 +181,7 @@ public class UserService{
 
 	// Create user
 	// Set template content
-	public void signupUser(String userEmail, String secret, String name, String firstName, Long role) {
+	public void signupUser(String userEmail, String secret, String name, String firstName, Long role, Long currencyID) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();  
 		User user = new User();
@@ -190,6 +192,7 @@ public class UserService{
 		user.setFirstName(firstName);
 		user.setUserRole(userRoleRepository.findById(role).get());
 		user.setCreation(dtf.format(now));
+		user.setCurrency(currencyService.findCurrencyByCurrencyID(currencyID));
 		userRepository.findAll().add(user);
 		userRepository.save(user);
 		groupService.createGroupSampleData(user);
@@ -210,20 +213,22 @@ public class UserService{
 	}
 
 	// Update account by user
-	public void updateAccount(String email, String name, String firstname) {
+	public void updateAccount(String email, String name, String firstname, Long currencyID) {
 		User user = this.findUserByeMail(email);
 		user.setName(name);
 		user.setFirstName(firstname);
+		user.setCurrency(currencyService.findCurrencyByCurrencyID(currencyID));
 		userRepository.save(user);
 	}
 
 	// Update by admin
-	public void updateUser(String eMail, String name, String firstname, String secret, String userRole) {
+	public void updateUser(String eMail, String name, String firstname, String secret, String userRole, Long currencyID) {
 		// Find user role name
 		User user = this.findUserByeMail(eMail);
 		user.setName(name);
 		user.setFirstName(firstname);
 		user.seteMail(eMail);
+		user.setCurrency(currencyService.findCurrencyByCurrencyID(currencyID));
 		if(!secret.equals(""))
 		{
 			String encodedPassword = this.passwordEncoder.encode(secret);

@@ -53,9 +53,9 @@ public class GroupService {
 	{
 		// Collect groups from specific user
 		groups = groupRepository.findGroupByUserUserID(user.getUserID());
-
 	}
 
+	// For new user to start
 	public void createGroupSampleData(User user)
 	{
 		List<Group> groups = new ArrayList();
@@ -88,7 +88,6 @@ public class GroupService {
 				groupRepository.save(group);
 			}
 		}
-
 	}
 
 	public void addGroup(String groupName, User user)
@@ -103,7 +102,7 @@ public class GroupService {
 	public void deleteGroup(Group group)
 	{
 		// Check if linked
-		//List<Group> groups = this.getGroups();
+		// List<Group> groups = this.getGroups();
 		groups.remove(group);
 		groupRepository.delete(group);
 	}

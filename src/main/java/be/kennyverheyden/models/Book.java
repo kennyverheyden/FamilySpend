@@ -19,7 +19,7 @@ public class Book {
 	String date;
 	
 	@Column(name="amount")
-	float amount;
+	double amount;
 	
 	@Column(name="description")
 	String description;
@@ -40,11 +40,11 @@ public class Book {
 		this.date = date;
 	}
 
-	public float getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(float amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

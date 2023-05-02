@@ -10,13 +10,13 @@ public class GroupedCategory {
 	private Long id;
 	
 	private String categoryName;
-	private float total;
+	private double total;
 	
 	public GroupedCategory()
 	{
 	}
 	
-	public GroupedCategory(String categoryName, float total)
+	public GroupedCategory(String categoryName, double total)
 	{
 		this.categoryName=categoryName;
 		this.total=total;
@@ -30,15 +30,15 @@ public class GroupedCategory {
 		this.categoryName = categoryName;
 	}
 
-	public float getTotal() {
+	public double getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
 	
-	public void addAmount(float amount) {
+	public void addAmount(double amount) {
 		this.total = total+amount;
 	}
 }

@@ -11,13 +11,13 @@ public class GroupedGroup {
 	private Long id;
 	
 	private String groupName;
-	private float total;
+	private double total;
 	
 	public GroupedGroup()
 	{
 	}
 	
-	public GroupedGroup(String groupName, float total)
+	public GroupedGroup(String groupName, double  total)
 	{
 		this.groupName=groupName;
 		this.total=total;
@@ -31,15 +31,15 @@ public class GroupedGroup {
 		this.groupName = groupName;
 	}
 
-	public float getTotal() {
+	public double getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(double total) {
 		this.total = total;
 	}
 	
-	public void addAmount(float amount) {
+	public void addAmount(double amount) {
 		this.total = total+amount;
 	}
 	

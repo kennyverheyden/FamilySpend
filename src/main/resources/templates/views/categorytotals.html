@@ -29,10 +29,12 @@
 <div class="table">
 <div class="tr"  th:each="category : ${groupedCategories}">
 
-<span class="td" style="padding:6px;font-size:13px;"  th:text="${category.getCategoryName}">
+<span class="td" style="padding:6px;font-size:13px;">
+<span th:text="${category.getCategoryName}"></span>
 </span>
 
-<span class="td" style="padding:6px;font-size:13px;text-align:right;" th:text="${#numbers.formatDecimal(category.getTotal,1, 'DEFAULT', 2, 'DEFAULT')}" >
+<span class="td" style="padding:6px;font-size:13px;text-align:right;">
+<span th:text="${currency}"></span><span th:text="${#numbers.formatDecimal(category.getTotal,1, 'DEFAULT', 2, 'DEFAULT')}" ></span>
 </span>
 
 </div>

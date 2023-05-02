@@ -13,6 +13,15 @@
 			<input type="hidden" name="email" th:value="${email}"><br>
 			Name: <input type="text" name="name" th:value="${name}" style="width:150px;"><br><br>
 			First name: <input type="text" name="firstName" th:value="${firstName}" style="width:150px;"><br><br>
+			Currency: 
+			<select name="currencyFK" style="width:40px;">
+   			 <option
+            th:each="c : ${currencies}"
+            th:text="${c.currencySymbol}"
+            th:value="${c.currencyID}" th:selected="${currencyID==c.currencyID}"  th:label="' '+${c.currencySymbol}">
+    		</option>
+    		</select>
+			<br><br>
 			<button type="submit">Update your profile</button>
 	<p>
 		<strong th:text="${message}"></strong>

@@ -80,6 +80,7 @@ public class GroupController {
 		model.addAttribute("groupedGroups", groupedGroups);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
+		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
 		model.addAttribute("content", "grouptotals");
 		return "index";
 	}
@@ -92,6 +93,7 @@ public class GroupController {
 		model.addAttribute("content", "grouptotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
+		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
 		model.addAttribute("groupedGroups", groupedGroups);
 		return "index";
 	}
