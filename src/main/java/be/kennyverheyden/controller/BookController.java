@@ -3,6 +3,7 @@ package be.kennyverheyden.controller;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,8 @@ public class BookController {
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
 
+	private String selectedMonth = null; // Keep the last month selection
+
 	public BookController() {}
 
 	@GetMapping("/book")
@@ -59,6 +62,11 @@ public class BookController {
 			return "redirect:/";
 		}
 
+		if(selectedMonth!=null) 
+		{
+			month=selectedMonth; // Last selected month by user
+		}
+		
 		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
 		//List bookings = bookService.findBookByUserUserID(user.getUserID());
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month); // Get filtered book lines from user per month
@@ -77,6 +85,7 @@ public class BookController {
 	@PostMapping("/book/filter")
 	public String bookFilterPost(@RequestParam (required = false) String month, Model model, RedirectAttributes rm)
 	{
+		selectedMonth=month; // Keep the last choice
 		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month); // Get filtered book lines from user per month
 		Collections.reverse(bookings); // Show newest first
@@ -84,7 +93,7 @@ public class BookController {
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
-		model.addAttribute("month",month);
+		model.addAttribute("month", month);
 		model.addAttribute("result", bookService.monthResult(user.getUserID(), month));
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
 		model.addAttribute("content", "book");
@@ -98,7 +107,6 @@ public class BookController {
 		{
 			delete=false;
 		}
-
 		if(delete)
 		{
 			bookService.deleteBook(bookService.findBookBybookID(bookID));
@@ -113,11 +121,20 @@ public class BookController {
 			double amount = number.doubleValue();
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
-				User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-				bookService.updateBook(bookID, date, amount, description, categoryName, user);
-				model.addAttribute("content", "book");
-				rm.addFlashAttribute("message","Booking succesfully updated");
-				return "redirect:/book";
+				if(this.dateValidator(date))
+				{
+					User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+					bookService.updateBook(bookID, date, amount, description, categoryName, user);
+					model.addAttribute("content", "book");
+					rm.addFlashAttribute("message","Booking succesfully updated");
+					return "redirect:/book";
+				}
+				else
+				{
+					model.addAttribute("content", "book");
+					rm.addFlashAttribute("message","Enter a valid date");
+					return "redirect:/book";
+				}
 			}
 			else
 			{
@@ -152,6 +169,169 @@ public class BookController {
 			model.addAttribute("content", "book");
 			rm.addFlashAttribute("message","Fill in all fields");
 			return "redirect:/book";
+		}
+	}
+
+	private boolean dateValidator(String date)
+	{
+		int format = LocalDate.now().getYear();
+
+		if(date!=null && date.length()==10)
+		{
+			String dayStr=date.substring(0,2);
+			String monthStr=date.substring(3,5);
+			String yearStr=date.substring(6,10);
+
+
+			int day= Integer.parseInt(dayStr);
+			int month =  Integer.parseInt(monthStr);
+			int year= Integer.parseInt(yearStr);
+
+			if(date.substring(2,3).equals("/") && date.substring(5,6).equals("/"))
+			{
+				if(format-year<=1 && year-format<=1)
+				{
+					switch(month){
+					case 1:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 2:
+						if(year%4==0)
+						{
+							if(day<=29 && day>0)
+							{
+								return true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+						else
+						{
+							if(day<=28 && day>0)
+							{
+								return true;
+							}
+							else
+							{
+								return false;
+							}
+						}
+					case 3:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 4:
+						if(day<=30 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+
+					case 5:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 6:
+						if(day<30 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 7:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 8:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 9:
+						if(day<=30 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 10:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 11:
+						if(day<=30 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					case 12:
+						if(day<=31 && day>0)
+						{
+							return true;
+						}
+						else
+						{
+							return false;
+						}
+					default:
+						return false;
+					} 
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
 		}
 	}
 
