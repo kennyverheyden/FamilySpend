@@ -45,8 +45,10 @@ public class BookController {
 	String month = mdf.format(date);
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
+	String year = Integer.toString(LocalDate.now().getYear());
 
-	private String selectedMonth = null; // Keep the last month selection
+	private String selectedMonth = null; // Keep the last month selection (user choice)
+	private String selectedYear = null; // Keep the last year selection (user choice)
 
 	public BookController() {}
 
@@ -64,38 +66,53 @@ public class BookController {
 
 		if(selectedMonth!=null) 
 		{
-			month=selectedMonth; // Last selected month by user
+			month=selectedMonth; // Set back the last user choice
 		}
-		
+		if(selectedYear!=null)
+		{
+			year=selectedYear; // Set back the last user choice
+		}
+
 		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-		//List bookings = bookService.findBookByUserUserID(user.getUserID());
-		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month); // Get filtered book lines from user per month
+		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
 		Collections.reverse(bookings); // Show newest first
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
-		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
-		model.addAttribute("month", month);
-		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
-		model.addAttribute("result", bookService.monthResult(user.getUserID(), month));
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month)); // Print month title
+		model.addAttribute("month", month); // Set the month
+		model.addAttribute("currency",user.getCurrency().getCurrencySymbol()); // Currency
+		model.addAttribute("result", bookService.monthResult(user.getUserID(), month, year)); // Total result
+		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
+		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("content", "book");
 		return "index";
 	}
 
 	@PostMapping("/book/filter")
-	public String bookFilterPost(@RequestParam (required = false) String month, Model model, RedirectAttributes rm)
+	public String bookFilterPost(@RequestParam (required = false) String month, String year, Model model, RedirectAttributes rm)
 	{
-		selectedMonth=month; // Keep the last choice
+		selectedMonth=month; // Keep the last user choice
+		if(year!=null)
+		{
+			selectedYear=year; // Keeop the last user choice
+		}
+		else
+		{
+			year = Integer.toString(LocalDate.now().getYear());
+		}
 		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month); // Get filtered book lines from user per month
+		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
 		Collections.reverse(bookings); // Show newest first
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
-		model.addAttribute("result", bookService.monthResult(user.getUserID(), month));
+		model.addAttribute("result", bookService.monthResult(user.getUserID(), month, year));
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
+		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("content", "book");
 		return "index";
 	}
@@ -189,7 +206,7 @@ public class BookController {
 
 			if(date.substring(2,3).equals("/") && date.substring(5,6).equals("/"))
 			{
-				if(format-year<=1 && year-format<=1)
+				if(format-year<=5 && year-format<=1)
 				{
 					switch(month){
 					case 1:

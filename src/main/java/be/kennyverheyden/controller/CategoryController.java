@@ -1,6 +1,7 @@
 package be.kennyverheyden.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class CategoryController {
 	String month = mdf.format(date);
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
+	String year = Integer.toString(LocalDate.now().getYear());
 	
 	public CategoryController() {}
 
@@ -76,25 +78,29 @@ public class CategoryController {
 		
 		// Get Category by group by and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
-		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
+		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
 		model.addAttribute("groupedCategories",groupedCategories);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
 		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("content", "categorytotals");
 		return "index";
 	}
 
 	@PostMapping("/categorytotals/totals") 
-	public String categoryTotalsPost(@RequestParam String month, Model model, RedirectAttributes rm)
+	public String categoryTotalsPost(@RequestParam String month, String year, Model model, RedirectAttributes rm)
 	{
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
-		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month);
+		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
 	
 		model.addAttribute("content", "categorytotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
 		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("groupedCategories", groupedCategories);
 		return "index";
 	}

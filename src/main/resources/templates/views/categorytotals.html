@@ -19,6 +19,13 @@
             th:value="${m.monthNumber}" th:selected="${ #strings.equals(m.monthNumber, month)}">
     </option>
     </select>&nbsp;
+        <select name="year" style="width:70px;">
+    <option
+            th:each="y : ${years}"
+            th:text="${y}"
+            th:value="${y}" th:selected="${ #strings.equals(y, year)}">
+    </option>
+    </select>
 <button type="submit" style="width:100px;">Submit</button>
 </form><br>
 <!--  End select month -->

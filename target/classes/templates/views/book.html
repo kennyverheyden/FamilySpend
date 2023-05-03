@@ -52,7 +52,7 @@ Description <span style="font-size:10px;">(not required)</span><br>
 	</strong><br>
 <!--  End add booking input -->
 
-<h5>Select month</h5>
+<h5>Filter on month / year</h5>
 
 <!-- Filter input -->
 <div class="table">
@@ -67,9 +67,16 @@ Description <span style="font-size:10px;">(not required)</span><br>
     </option>
     </select>
     &nbsp;
+    <select name="year" style="width:70px;">
+    <option
+            th:each="y : ${years}"
+            th:text="${y}"
+            th:value="${y}" th:selected="${ #strings.equals(y, year)}">
+    </option>
+    </select>
  </span>
  <span class="td">
-<button type="submit" style="width:100px;">Submit</button>
+<button type="submit" style="width:100px;">Filter</button>
 </span>
 </form>
 </div>
@@ -80,7 +87,7 @@ Description <span style="font-size:10px;">(not required)</span><br>
 <span th:text="${result}" style="font-weight:bold;"></span>
 <p>
 
-<h5 th:text="${month_long}"></h5>
+<h5><span th:text="${month_long}"></span> <span th:text="${year}"></span></h5>
 
 <!-- Show bookings -->
 <div class="table">

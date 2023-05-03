@@ -1,9 +1,12 @@
 package be.kennyverheyden.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import be.kennyverheyden.models.Book;
@@ -42,14 +45,14 @@ public class BookService {
 		return bookRepository.findBookBybookID(bookID);
 	}
 
-	// Find book lines from a specific user per month
-	public List<Book> findBookByUserUserIDperMonth (Long userID, String month) {
+	// Find book lines from a specific user per month (and year)
+	public List<Book> findBookByUserUserIDperMonth (Long userID, String month, String year) {
 		List<Book> books = bookRepository.findBookByUserUserID(userID); // Load book lines from specific user
 		List<Book> filteredBooks = new ArrayList(); // New list for storing filtered book lines
 		String subString = "/"+month+"/"; // Store month /MM/ for month filter (substring)
 		for(Book line:books)
 		{
-			if(line.getDate().contains(subString)) // Date contains specific month /MM/
+			if(line.getDate().contains(subString) && line.getDate().contains(year)) // Date contains specific month /MM/ and year YYYY
 			{
 				filteredBooks.add(line); // Add to new list
 			}
@@ -57,10 +60,25 @@ public class BookService {
 		return filteredBooks;
 	}
 
+	// Get the years
+	public List<String> getYears (Long userID) {
+		List<Book> books = bookRepository.findBookByUserUserID(userID); // Get all the books
+		List<String> years = new ArrayList(); // Make list with the registered years
+		years.add(Integer.toString(LocalDate.now().getYear())); // Avoid empty dropdown by empty book
+		for(Book book:books)
+		{
+			String yearStr=book.getDate().substring(6,10);
+			years.add(yearStr);
+		}
+		// Remove duplicates
+		List<String> noDuplicatesYears = years.stream().distinct().collect(Collectors.toList());
+		return noDuplicatesYears;
+	}
+
 	// Shows the result
-	public String monthResult(Long userID, String month)
+	public String monthResult(Long userID, String month, String year)
 	{
-		List<Book> filteredBooks = findBookByUserUserIDperMonth (userID, month); // Get list by user and month
+		List<Book> filteredBooks = findBookByUserUserIDperMonth (userID, month,year); // Get list by user and month
 		double income=0;
 		double spending=0;
 		double result=0;
@@ -98,14 +116,14 @@ public class BookService {
 	}
 
 	// Totals on category page
-	public List<GroupedCategory> bookGroupByCategoryMonth(Long userID,String month)
+	public List<GroupedCategory> bookGroupByCategoryMonth(Long userID,String month, String year)
 	{
 		List<Book> books = bookRepository.findBookByUserUserID(userID); // Load book lines from specifiek user
 		List<GroupedCategory> groupedCategories = new ArrayList(); // New list for storing "group by" categories
 		String subString = "/"+month+"/"; // Store month /MM/ for month filter (substring)
 		for(Book line:books) // Read book lines
 		{
-			if(line.getDate().toString().contains(subString)) { // Month filter: Check if date contains month /04/
+			if(line.getDate().toString().contains(subString) && line.getDate().contains(year)) { // Month filter: Check if date contains month /04/ and year YYYY
 
 				// Check if category already exists in new grouped by category list
 				int i=0;
@@ -135,9 +153,9 @@ public class BookService {
 	}
 
 	// Totals on group page
-	public List<GroupedGroup> bookGroupByGroupMonth(Long userID, String month)
+	public List<GroupedGroup> bookGroupByGroupMonth(Long userID, String month, String year)
 	{
-		List<GroupedCategory> groupedCategories =  bookGroupByCategoryMonth(userID, month); // Load from (grouped by) Category totals, already used on category page
+		List<GroupedCategory> groupedCategories =  bookGroupByCategoryMonth(userID, month, year); // Load from (grouped by) Category totals, already used on category page
 		List<GroupedGroup> groupedGroups = new ArrayList(); // New list for "grouped by" groups
 		List<Category> cats = categoryService.findCategoryByUserUserID(userID); // Load existing categories from specific user
 
