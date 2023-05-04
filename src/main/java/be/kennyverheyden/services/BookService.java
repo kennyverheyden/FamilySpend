@@ -236,5 +236,11 @@ public class BookService {
 	public List<Book> getBooks() {
 		return books;
 	}
+	
+	// Delete all bookings from a specific month and user
+	public void deleteMonthBook(Long UserID, String month, String year)
+	{
+		bookRepository.deleteMonthBook(UserID, month, year);
+	}
 
 }

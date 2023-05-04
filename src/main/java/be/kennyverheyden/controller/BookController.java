@@ -188,7 +188,25 @@ public class BookController {
 			return "redirect:/book";
 		}
 	}
+	
+	@PostMapping("/book/deletebook")
+	public String bookFilterPost(Model model, RedirectAttributes rm)
+	{
+		if(selectedMonth!=null) 
+		{
+			month=selectedMonth; // Set back the last user choice
+		}
+		if(selectedYear!=null)
+		{
+			year=selectedYear; // Set back the last user choice
+		}
+		bookService.deleteMonthBook(userService.findUserByeMail(userService.getUserEmail()).getUserID(), month, year);
+		model.addAttribute("content", "book");
+		rm.addFlashAttribute("message","Month bookings deleted");
+		return "redirect:/book";
+	}
 
+	// Book page - Update date input
 	private boolean dateValidator(String date)
 	{
 		int format = LocalDate.now().getYear();

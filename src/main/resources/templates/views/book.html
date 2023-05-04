@@ -9,7 +9,7 @@
       
    <div style="font-size:12px;">| <a href="/category">Edit categories</a> | <a href="/group">Edit groups</a> |</div>  
 
- <h5>Add record</h5>
+ <h5>Add record for current month</h5>
  <!--  Add booking input -->
 <div class="table">
 <div class="tr">
@@ -37,7 +37,7 @@ IN/OUT<br>
 </select>
 </span><span class="w3-text-grey td">
 Description <span style="font-size:10px;">(not required)</span><br>
-<input type="text" name="description" style="width:150px;">
+<input type="text" name="description" style="width:170px;">
 </span>
 <span class="w3-text-grey td">
 <button type="submit" style="width:100px;">Add record</button>
@@ -126,6 +126,13 @@ Description<br>
 </div>
 <!-- End show bookings -->
 
+<br><br>
+
+<!--  Delete month bookings -->
+<form action="/book/deletebook" method="post">
+<button type="submit" th:onclick="if(!(confirm('Are you sure you want to delete all bookings for the selected month?') )) return false" th:text="'Delete all bookings from '+${month_long}"></button>
+</form>
+<!--  End delete month bookings -->
 
     </div>
     
