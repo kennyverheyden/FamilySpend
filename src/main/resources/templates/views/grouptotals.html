@@ -8,7 +8,8 @@
       <h4>Group totals</h4>
 
 <p class="w3-text-grey"><a href="/group"><strong>Edit groups</strong></a></p>
-<br>
+
+<p class="w3-text-grey">A group exist of one or more categories.</p>
 
 <!--  Select month -->
 <form action="/grouptotals/totals" method="post">
@@ -36,7 +37,7 @@
 <div class="table">
 <div class="tr"  th:each="group : ${groupedGroups}">
 
-<span class="td" style="padding:6px;font-size:13px;">
+<span class="td" style="padding:6px;font-size:13px;width:190px;">
 <span th:text="${group.getGroupName}"></span>
 </span>
 

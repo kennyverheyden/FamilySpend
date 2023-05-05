@@ -7,27 +7,39 @@
     <div class="w3-twothird">
       <h4>Book</h4>
       
-   <div style="font-size:12px;">| <a href="/category">Edit categories</a> | <a href="/group">Edit groups</a> |</div>  
+   <div style="font-size:13px;">| <a href="/category">Edit categories</a> | <a href="/group">Edit groups</a> |</div>  
 
- <h5>Add record for current month</h5>
- <!--  Add booking input -->
+
+<!--  Add booking input -->
+<h5>Add record</h5>
 <div class="table">
 <div class="tr">
 <form action="/book/add" method="post">
-<span class="w3-text-grey td">
-Amount <br>
-<span th:text="${currency}"></span> <input name="amount" style="width:85px;text-align:right" type="number" step="0.01">
-</span><span class="w3-text-grey td">
-IN/OUT<br>
-<select name="inout" style="width:65px;">
+<span class="w3-text-grey td" style="width:100px;vertical-align:top;">
+
+Amount <span th:text="${currency}"></span><br>
+<input name="amount" style="width:100px;text-align:right" type="number" step="0.01">
+
+<br><br>
+
+<strong>IN/OUT</strong><br>
+<select name="inout" style="width:65px;font-size:14px;">
 <option value="" label="select"></option>
     <option value="in">In
     </option>
      <option value="out">Out
     </option>
 </select>
-</span><span class="w3-text-grey td">
-<select name="categoryName" style="width:130px;">
+
+</span><span class="w3-text-grey td" style="vertical-align:top;">
+
+Description <span style="font-size:10px;">(not required)</span><br>
+<input type="text" name="description" style="width:170px;">
+
+<br> <br>
+
+Select category<br>
+<select name="categoryName" style="width:170px;font-size:14px;">
 <option selected value="">Select category</option>
     <option
             th:each="categoryName : ${categories}"
@@ -35,12 +47,16 @@ IN/OUT<br>
             th:value="${categoryName.getCategoryName}">
     </option>
 </select>
-</span><span class="w3-text-grey td">
-Description <span style="font-size:10px;">(not required)</span><br>
-<input type="text" name="description" style="width:170px;">
-</span>
-<span class="w3-text-grey td">
-<button type="submit" style="width:100px;">Add record</button>
+
+</span><span class="w3-text-grey td" style="vertical-align:top;">
+
+Date<br>
+<input type="text" name="addDate" th:value="${currentDate}" style="width:100px;">
+
+<br> <br> <br>
+
+<button type="submit" style="width:100px;font-size:14px;">Add record</button>
+
 </span>
 </form>
 </div>

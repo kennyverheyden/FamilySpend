@@ -4,6 +4,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +39,7 @@ public class BookController {
 	@Autowired
 	private CategoryService categoryService;
 
-	// Get current month
+	// Get current month and year
 	Date date = new Date();
 	String monthDateFormat = "MM";
 	String monthDateFormat_long = "MMMM";
@@ -46,6 +48,11 @@ public class BookController {
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
 	String year = Integer.toString(LocalDate.now().getYear());
+
+	// Get current date
+	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
+	LocalDateTime now = LocalDateTime.now();
+	String currentDate=dtf.format(now);
 
 	private String selectedMonth = null; // Keep the last month selection (user choice)
 	private String selectedYear = null; // Keep the last year selection (user choice)
@@ -83,8 +90,9 @@ public class BookController {
 		model.addAttribute("month", month); // Set the month
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol()); // Currency
 		model.addAttribute("result", bookService.monthResult(user.getUserID(), month, year)); // Total result
-		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
-		model.addAttribute("year",year); // Dropdown selected option
+		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter, get years used by user
+		model.addAttribute("year",year); // Dropdown selected option (month filter)
+		model.addAttribute("currentDate",currentDate); // Add booking date field
 		model.addAttribute("content", "book");
 		return "index";
 	}
@@ -113,6 +121,7 @@ public class BookController {
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
 		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option
+		model.addAttribute("currentDate",currentDate); // Add booking date field
 		model.addAttribute("content", "book");
 		return "index";
 	}
@@ -163,7 +172,7 @@ public class BookController {
 	}
 
 	@PostMapping("/book/add")
-	public String bookAddPost(@RequestParam (required = false) Float amount, @RequestParam (required = false) String inout, @RequestParam (required = false) String categoryName, @RequestParam (required = false) String description, Model model, RedirectAttributes rm)
+	public String bookAddPost(@RequestParam (required = false) Float amount, @RequestParam (required = false) String addDate, @RequestParam (required = false) String inout, @RequestParam (required = false) String categoryName, @RequestParam (required = false) String description, Model model, RedirectAttributes rm)
 	{
 		//	System.out.println(amount + " " + description);
 		if(amount!=null && inout!="" && categoryName!="")
@@ -175,11 +184,20 @@ public class BookController {
 				amount=amount-(amount*2);
 			}
 
-			User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-			bookService.addBook(amount, description, categoryName, user);
-			model.addAttribute("content", "book");
-			rm.addFlashAttribute("message","Booking succesfully updated");
-			return "redirect:/book";
+			if(dateValidator(addDate))
+			{
+				User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+				bookService.addBook(amount, addDate, description, categoryName, user);
+				model.addAttribute("content", "book");
+				rm.addFlashAttribute("message","Booking succesfully updated");
+				return "redirect:/book";
+			}
+			else
+			{
+				model.addAttribute("content", "book");
+				rm.addFlashAttribute("message","Enter a valid date");
+				return "redirect:/book";
+			}
 		}
 		else
 		{
@@ -188,7 +206,7 @@ public class BookController {
 			return "redirect:/book";
 		}
 	}
-	
+
 	@PostMapping("/book/deletebook")
 	public String bookFilterPost(Model model, RedirectAttributes rm)
 	{

@@ -212,12 +212,10 @@ public class BookService {
 		bookRepository.save(book);
 	}
 
-	public void addBook(double amount, String description, String categoryName, User user)
+	public void addBook(double amount, String date, String description, String categoryName, User user)
 	{
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");  
-		LocalDateTime now = LocalDateTime.now();
 		Book book = new Book();
-		book.setDate(dtf.format(now)); // Add date
+		book.setDate(date);
 		book.setAmount(amount);
 		book.setDescription(description);
 		book.setUser(user);
@@ -236,11 +234,12 @@ public class BookService {
 	public List<Book> getBooks() {
 		return books;
 	}
-	
+
 	// Delete all bookings from a specific month and user
 	public void deleteMonthBook(Long UserID, String month, String year)
 	{
-		bookRepository.deleteMonthBook(UserID, month, year);
+		List<Book> bookingsToDelete = this.findBookByUserUserIDperMonth(UserID, month, year);
+		bookRepository.deleteAll(bookingsToDelete);
 	}
 
 }

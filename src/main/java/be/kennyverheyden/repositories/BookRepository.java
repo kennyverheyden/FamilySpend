@@ -13,8 +13,5 @@ import be.kennyverheyden.models.Book;
 public interface BookRepository extends JpaRepository<Book, Long> {
 	List<Book> findBookByUserUserID(Long userID);
 	Book findBookBybookID(Long bookID);
-	
-	@Modifying
-	@Query(value="DELETE FROM tblBook WHERE userFK =:userFK AND date LIKE '%/:month/:year';",nativeQuery=true)
-	void deleteMonthBook (@Param("userFK") long userFK, @Param("month") String month, @Param("year") String year);
+
 }
