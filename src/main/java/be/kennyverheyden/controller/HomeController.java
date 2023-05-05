@@ -27,7 +27,7 @@ public class HomeController {
 	}
 
 
-	@GetMapping("/") //
+	@GetMapping("/")
 	public String homeGet(Model model) {
 
 		model.addAttribute("content", "home");
@@ -37,6 +37,12 @@ public class HomeController {
 			return "redirect:/";
 		// ***********************************
 
+		return "index";
+	}
+
+	@GetMapping("/privacy") //
+	public String privacyGet(Model model) {
+		model.addAttribute("content", "privacy");
 		return "index";
 	}
 
