@@ -37,6 +37,12 @@
      
 
 <div class="table">
+<div class="tr" style="display:flex; flex-direction: row; justify-content: left; align-items: center;">
+<span  class="w3-text-grey td" style="width:175px;">Category name</span>
+<span  class="w3-text-grey td" style="width:130px;">belongs to group</span>
+<span  class="w3-text-grey td">&nbsp; </span>
+<span  class="w3-text-grey td">&nbsp; </span>
+</div>
 <div class="tr" th:each="category, index: ${categories}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
 
 <form action="/category/update" method="post">

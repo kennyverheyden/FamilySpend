@@ -104,7 +104,7 @@ Date<br>
 <p>
 
 <h5><span th:text="${month_long}"></span> <span th:text="${year}"></span></h5>
-<p class="w3-text-grey td">Add minus symbol - before number to mark as a spend or cost.</p>
+<p class="w3-text-grey td">Add minus - symbol before number to mark as a spend or cost.</p>
 <!-- Show bookings -->
 <div class="table">
 <div class="tr" th:each="book,index : ${books}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
@@ -116,7 +116,7 @@ Date<br>
 Date<br>
 <input th:value="${book.date}" name="date" type="text" style="width:100px;">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
-<strong> <span th:text="${currency}"></span> -/+</strong>
+<strong> <span th:text="${currency}"></span> </strong>
 <br><input type="text" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:80px; text-align:right">
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>
