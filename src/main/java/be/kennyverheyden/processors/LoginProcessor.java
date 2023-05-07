@@ -39,6 +39,7 @@ public class LoginProcessor {
 		{
 			if(user.geteMail().equals(userService.getUserEmail()) && passwordEncoder.matches(userService.getSecret(),user.getSecret()))
 			{
+				userService.clearToken(user); // // If the user never used the reset password link
 				return true;
 			}
 		}

@@ -258,6 +258,16 @@ public class UserService{
 		userRepository.save(user);
 	}
 
+	// If the user never used the reset password link
+	public void clearToken(User user)
+	{
+		if(user!=null)
+		{
+			user.setResetPasswordToken(null);
+			userRepository.save(user);
+		}
+	}
+
 	// Getters and Setters
 
 	public String getUserEmail() {
