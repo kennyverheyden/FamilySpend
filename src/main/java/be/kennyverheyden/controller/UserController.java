@@ -85,7 +85,7 @@ public class UserController {
 				}
 				else
 				{
-					userService.deleteUser(email);
+					userService.deleteUserByAdmin(email);
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","User deleted");
 					return "redirect:/admin";

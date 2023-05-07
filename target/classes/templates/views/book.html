@@ -25,9 +25,9 @@ Amount <span th:text="${currency}"></span><br>
 <strong>IN/OUT</strong><br>
 <select name="inout" style="width:65px;font-size:14px;">
 <option value="" label="select"></option>
-    <option value="in">In
+ <option value="out">Out
     </option>
-     <option value="out">Out
+    <option value="in">In
     </option>
 </select>
 
@@ -130,7 +130,7 @@ Category<br>
 </span>
 <span class="w3-text-grey td">
 Description<br>
-<input th:value="${book.description}" name="description" style="width:150px;">
+<input type="text" th:value="${book.description}" name="description" style="width:150px;">
 </span><span class="w3-text-grey td" style="width:110px">
 Delete
  &nbsp; &nbsp;<input type="checkbox" th:id="${index.index}"  name="delete" th:onclick="'javascript:changeSubmitButton(' + ${index.index} + ')'">

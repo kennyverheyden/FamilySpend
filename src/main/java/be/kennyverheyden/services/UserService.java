@@ -211,6 +211,15 @@ public class UserService{
 		this.userEmail=null;
 		this.secret=null;
 	}
+	
+	public void deleteUserByAdmin(String userEmail)
+	{
+		User user = this.findUserByeMail(userEmail);
+		userRepository.deleteBookingsFromUser(user.getUserID());
+		userRepository.deleteCategoriesFromUser(user.getUserID());
+		userRepository.deleteGroupsFromUser(user.getUserID());
+		userRepository.delete(user);
+	}
 
 	// Update account by user
 	public void updateAccount(String email, String name, String firstname, Long currencyID) {
