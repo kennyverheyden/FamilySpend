@@ -238,6 +238,26 @@ public class UserService{
 		userRepository.save(user);
 	}
 
+	public void updateResetPasswordToken(String token, String email) {
+		User user = userRepository.findByEmail(email);
+		if (user != null) {
+			user.setResetPasswordToken(token);
+			userRepository.save(user);
+		} 
+	} 
+
+	public User getByResetPasswordToken(String token) {
+		return userRepository.findByResetPasswordToken(token);
+	}
+
+	public void updatePassword(User user, String newPassword) {
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String encodedPassword = passwordEncoder.encode(newPassword);
+		user.setSecret(encodedPassword);
+		user.setResetPasswordToken(null);
+		userRepository.save(user);
+	}
+
 	// Getters and Setters
 
 	public String getUserEmail() {

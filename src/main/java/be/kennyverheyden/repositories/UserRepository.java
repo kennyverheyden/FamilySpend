@@ -22,6 +22,11 @@ public interface UserRepository extends JpaRepository<User,Long>{
 	@Modifying
 	@Query(value="DELETE FROM tblGroup WHERE tblGroup.userFK = ?",nativeQuery = true)
 	void deleteGroupsFromUser(Long userFK);
+	
+    @Query("SELECT u FROM tblUser u WHERE u.eMail = ?1")
+    public User findByEmail(String email); 
+     
+    public User findByResetPasswordToken(String token);
 
 }
 

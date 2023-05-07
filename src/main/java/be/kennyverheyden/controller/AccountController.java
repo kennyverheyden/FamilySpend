@@ -50,10 +50,17 @@ public class AccountController {
 		if(!name.equals("") && !firstName.equals(""))
 		{
 			// Update user
-			userService.updateAccount(email, name, firstName, currencyFK);
-			model.addAttribute("content", "account");
-			rm.addFlashAttribute("message","Information succesfully updated");
-			return "redirect:account";
+			try
+			{
+				userService.updateAccount(email, name, firstName, currencyFK);
+				model.addAttribute("content", "account");
+				rm.addFlashAttribute("message","Information succesfully updated");
+				return "redirect:account";
+			}
+			catch (Exception e) {
+				model.addAttribute("error", e.getMessage());
+				return "redirect:/book";
+			}
 		}
 		else
 		{
@@ -66,9 +73,16 @@ public class AccountController {
 
 	@PostMapping("/account/delete") 
 	public String deleteAccountPost(Model model, RedirectAttributes rm){
-		userService.deleteUser(userService.getUserEmail());
-		model.addAttribute("content", "account");
-		return "redirect:/main?logout";
+		try
+		{
+			userService.deleteUser(userService.getUserEmail());
+			model.addAttribute("content", "account");
+			return "redirect:/main?logout";
+		}
+		catch (Exception e) {
+			model.addAttribute("error", e.getMessage());
+			return "redirect:/account";
+		}
 	}
 
 }

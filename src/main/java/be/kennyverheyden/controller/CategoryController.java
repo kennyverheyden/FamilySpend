@@ -41,7 +41,7 @@ public class CategoryController {
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
 	String year = Integer.toString(LocalDate.now().getYear());
-	
+
 	public CategoryController() {}
 
 	@GetMapping("/category")
@@ -75,7 +75,7 @@ public class CategoryController {
 			model.addAttribute("content", "login");
 			return "redirect:/";
 		}
-		
+
 		// Get Category by group by and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
@@ -94,7 +94,7 @@ public class CategoryController {
 	{
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
-	
+
 		model.addAttribute("content", "categorytotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
@@ -117,10 +117,17 @@ public class CategoryController {
 		{
 			if(!bookService.bookingHasCategory(categoryID, userService.getUserEmail()))
 			{
-				categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
-				model.addAttribute("content", "category");
-				rm.addFlashAttribute("message","Category succesfully deleted");
-				return "redirect:/category";
+				try
+				{
+					categoryService.deleteCategory(categoryService.findCategoryByCategoryID(categoryID));
+					model.addAttribute("content", "category");
+					rm.addFlashAttribute("message","Category succesfully deleted");
+					return "redirect:/category";
+				}
+				catch (Exception e) {
+					model.addAttribute("error", e.getMessage());
+					return "redirect:/category";
+				}
 			}
 			else
 			{
@@ -170,10 +177,17 @@ public class CategoryController {
 					String checkDuplicat = giveDuplicateIfExist(categoryName);
 					if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
 					{
-						categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
-						model.addAttribute("content", "category");
-						rm.addFlashAttribute("message","Category succesfully added");
-						return "redirect:/category";
+						try
+						{
+							categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+							model.addAttribute("content", "category");
+							rm.addFlashAttribute("message","Category succesfully added");
+							return "redirect:/category";
+						}
+						catch (Exception e) {
+							model.addAttribute("error", e.getMessage());
+							return "redirect:/category";
+						}
 					}
 					else
 					{

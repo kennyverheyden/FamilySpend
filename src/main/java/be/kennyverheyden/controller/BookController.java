@@ -149,11 +149,18 @@ public class BookController {
 			{
 				if(this.dateValidator(date))
 				{
-					User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-					bookService.updateBook(bookID, date, amount, description, categoryName, user);
-					model.addAttribute("content", "book");
-					rm.addFlashAttribute("message","Booking succesfully updated");
-					return "redirect:/book";
+					try
+					{
+						User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+						bookService.updateBook(bookID, date, amount, description, categoryName, user);
+						model.addAttribute("content", "book");
+						rm.addFlashAttribute("message","Booking succesfully updated");
+						return "redirect:/book";
+					}
+					catch (Exception e) {
+						model.addAttribute("error", e.getMessage());
+						return "redirect:/book";
+					}
 				}
 				else
 				{
@@ -186,11 +193,18 @@ public class BookController {
 
 			if(dateValidator(addDate))
 			{
-				User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-				bookService.addBook(amount, addDate, description, categoryName, user);
-				model.addAttribute("content", "book");
-				rm.addFlashAttribute("message","Booking succesfully updated");
-				return "redirect:/book";
+				try
+				{
+					User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+					bookService.addBook(amount, addDate, description, categoryName, user);
+					model.addAttribute("content", "book");
+					rm.addFlashAttribute("message","Booking succesfully updated");
+					return "redirect:/book";
+				}
+				catch (Exception e) {
+					model.addAttribute("error", e.getMessage());
+					return "redirect:/book";
+				}
 			}
 			else
 			{
@@ -218,10 +232,17 @@ public class BookController {
 		{
 			year=selectedYear; // Set back the last user choice
 		}
-		bookService.deleteMonthBook(userService.findUserByeMail(userService.getUserEmail()).getUserID(), month, year);
-		model.addAttribute("content", "book");
-		rm.addFlashAttribute("message","Month bookings deleted");
-		return "redirect:/book";
+		try
+		{
+			bookService.deleteMonthBook(userService.findUserByeMail(userService.getUserEmail()).getUserID(), month, year);
+			model.addAttribute("content", "book");
+			rm.addFlashAttribute("message","Month bookings deleted");
+			return "redirect:/book";
+		}
+		catch (Exception e) {
+			model.addAttribute("error", e.getMessage());
+			return "redirect:/book";
+		}
 	}
 
 	// Book page - Update date input

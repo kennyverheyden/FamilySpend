@@ -43,7 +43,7 @@ public class GroupController {
 	SimpleDateFormat mdf_long = new SimpleDateFormat(monthDateFormat_long);
 	String month_long = StringUtils.capitalize(mdf_long.format(date));
 	String year = Integer.toString(LocalDate.now().getYear());
-	
+
 	public GroupController() {}
 
 	@GetMapping("/group")
@@ -116,10 +116,17 @@ public class GroupController {
 		{
 			if(!categoryService.categoryHasGroup(groupID, userService.getUserEmail()))
 			{
-				groupService.deleteGroup(groupService.findGroupByGroupID(groupID));
-				model.addAttribute("content", "group");
-				rm.addFlashAttribute("message","Group succesfully deleted");
-				return "redirect:/group";
+				try
+				{
+					groupService.deleteGroup(groupService.findGroupByGroupID(groupID));
+					model.addAttribute("content", "group");
+					rm.addFlashAttribute("message","Group succesfully deleted");
+					return "redirect:/group";
+				}
+				catch (Exception e) {
+					model.addAttribute("error", e.getMessage());
+					return "redirect:/book";
+				}
 			}
 			else
 			{
@@ -135,10 +142,17 @@ public class GroupController {
 				String checkDuplicat = giveDuplicateIfExist(groupName);
 				if(!groupName.equalsIgnoreCase(checkDuplicat))
 				{
-					groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
-					model.addAttribute("content", "group");
-					rm.addFlashAttribute("message","Information succesfully updated");
-					return "redirect:/group";
+					try
+					{
+						groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
+						model.addAttribute("content", "group");
+						rm.addFlashAttribute("message","Information succesfully updated");
+						return "redirect:/group";
+					}
+					catch (Exception e) {
+						model.addAttribute("error", e.getMessage());
+						return "redirect:/group";
+					}
 				}
 				else
 				{
@@ -165,10 +179,17 @@ public class GroupController {
 				String checkDuplicat = giveDuplicateIfExist(groupName);
 				if(!groupName.equalsIgnoreCase(checkDuplicat))
 				{
-					groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
-					model.addAttribute("content", "group");
-					rm.addFlashAttribute("message","Group succesfully added");
-					return "redirect:/group";
+					try
+					{
+						groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
+						model.addAttribute("content", "group");
+						rm.addFlashAttribute("message","Group succesfully added");
+						return "redirect:/group";
+					}
+					catch (Exception e) {
+						model.addAttribute("error", e.getMessage());
+						return "redirect:/group";
+					}
 				}
 				else
 				{

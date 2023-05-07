@@ -30,6 +30,8 @@ public class User {
 	@OneToOne
 	@JoinColumn(name="currencyFK")
 	Currency currency;
+	@Column(name = "reset_password_token")
+    private String resetPasswordToken;
 	
 	public Long getUserID() {
 		return userID;
@@ -78,6 +80,12 @@ public class User {
 	}
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
+	}
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 	
 }
