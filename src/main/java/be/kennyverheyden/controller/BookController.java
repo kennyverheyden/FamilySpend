@@ -86,8 +86,10 @@ public class BookController {
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month)); // Print month title
 		model.addAttribute("month", month); // Set the month
+		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
+		model.addAttribute("spending",bookService.monthResultSpending(user, month, year));
+		model.addAttribute("result",bookService.monthResult(user, month, year));
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol()); // Currency
-		model.addAttribute("result", bookService.monthResult(user.getUserID(), month, year)); // Total result
 		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter, get years used by user
 		model.addAttribute("year",year); // Dropdown selected option (month filter)
 		model.addAttribute("currentDate",currentDate); // Add booking date field
@@ -115,7 +117,9 @@ public class BookController {
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
-		model.addAttribute("result", bookService.monthResult(user.getUserID(), month, year));
+		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
+		model.addAttribute("spending",bookService.monthResultSpending(user, month, year));
+		model.addAttribute("result",bookService.monthResult(user, month, year));
 		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
 		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option

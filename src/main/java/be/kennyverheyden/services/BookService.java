@@ -73,14 +73,46 @@ public class BookService {
 		return noDuplicatesYears;
 	}
 
-	// Shows the result
-	public String monthResult(Long userID, String month, String year)
+	// Show month result income
+	public double monthResultIncome(User user, String month, String year)
 	{
-		List<Book> filteredBooks = findBookByUserUserIDperMonth (userID, month,year); // Get list by user and month
+		List<Book> filteredBooks = findBookByUserUserIDperMonth (user.getUserID(), month,year); // Get list by user and month
+		double income=0;
+		for(Book line:filteredBooks)
+		{
+			// Spendings are recognized by the negative number (-) 
+			if(line.getAmount() > 0) // > = income
+			{
+				income+=line.getAmount();
+			}
+		}
+		return income;
+	}
+
+	// Shows month result spending
+	public double monthResultSpending(User user, String month, String year)
+	{
+		List<Book> filteredBooks = findBookByUserUserIDperMonth (user.getUserID(), month,year); // Get list by user and month
+		double spending=0;
+		for(Book line:filteredBooks)
+		{
+			// Spendings are recognized by the negative number (-) 
+			if(line.getAmount() < 0) 
+			{
+				spending+=line.getAmount();
+			}
+		}
+		spending=Math.abs(spending);
+		return spending;
+	}
+
+	// Show month result
+	public double monthResult(User user, String month, String year)
+	{
+		List<Book> filteredBooks = findBookByUserUserIDperMonth (user.getUserID(), month,year); // Get list by user and month
 		double income=0;
 		double spending=0;
 		double result=0;
-		String currency=userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol(); // Get currency from user
 		for(Book line:filteredBooks)
 		{
 			// Spendings are recognized by the negative number (-) 
@@ -95,7 +127,7 @@ public class BookService {
 		}
 		spending=Math.abs(spending);
 		result=income-spending; // Make total
-		return "Income: "+currency+String.format("%.2f", income)+" | Spending: "+currency+String.format("%.2f", spending)+" | Result: "+currency+String.format("%.2f", result);
+		return result;
 	}
 
 	// Check if booking has category
