@@ -60,11 +60,15 @@ public class UserController {
 	
 	// Admin can edit users
 	@PostMapping("/admin/users") 
-	public String updateUserPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String secret, @RequestParam (required = false) String userRole, @RequestParam (required = false) Long currencyFK, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm){
+	public String updateUserPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String secret, @RequestParam (required = false) String userRole, @RequestParam (required = false) Long currencyFK, @RequestParam (required = false) Integer enable, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm){
 
 		if(delete==null) // Avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
 			delete=false;
+		}
+		if(enable==null) // Could be empty, because isEnable is disabled for own admin account
+		{
+			enable=1;
 		}
 
 		if(delete)
@@ -105,7 +109,7 @@ public class UserController {
 				else
 				{
 					// Update user
-					userService.updateUser(email, name, firstName, secret, userRole, currencyFK);
+					userService.updateUser(email, name, firstName, secret, userRole, currencyFK, enable);
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","Information succesfully updated");
 					return "redirect:/admin";

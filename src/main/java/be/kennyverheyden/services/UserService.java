@@ -1,21 +1,24 @@
 package be.kennyverheyden.services;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.models.UserRole;
 import be.kennyverheyden.repositories.UserRepository;
 import be.kennyverheyden.repositories.UserRoleRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
+import net.bytebuddy.utility.RandomString;
 
 
 @Service
@@ -32,6 +35,8 @@ public class UserService{
 	private CategoryService categoryService;
 	@Autowired
 	private CurrencyService currencyService;
+	@Autowired
+	private JavaMailSender mailSender;
 
 	private  PasswordEncoder passwordEncoder;
 
@@ -179,9 +184,9 @@ public class UserService{
 		userRepository.save(user);
 	}
 
-	// Create user
-	// Set template content
-	public void signupUser(String userEmail, String secret, String name, String firstName, Long role, Long currencyID) {
+	// User registration - create user and set inactive until verification mail is send
+	public void register(String userEmail, String secret, String name, String firstName, Long role, Long currencyID, String siteURL)
+			throws UnsupportedEncodingException, MessagingException {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();  
 		User user = new User();
@@ -193,12 +198,59 @@ public class UserService{
 		user.setUserRole(userRoleRepository.findById(role).get());
 		user.setCreation(dtf.format(now));
 		user.setCurrency(currencyService.findCurrencyByCurrencyID(currencyID));
+		String randomCode = RandomString.make(64);
+		user.setVerificationCode(randomCode);
+		user.setEnabled(0);
 		userRepository.findAll().add(user);
 		userRepository.save(user);
 		groupService.createGroupSampleData(user);
 		categoryService.createCategorySampleData(user);
+		sendVerificationEmail(user, siteURL);
 	}
 
+	// Send verification mail - user registration
+	private void sendVerificationEmail(User user, String siteURL)
+			throws MessagingException, UnsupportedEncodingException {
+		String toAddress = user.geteMail();
+		String fromAddress = "contact@kennyverheyden.be";
+		String senderName = "FamilySpend";
+		String subject = "Please verify your registration";
+		String content = "Dear [[name]],<br>"
+				+ "Please click the link below to verify your registration:<br>"
+				+ "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+				+ "Thank you,<br>"
+				+ "FamilySpend.";
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom(fromAddress, senderName);
+		helper.setTo(toAddress);
+		helper.setSubject(subject);
+
+		content = content.replace("[[name]]", user.getFirstName());
+		String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+
+		content = content.replace("[[URL]]", verifyURL);
+
+		helper.setText(content, true);
+
+		mailSender.send(message);
+	}
+
+	// Verify verification code
+	public boolean verify(String verificationCode) {
+		User user = userRepository.findByVerificationCode(verificationCode);
+
+		if (user == null || user.isEnabled()==1) {
+			return false;
+		} else {
+			user.setVerificationCode(null);
+			user.setEnabled(1);
+			userRepository.save(user);
+			return true;
+		}
+	}
 
 	// Delete the user and all his content in the DB
 	public void deleteUser(String userEmail)
@@ -211,7 +263,7 @@ public class UserService{
 		this.userEmail=null;
 		this.secret=null;
 	}
-	
+
 	public void deleteUserByAdmin(String userEmail)
 	{
 		User user = this.findUserByeMail(userEmail);
@@ -231,7 +283,7 @@ public class UserService{
 	}
 
 	// Update by admin
-	public void updateUser(String eMail, String name, String firstname, String secret, String userRole, Long currencyID) {
+	public void updateUser(String eMail, String name, String firstname, String secret, String userRole, Long currencyID, int enable) {
 		// Find user role name
 		User user = this.findUserByeMail(eMail);
 		user.setName(name);
@@ -244,6 +296,9 @@ public class UserService{
 			user.setSecret(encodedPassword);
 		}
 		user.setUserRole(userRoleRepository.findById(findbyRoleName(userRole)).get()); // Set userRole
+		user.setVerificationCode(null);
+		user.setResetPasswordToken(null);
+		user.setEnabled(enable); // 0 or 1
 		userRepository.save(user);
 	}
 

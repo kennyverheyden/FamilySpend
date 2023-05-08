@@ -32,6 +32,10 @@ public class User {
 	Currency currency;
 	@Column(name = "reset_password_token")
     private String resetPasswordToken;
+	@Column(name = "verificationCode", length = 64)
+	private String verificationCode;
+	@Column(name="enabled")
+	private Integer enabled;
 	
 	public Long getUserID() {
 		return userID;
@@ -86,6 +90,18 @@ public class User {
 	}
 	public void setResetPasswordToken(String resetPasswordToken) {
 		this.resetPasswordToken = resetPasswordToken;
+	}
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+	public Integer isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(Integer enabled) {
+		this.enabled = enabled;
 	}
 	
 }

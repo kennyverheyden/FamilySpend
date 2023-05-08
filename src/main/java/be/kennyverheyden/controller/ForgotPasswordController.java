@@ -1,8 +1,6 @@
 package be.kennyverheyden.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -10,13 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.mail.javamail.JavaMailSender;
-
 import be.kennyverheyden.Utility;
 import be.kennyverheyden.models.User;
-import be.kennyverheyden.models.UserRole;
 import be.kennyverheyden.services.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -64,7 +59,7 @@ public class ForgotPasswordController {
 		MimeMessage message = mailSender.createMimeMessage();              
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 
-		helper.setFrom("contact.familyspend@gmail.com", "FamilySpend Support");
+		helper.setFrom("contact@kennyverheyden.be", "FamilySpend");
 		helper.setTo(recipientEmail);
 
 		String subject = "Here's the link to reset your password";

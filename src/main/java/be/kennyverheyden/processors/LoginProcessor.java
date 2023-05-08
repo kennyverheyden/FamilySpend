@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import be.kennyverheyden.models.User;
-import be.kennyverheyden.repositories.UserRepository;
 import be.kennyverheyden.services.UserService;
 
 
@@ -37,7 +36,7 @@ public class LoginProcessor {
 		// Check if userMail and password exist
 		for(User user:userService.findAll())
 		{
-			if(user.geteMail().equals(userService.getUserEmail()) && passwordEncoder.matches(userService.getSecret(),user.getSecret()))
+			if(user.geteMail().equals(userService.getUserEmail()) && passwordEncoder.matches(userService.getSecret(),user.getSecret()) && user.isEnabled()==1)
 			{
 				userService.clearToken(user); // // If the user never used the reset password link
 				return true;

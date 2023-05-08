@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import be.kennyverheyden.models.Category;
-import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;

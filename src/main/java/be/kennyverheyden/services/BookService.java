@@ -27,8 +27,6 @@ public class BookService {
 	@Autowired
 	private CategoryService categoryService;
 	@Autowired
-	private GroupService groupService;
-	@Autowired
 	private UserService userService;
 
 	private List<Book> books;

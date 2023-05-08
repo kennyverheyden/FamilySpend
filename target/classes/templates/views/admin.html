@@ -74,7 +74,18 @@ Rolename<br>
             th:value="${c.currencyID}" th:selected="${user.getCurrency.getCurrencyID==c.currencyID}"  th:label="' '+${c.currencySymbol}">
     		</option>
     		</select>
-<br><br><br><br>
+<br><br>
+	<select name="enable" style="width:80px;">
+   			 <option
+            th:text="enabled"
+            th:value="1" th:selected="1==${user.isEnabled}" th:disabled="1==${user.getUserRole.getRoleID}"  th:label="enabled">
+    		</option>
+    		 <option
+            th:text="disabled"
+            th:value="0" th:selected="0==${user.isEnabled}" th:disabled="1==${user.getUserRole.getRoleID}"  th:label="disabled">
+    		</option>
+    		</select>
+<br><br>
 <button type="submit" th:id="${'submit'+index.index}" th:onclick="'javascript:show_alert(' + ${index.index} + ')'" style="width:100px;">Edit</button>
 </span>
 
