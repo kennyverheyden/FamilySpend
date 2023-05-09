@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.services.BookService;
@@ -106,8 +108,9 @@ public class CategoryController {
 	}
 
 	@PostMapping("/category/update") 
-	public String updateCategoryPost(@RequestParam Long categoryID, @RequestParam String categoryName, String groupName, Boolean delete, Model model, RedirectAttributes rm)
+	public String updateCategoryPost(@RequestParam (required = false) Long categoryID, @RequestParam (required = false) String categoryName, @RequestParam (required = false) String groupName, @RequestParam (required = false) Integer inout, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm)
 	{
+		Category category = categoryService.findCategoryByCategoryID(categoryID);
 		if(delete==null) // avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
 			delete=false;
@@ -141,9 +144,9 @@ public class CategoryController {
 			if(categoryName!="")
 			{
 				String checkDuplicat = giveDuplicateIfExist(categoryName);
-				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName) || inout!=category.getInOut())
 				{
-					categoryService.updateCategory(categoryID,categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
+					categoryService.updateCategory(categoryID,categoryName,groupName,inout,userService.findUserByeMail(userService.getUserEmail()));
 					model.addAttribute("content", "category");
 					rm.addFlashAttribute("message","Information succesfully updated");
 					return "redirect:/category";
@@ -166,7 +169,7 @@ public class CategoryController {
 	}
 
 	@PostMapping("/category/add") 
-	public String addCategoryPost(@RequestParam String categoryName, String groupName, Model model, RedirectAttributes rm)
+	public String addCategoryPost(@RequestParam (required = false) String categoryName,@RequestParam (required = false) String groupName,@RequestParam (required = false) Integer inout, Model model, RedirectAttributes rm)
 	{
 		if(categoryService.getCategories().size()<50) // Allow 50 per user
 		{
@@ -174,25 +177,34 @@ public class CategoryController {
 			{
 				if(groupName!="")
 				{
-					String checkDuplicat = giveDuplicateIfExist(categoryName);
-					if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+					if(inout!=null)
 					{
-						try
+						String checkDuplicat = giveDuplicateIfExist(categoryName);
+						if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
 						{
-							categoryService.addCategory(categoryName,groupName,userService.findUserByeMail(userService.getUserEmail()));
-							model.addAttribute("content", "category");
-							rm.addFlashAttribute("message","Category succesfully added");
-							return "redirect:/category";
+							try
+							{
+								categoryService.addCategory(categoryName,groupName,inout,userService.findUserByeMail(userService.getUserEmail()));
+								model.addAttribute("content", "category");
+								rm.addFlashAttribute("message","Category succesfully added");
+								return "redirect:/category";
+							}
+							catch (Exception e) {
+								model.addAttribute("error", e.getMessage());
+								return "redirect:/category";
+							}
 						}
-						catch (Exception e) {
-							model.addAttribute("error", e.getMessage());
+						else
+						{
+							model.addAttribute("content", "category");
+							rm.addFlashAttribute("message","Category already exist");
 							return "redirect:/category";
 						}
 					}
 					else
 					{
 						model.addAttribute("content", "category");
-						rm.addFlashAttribute("message","Category already exist");
+						rm.addFlashAttribute("message","Select IN or OUT");
 						return "redirect:/category";
 					}
 				}

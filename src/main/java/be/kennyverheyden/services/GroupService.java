@@ -68,6 +68,7 @@ public class GroupService {
 		groups.add(new Group("Insurance"));
 		groups.add(new Group("Debts"));
 		groups.add(new Group("Various"));
+		groups.add(new Group("Food"));
 		for(Group i:groups)
 		{
 			i.setUser(user); // A group is linked to an user

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.services.BookService;
@@ -181,16 +182,16 @@ public class BookController {
 	}
 
 	@PostMapping("/book/add")
-	public String bookAddPost(@RequestParam (required = false) Float amount, @RequestParam (required = false) String addDate, @RequestParam (required = false) String inout, @RequestParam (required = false) String categoryName, @RequestParam (required = false) String description, Model model, RedirectAttributes rm)
+	public String bookAddPost(@RequestParam (required = false) Float amount, @RequestParam (required = false) String addDate, @RequestParam (required = false) Long categoryID, @RequestParam (required = false) String description, Model model, RedirectAttributes rm)
 	{
-		//	System.out.println(amount + " " + description);
-		if(amount!=null && inout!="" && categoryName!="")
+		if(amount!=null && categoryID!=null && addDate!=null)
 		{
-			// make value negative
-
-			if(inout.equals("out") && amount>0)
+			// If booking is not income, make number negative
+			// Determined by category
+			Category category=categoryService.findCategoryByCategoryID(categoryID); 
+			if(category.getInOut()!=0) // 0=income
 			{
-				amount=amount-(amount*2);
+				amount=amount-(amount*2); // Make number negative
 			}
 
 			if(dateValidator(addDate))
@@ -198,7 +199,7 @@ public class BookController {
 				try
 				{
 					User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
-					bookService.addBook(amount, addDate, description, categoryName, user);
+					bookService.addBook(amount, addDate, description, category.getCategoryName(), user);
 					model.addAttribute("content", "book");
 					rm.addFlashAttribute("message","Booking succesfully updated");
 					return "redirect:/book";

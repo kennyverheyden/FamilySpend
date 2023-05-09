@@ -81,7 +81,7 @@ public class UserController {
 			}
 			else
 			{
-				if(email.equals("test@test.com")) // You cannot delete the primary admin account
+				if(email.equals("kenny.verheyden@gmail.com")) // You cannot delete the primary admin account
 				{
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","You cannot delete the primary admin account");
@@ -100,7 +100,7 @@ public class UserController {
 		{
 			if(!name.equals("") && !firstName.equals(""))
 			{
-				if(email.equals("test@test.com") && !userRole.equals("Admin")) {
+				if(email.equals("kenny.verheyden@gmail.com") && !userRole.equals("Admin")) {
 
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","You cannot change the role of the primary admin account");

@@ -12,55 +12,50 @@
 
 <!--  Add booking input -->
 <h5>Add record</h5>
+<form action="/book/add" method="post">
 <div class="table">
 <div class="tr">
-<form action="/book/add" method="post">
 <span class="w3-text-grey td" style="width:100px;vertical-align:top;">
 
 Amount <span th:text="${currency}"></span><br>
 <input name="amount" style="width:100px;text-align:right" type="number" step="0.01">
 
-<br><br>
+</span><span class="w3-text-grey td" style="vertical-align:top;">
 
-<strong>IN/OUT</strong><br>
-<select name="inout" style="width:65px;font-size:14px;">
-<option value="" label="select"></option>
- <option value="out">Out
-    </option>
-    <option value="in">In
+Select category<br>
+<select name="categoryID" style="width:170px;">
+<option selected value="">Select category</option>
+    <option
+            th:each="category : ${categories}"
+            th:text="${category.getCategoryName}"
+            th:value="${category.getCategoryID}">
     </option>
 </select>
+
+</span><span class="w3-text-grey td" style="vertical-align:top;">
+
+<br>
+<button type="submit" style="width:100px;font-size:14px;">Add record</button>
+
+</span>
+</div>
+<div class="tr">
+<span class="w3-text-grey td" style="vertical-align:top;">
+
+Date<br>
+<input type="text" name="addDate" th:value="${currentDate}" style="width:100px;">
 
 </span><span class="w3-text-grey td" style="vertical-align:top;">
 
 Description <span style="font-size:10px;">(not required)</span><br>
 <input type="text" name="description" style="width:170px;">
 
-<br> <br>
-
-Select category<br>
-<select name="categoryName" style="width:170px;font-size:14px;">
-<option selected value="">Select category</option>
-    <option
-            th:each="categoryName : ${categories}"
-            th:text="${categoryName.getCategoryName}"
-            th:value="${categoryName.getCategoryName}">
-    </option>
-</select>
-
 </span><span class="w3-text-grey td" style="vertical-align:top;">
 
-Date<br>
-<input type="text" name="addDate" th:value="${currentDate}" style="width:100px;">
-
-<br> <br> <br>
-
-<button type="submit" style="width:100px;font-size:14px;">Add record</button>
-
 </span>
+</div>
+</div>
 </form>
-</div>
-</div>
 
 <br>
 <strong>
@@ -68,7 +63,7 @@ Date<br>
 	</strong><br>
 <!--  End add booking input -->
 
-<h5>Filter on month / year</h5>
+<h5>Select month / year</h5>
 
 <!-- Filter input -->
 <div class="table">
@@ -92,7 +87,7 @@ Date<br>
     </select>
  </span>
  <span class="td">
-<button type="submit" style="width:100px;">Filter</button>
+<button type="submit" style="width:100px;">Change</button>
 </span>
 </form>
 </div>
@@ -102,13 +97,13 @@ Date<br>
 
 <!--  Print month results -->
 <p>
-Income: <span th:text="${currency}"></span> <span th:text="${income}"  style="font-weight:bold;"></span> | Spending: <span th:text="${currency}"></span> <span th:text="${spending}" style="font-weight:bold;"></span> | Result: <span th:text="${currency}"></span> <span th:if="${result}>=0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:green;font-size:16px;"></span><span th:if="${result}<0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:red;font-size:16px;"></span>
+Income: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(income, 1, 'DEFAULT', 2, 'DEFAULT')}"  style="font-weight:bold;"></span> | Spending: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(spending, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;"></span> | Result: <span th:text="${currency}"></span> <span th:if="${result}>=0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:green;font-size:16px;"></span><span th:if="${result}<0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:red;font-size:16px;"></span>
 </p>
 <!--  End print month results -->
 
 
 <h5><span th:text="${month_long}"></span> <span th:text="${year}"></span></h5>
-<p class="w3-text-grey td">Add minus - symbol before number to mark as a spend or cost.</p>
+<p class="w3-text-grey td">Add minus (<strong>-</strong>) symbol before number to mark as a spend or cost.</p>
 <!-- Show bookings -->
 <div class="table">
 <div class="tr" th:each="book,index : ${books}" style="display:flex; flex-direction: row; justify-content: center; align-items: center">
@@ -122,7 +117,7 @@ Date<br>
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 <strong> <span th:text="${currency}"></span> </strong>
 
-<br><input type="text" th:if="${book.amount}>=0" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:80px; text-align:right;color:green;font-weight:bold;"><input type="text" th:if="${book.amount}<0" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:80px; text-align:right;color:red;font-weight:bold;">
+<br><input type="text" th:if="${book.amount}>=0" th:value="${#numbers.formatDecimal(book.amount, 1, 'DEFAULT', 2, 'DEFAULT')}" name="stramount" style="width:80px; text-align:right;color:green;font-weight:bold;"><input type="text" th:if="${book.amount}<0" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:80px; text-align:right;color:red;font-weight:bold;">
 
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>

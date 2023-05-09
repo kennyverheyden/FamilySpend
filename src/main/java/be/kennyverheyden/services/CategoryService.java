@@ -92,32 +92,32 @@ public class CategoryService {
 	public void createCategorySampleData(User user)
 	{
 		List<Category> categories = new ArrayList();
-		categories.add(new Category("Electricity/gas")); // Add new category
-		categories.get(0).setGroup(groupService.getGroups().get(1)); // Assign foreign key to group
-		categories.add(new Category("Wage"));
+		categories.add(new Category("Electricity/gas",1)); // Add new category
+		categories.get(0).setGroup(groupService.getGroups().get(4)); // Assign foreign key to group
+		categories.add(new Category("Wage",0));
 		categories.get(1).setGroup(groupService.getGroups().get(0));
-		categories.add(new Category("Hypotheek"));
-		categories.get(2).setGroup(groupService.getGroups().get(4));
-		categories.add(new Category("Other income"));
+		categories.add(new Category("Mortage",1));
+		categories.get(2).setGroup(groupService.getGroups().get(7));
+		categories.add(new Category("Other income",0));
 		categories.get(3).setGroup(groupService.getGroups().get(0));
-		categories.add(new Category("Other expenses"));
-		categories.get(4).setGroup(groupService.getGroups().get(7));
-		categories.add(new Category("School"));
+		categories.add(new Category("Other expenses",1));
+		categories.get(4).setGroup(groupService.getGroups().get(8));
+		categories.add(new Category("School",1));
 		categories.get(5).setGroup(groupService.getGroups().get(3));
-		categories.add(new Category("Car taxes"));
+		categories.add(new Category("Car taxes",1));
 		categories.get(6).setGroup(groupService.getGroups().get(2));
-		categories.add(new Category("Petrol"));
+		categories.add(new Category("Petrol",1));
 		categories.get(7).setGroup(groupService.getGroups().get(2));
-		categories.add(new Category("Shopping"));
+		categories.add(new Category("Shopping",1));
 		categories.get(8).setGroup(groupService.getGroups().get(5));
-		categories.add(new Category("Insurance"));
+		categories.add(new Category("Insurance",1));
 		categories.get(9).setGroup(groupService.getGroups().get(6));
-		categories.add(new Category("Telecom"));
+		categories.add(new Category("Telecom",1));
 		categories.get(10).setGroup(groupService.getGroups().get(1));
-		categories.add(new Category("Renovation loan"));
-		categories.get(11).setGroup(groupService.getGroups().get(4));
-		categories.add(new Category("Restaurant"));
-		categories.get(12).setGroup(groupService.getGroups().get(7));
+		categories.add(new Category("Renovation loan",1));
+		categories.get(11).setGroup(groupService.getGroups().get(7));
+		categories.add(new Category("Restaurant",1));
+		categories.get(12).setGroup(groupService.getGroups().get(9));
 		// Assign user (foreign key)
 		for(int i=0;i<categories.size();i++)
 		{
@@ -127,7 +127,7 @@ public class CategoryService {
 		categoryRepository.saveAll(categories);
 	}
 
-	public void updateCategory(Long categoryID, String categoryName, String groupName, User user)
+	public void updateCategory(Long categoryID, String categoryName, String groupName, Integer inout, User user)
 	{
 		// Search the category by categoryName
 		for(Category category:categories)
@@ -136,17 +136,19 @@ public class CategoryService {
 			{
 				category.setCategoryName(categoryName);
 				category.setGroup(groupService.findGroupByGroupName(groupName,user));
+				category.setInOut(inout);
 				categoryRepository.save(category);
 			}
 		}
 	}
 
-	public void addCategory(String categoryName, String groupName, User user)
+	public void addCategory(String categoryName, String groupName, int inout, User user)
 	{
 		Category category = new Category();
 		category.setCategoryName(categoryName);
 		category.setUser(user);
 		category.setGroup(groupService.findGroupByGroupName(groupName,user));
+		category.setInOut(inout);
 		categories.add(category);
 		categoryRepository.save(category);
 	}

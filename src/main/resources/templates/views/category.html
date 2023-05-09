@@ -22,6 +22,14 @@
             th:value="${groupName.getGroupName}">
     </option>
 </select>
+</span><span class="w3-text-grey td">
+<select name="inout" style="width:75px;">
+<option value="" label="IN/OUT"></option>
+ <option value="1">OUT
+    </option>
+    <option value="0">IN
+    </option>
+</select>
 </span>
 <span class="w3-text-grey td">
 <button type="submit" style="width:100px;">Add category</button>
@@ -58,6 +66,16 @@
             th:value="${groupName.getGroupName}" th:selected="${ #strings.equals(groupName.getGroupName, category.getGroup.getGroupName)}">
     </option>
 </select>
+</span>
+
+<span class="w3-text-grey td">
+<select name="inout" style="width:75px;">
+ <option value="1" th:selected="${category.getInOut==1}" >OUT
+    </option>
+    <option value="0" th:selected="${category.getInOut==0}" >IN
+    </option>
+</select>
+
 </span>
 <span class="w3-text-grey td">
 <strong>Delete</strong><br>
