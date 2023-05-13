@@ -8,11 +8,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.SessionScope;
+
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.models.UserRole;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.repositories.UserRepository;
 import be.kennyverheyden.repositories.UserRoleRepository;
 import jakarta.mail.MessagingException;
@@ -20,10 +27,9 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import net.bytebuddy.utility.RandomString;
 
-
 @Service
-@Transactional 
-public class UserService{
+@Transactional
+public class UserService implements UserDetailsService{
 
 	@Autowired
 	private  UserRepository userRepository;
@@ -39,12 +45,22 @@ public class UserService{
 	private JavaMailSender mailSender;
 
 	private  PasswordEncoder passwordEncoder;
-
+	
 	private String userEmail;
-	private String secret;
+
 
 	public UserService() {
 		this.passwordEncoder =  new BCryptPasswordEncoder();
+	}
+	
+	// Part of Spring security
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByEmail(username);
+		if(user==null) {
+			throw new UsernameNotFoundException(username);
+		}
+		return new UserDetailsImpl(user);
 	}
 
 	public List<User> findAll() {
@@ -260,8 +276,8 @@ public class UserService{
 		userRepository.deleteCategoriesFromUser(user.getUserID());
 		userRepository.deleteGroupsFromUser(user.getUserID());
 		userRepository.delete(user);
-		this.userEmail=null;
-		this.secret=null;
+//		this.userEmail=null;
+//		this.secret=false;
 	}
 
 	public void deleteUserByAdmin(String userEmail)
@@ -332,22 +348,13 @@ public class UserService{
 		}
 	}
 
-	// Getters and Setters
-
+	
 	public String getUserEmail() {
 		return userEmail;
 	}
 
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
-	}
-
-	public String getSecret() {
-		return secret;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
 	}
 
 }

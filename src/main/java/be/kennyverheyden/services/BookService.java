@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import be.kennyverheyden.models.Book;
 import be.kennyverheyden.models.Category;
@@ -28,6 +29,8 @@ public class BookService {
 	private CategoryService categoryService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserDetails userDetails;
 
 	private List<Book> books;
 
@@ -233,7 +236,7 @@ public class BookService {
 	}
 
 	public void updateBook(Long bookID, String date, Double amount, String description, String categoryName, User user) {
-		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
+		categoryService.loadCategories(userService.findUserByeMail(userDetails.getUsername())); // Collect and load categories from specific user
 		Book book = this.findBookBybookID(bookID);
 		book.setDate(date);
 		book.setAmount(amount);
@@ -249,7 +252,7 @@ public class BookService {
 		book.setAmount(amount);
 		book.setDescription(description);
 		book.setUser(user);
-		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
+		categoryService.loadCategories(userService.findUserByeMail(userDetails.getUsername())); // Collect and load categories from specific user
 		book.setCategory(categoryService.findCategoryByCategoryName(categoryName,user)); // Find and add category name
 		books.add(book);
 		bookRepository.save(book);

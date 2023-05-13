@@ -39,7 +39,8 @@ public class PasswordResetController {
 	@PostMapping("/passreset") 
 	public String passResetPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
 
-		if(userService.getSecret().equals(oldSecret))
+		User user=userService.findUserByeMail(userEmail);
+		if(user.getSecret().equals(oldSecret))
 		{		
 			if(!secret.equals("") && !confirmSecret.equals(""))
 			{

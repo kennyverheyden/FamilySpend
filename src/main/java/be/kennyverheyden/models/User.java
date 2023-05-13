@@ -14,14 +14,14 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userID;
-	@Column(name="email")
+	@Column(name="email", nullable=false, unique=true)
 	private String eMail;
 	@Column(name="name")
 	private String name;
 	@Column(name="firstName")
 	private String firstName;
 	@Column(name="secret")
-	private String Secret;
+	private String secret;
 	@Column(name="creation")
 	private String creation;
 	@OneToOne
@@ -62,10 +62,10 @@ public class User {
 		this.firstName = firstName;
 	}
 	public String getSecret() {
-		return Secret;
+		return secret;
 	}
 	public void setSecret(String secret) {
-		Secret = secret;
+		secret = secret;
 	}
 	public String getCreation() {
 		return creation;

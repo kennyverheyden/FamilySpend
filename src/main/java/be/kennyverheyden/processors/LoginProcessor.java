@@ -1,58 +1,43 @@
 package be.kennyverheyden.processors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
 
-import be.kennyverheyden.models.User;
 import be.kennyverheyden.services.UserService;
 
-
 @Component
-@RequestScope
 public class LoginProcessor {
 
-	private String userEmail;
-	private String secret;
-
+	@Autowired
+	private AuthenticationConfiguration authenticationConfiguration;
 	@Autowired
 	private UserService userService;
+	
+	
+	public LoginProcessor () {}
 
-	private  PasswordEncoder passwordEncoder;
 
-	public LoginProcessor()
+	public boolean login(String userEmail, String secret) throws Exception
 	{
-		this.passwordEncoder =  new BCryptPasswordEncoder();
-	}
+System.out.println("login");
+		Authentication auth = new UsernamePasswordAuthenticationToken(userEmail,secret);
+		AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
+		auth= authenticationManager.authenticate(auth);
 
-	public boolean login()
-	{
-		// Session scope bean, userEmail must be available
+		SecurityContext sc = SecurityContextHolder.getContext();
+		sc.setAuthentication(auth);
+		System.out.println(sc.getAuthentication().getName());
+		System.out.println(sc.getAuthentication().getAuthorities());
+		secret=null;
 		userService.setUserEmail(userEmail);
-		userService.setSecret(secret);
-
-		// Check if userMail and password exist
-		for(User user:userService.findAll())
-		{
-			if(user.geteMail().equals(userService.getUserEmail()) && passwordEncoder.matches(userService.getSecret(),user.getSecret()) && user.isEnabled()==1)
-			{
-				userService.clearToken(user); // // If the user never used the reset password link
-				return true;
-			}
-		}
-		userService.setUserEmail(null);
-		userService.setSecret(null);
-		return false;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
-	}
-
-	public void setSecret(String secret) {
-		this.secret = secret;
+		return auth.isAuthenticated();
 	}
 
 }

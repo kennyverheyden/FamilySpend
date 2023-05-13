@@ -22,7 +22,6 @@ public class MainController {
 	{
 		if(logout != null) {
 			userService.setUserEmail(null);
-			userService.setSecret(null);
 		}
 
 		String userEmail = userService.getUserEmail();

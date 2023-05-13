@@ -69,6 +69,11 @@
     <artifactId>byte-buddy</artifactId>
     <version>1.14.4</version>
 </dependency>
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+    <version>3.1.1.RELEASE</version>
+</dependency>
 	</dependencies>
 
 	<build>

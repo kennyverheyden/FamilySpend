@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>FamilySpend</title>
 <meta charset="UTF-8">
@@ -116,25 +116,25 @@ input[type=email]:focus {
   <div class="w3-bar w3-red w3-card w3-left-align w3-large">
     <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-red" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
     <a href="/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
-    <a th:if="${isLoggedIn}==true" href="/book" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Book</a>
-    <a th:if="${isLoggedIn}==true" href="/categorytotals" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Category</a>
-    <a th:if="${isLoggedIn}==true" href="/grouptotals" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Group</a>
-    <a th:if="${isLoggedIn}==false" href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Login</a>
-    <a th:if="${isLoggedIn}==true" href="/main" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Account</a>
-  	<a th:if="${isAdmin}==true"href="/admin" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Admin</a>
-    <a th:if="${isLoggedIn}==true" href="/main?logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Log out</a>
+    <a sec:authorize="isAuthenticated()" href="/book" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Book</a>
+    <a sec:authorize="isAuthenticated()" href="/categorytotals" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Category</a>
+    <a sec:authorize="isAuthenticated()" href="/grouptotals" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Group</a>
+    <a sec:authorize="isAuthenticated()==false" href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Login</a>
+    <a sec:authorize="isAuthenticated()" href="/main" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Account</a>
+  	<a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Admin</a>
+    <a sec:authorize="isAuthenticated()" href="/main?logout" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Log out</a>
   </div>
 
   <!-- Navbar on small screens -->
   <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
     <a href="/" class="w3-bar-item w3-button w3-padding-large">Home</a>
-    <a th:if="${isLoggedIn}==true" href="/book" class="w3-bar-item w3-button w3-padding-large">Book</a>
-    <a th:if="${isLoggedIn}==true" href="/category" class="w3-bar-item w3-button w3-padding-large">Category</a>
-    <a th:if="${isLoggedIn}==true" href="/group" class="w3-bar-item w3-button w3-padding-large">Group</a>
-    <a th:if="${isLoggedIn}==false" href="/login" class="w3-bar-item w3-button w3-padding-large">Login</a>
-    <a th:if="${isLoggedIn}==true" href="/main" class="w3-bar-item w3-button w3-padding-large">Account</a>
-   	<a th:if="${isAdmin}==true" href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
-    <a th:if="${isLoggedIn}==true" href="/main?logout" class="w3-bar-item w3-button w3-padding-large">Log out</a>
+    <a sec:authorize="isAuthenticated()" href="/book" class="w3-bar-item w3-button w3-padding-large">Book</a>
+    <a sec:authorize="isAuthenticated()" href="/category" class="w3-bar-item w3-button w3-padding-large">Category</a>
+    <a sec:authorize="isAuthenticated()" href="/group" class="w3-bar-item w3-button w3-padding-large">Group</a>
+    <a sec:authorize="isAuthenticated()==false" href="/login" class="w3-bar-item w3-button w3-padding-large">Login</a>
+    <a sec:authorize="isAuthenticated()" href="/main" class="w3-bar-item w3-button w3-padding-large">Account</a>
+   	<a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
+    <a sec:authorize="isAuthenticated()" href="/main?logout" class="w3-bar-item w3-button w3-padding-large">Log out</a>
   </div>
 </div>
 

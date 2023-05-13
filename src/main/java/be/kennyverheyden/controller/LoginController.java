@@ -16,6 +16,8 @@ public class LoginController{
 	@Autowired
 	private LoginProcessor loginProcessor;
 
+	
+	
 	public LoginController() {}
 
 	@GetMapping("/login") // get request
@@ -28,10 +30,11 @@ public class LoginController{
 	public String loginPost(@RequestParam String userEmail, @RequestParam String secret, Model model, RedirectAttributes rm) {
 		boolean loggedIn = false;
 
-		loginProcessor.setUserEmail(userEmail);
-		loginProcessor.setSecret(secret);
-
-		loggedIn = loginProcessor.login();
+		try {
+			loggedIn = loginProcessor.login(userEmail, secret);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if(loggedIn == true)
 		{
