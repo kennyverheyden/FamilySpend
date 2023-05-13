@@ -22,13 +22,6 @@ public class PasswordResetController {
 	@GetMapping("/passreset") // get request
 	public String passResetGet(Model model) {
 
-		// When user is not logged on, the String is null
-		if(userService.getUserEmail()==null)
-		{
-			model.addAttribute("content", "home");
-			return "index";
-		}
-
 		User user = userService.findUserByeMail(userService.getUserEmail());
 		model.addAttribute("userEmail",user.geteMail());  // map content to html elements
 		model.addAttribute("content", "passreset"); 

@@ -27,12 +27,6 @@ public class AccountController {
 	public String accountGet(Model model) {
 
 
-		if(userService.getUserEmail()==null)
-		{
-			model.addAttribute("content", "home");
-			return "index";
-		}
-
 		User user = userService.findUserByeMail(userService.getUserEmail());
 
 		model.addAttribute("content", "account");

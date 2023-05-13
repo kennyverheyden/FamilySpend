@@ -64,12 +64,6 @@ public class BookController {
 		String userEmail = userService.getUserEmail();
 		//	When user is not logged on, the String is null
 
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "home");
-			return "redirect:/";
-		}
-
 		if(selectedMonth!=null) 
 		{
 			month=selectedMonth; // Set back the last user choice

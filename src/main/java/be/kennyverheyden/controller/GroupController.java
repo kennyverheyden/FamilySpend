@@ -49,15 +49,7 @@ public class GroupController {
 	@GetMapping("/group")
 	public String groupGet(Model model)
 	{
-
 		String userEmail = userService.getUserEmail();
-		//		// When user is not logged on, the String is null
-
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "home");
-			return "redirect:/";
-		}
 		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load groups from specific user
 		model.addAttribute("groups",groupService.findGroupByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
 		model.addAttribute("content", "group");
@@ -68,13 +60,6 @@ public class GroupController {
 	public String groupTotalsGet(Model model)
 	{
 		String userEmail = userService.getUserEmail();
-		// When user is not logged on, the String is null
-
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "login");
-			return "redirect:/";
-		}
 
 		// Get group by groups and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();

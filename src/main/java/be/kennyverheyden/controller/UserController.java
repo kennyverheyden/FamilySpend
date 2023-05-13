@@ -28,13 +28,6 @@ public class UserController {
 	@GetMapping("/admin") // get request
 	public String usersGet(Model model) {
 
-
-		if(userService.getUserEmail()==null)
-		{
-			model.addAttribute("content", "home");
-			return "index";
-		}
-
 		List<User> users = userService.findAll();
 		List<UserRole> roles = userService.findUserRoles();
 

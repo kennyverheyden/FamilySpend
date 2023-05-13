@@ -53,11 +53,6 @@ public class CategoryController {
 		String userEmail = userService.getUserEmail();
 		// When user is not logged on, the String is null
 
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "home");
-			return "redirect:/";
-		}
 		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
 		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
@@ -70,13 +65,6 @@ public class CategoryController {
 	public String categorieTotalsGet(Model model)
 	{
 		String userEmail = userService.getUserEmail();
-		// When user is not logged on, the String is null
-
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "login");
-			return "redirect:/";
-		}
 
 		// Get Category by group by and totals
 		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();

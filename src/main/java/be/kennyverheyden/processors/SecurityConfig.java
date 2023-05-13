@@ -55,8 +55,8 @@ public class SecurityConfig{
 		.and()
 		.formLogin()
 		.loginPage("/login")
-		//.loginProcessingUrl("/login")
-		//.defaultSuccessUrl("/login")
+		.loginProcessingUrl("/login")
+		.defaultSuccessUrl("/login")
 		.permitAll();
 		//.and()
 		//.logout()

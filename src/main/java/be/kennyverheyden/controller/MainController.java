@@ -20,18 +20,7 @@ public class MainController {
 	@GetMapping("/main")
 	public String mainGet(@RequestParam(required = false)String logout, Model model)
 	{
-		if(logout != null) {
-			userService.setUserEmail(null);
-		}
-
 		String userEmail = userService.getUserEmail();
-		// When user is not logged on, the String is null
-
-		if(userEmail==null)
-		{
-			model.addAttribute("content", "home");
-			return "redirect:/";
-		}
 
 		// When user is logged in, the user will be directed to another page
 		model.addAttribute("welcomeName",userService.findUserByeMail(userEmail).getFirstName());
