@@ -41,7 +41,7 @@ public class LoginController{
 		{
 			System.out.println("login: "+loggedIn);
 			model.addAttribute("content", "main");
-			return "redirect:/main";
+			return "index";
 		}
 		else
 		{
