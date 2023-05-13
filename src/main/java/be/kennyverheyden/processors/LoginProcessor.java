@@ -26,7 +26,6 @@ public class LoginProcessor {
 
 	public boolean login(String userEmail, String secret) throws Exception
 	{
-System.out.println("login");
 		Authentication auth = new UsernamePasswordAuthenticationToken(userEmail,secret);
 		AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
 		auth= authenticationManager.authenticate(auth);
@@ -37,6 +36,7 @@ System.out.println("login");
 		System.out.println(sc.getAuthentication().getAuthorities());
 		secret=null;
 		userService.setUserEmail(userEmail);
+		System.out.println(auth.isAuthenticated());
 		return auth.isAuthenticated();
 	}
 

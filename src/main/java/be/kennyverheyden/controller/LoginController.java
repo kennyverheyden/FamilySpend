@@ -26,7 +26,7 @@ public class LoginController{
 		return "index";
 	}
 
-	@PostMapping("/login") 
+	@PostMapping("/login/submit") 
 	public String loginPost(@RequestParam String userEmail, @RequestParam String secret, Model model, RedirectAttributes rm) {
 		boolean loggedIn = false;
 
@@ -35,17 +35,19 @@ public class LoginController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 
 		if(loggedIn == true)
 		{
+			System.out.println("login: "+loggedIn);
 			model.addAttribute("content", "main");
-			return "redirect:main";
+			return "redirect:/main";
 		}
 		else
 		{
 			model.addAttribute("content", "login");
 			rm.addFlashAttribute("message","Your credentials are incorrect");
-			return "redirect:login";
+			return "redirect:/login";
 		}
 	}
 
