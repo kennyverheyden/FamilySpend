@@ -27,7 +27,7 @@ public class UserController {
 	private UserDetailsImpl userDetails;
 
 	public UserController() {}
-	
+
 	@GetMapping("/admin") // get request
 	public String usersGet(Model model) {
 
@@ -40,7 +40,7 @@ public class UserController {
 		model.addAttribute("content", "admin");
 		return "index";
 	}
-	
+
 	// Admin can search for users
 	@PostMapping("/admin/find") 
 	public String findUsersPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String roleName, Model model, RedirectAttributes rm){
@@ -53,7 +53,7 @@ public class UserController {
 		model.addAttribute("content", "admin"); 
 		return "index";
 	}
-	
+
 	// Admin can edit users
 	@PostMapping("/admin/users") 
 	public String updateUserPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String secret, @RequestParam (required = false) String userRole, @RequestParam (required = false) Long currencyFK, @RequestParam (required = false) Integer enable, @RequestParam (required = false) Boolean delete, Model model, RedirectAttributes rm){

@@ -30,6 +30,12 @@
 </form><br>
 <!--  End select month -->
 
+<!--  Print month results -->
+<p>
+Income: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(income, 1, 'DEFAULT', 2, 'DEFAULT')}"  style="font-weight:bold;"></span> | Spending: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(spending, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;"></span> | Result: <span th:text="${currency}"></span> <span th:if="${result}>=0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:green;font-size:16px;"></span><span th:if="${result}<0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:red;font-size:16px;"></span>
+</p>
+<!--  End print month results -->
+
 <h4 th:text="${month_long}"></h4>
 
 <!--  Totals -->

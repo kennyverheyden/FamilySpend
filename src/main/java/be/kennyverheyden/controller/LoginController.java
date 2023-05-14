@@ -37,7 +37,6 @@ public class LoginController{
 			e.printStackTrace();
 		}
 
-
 		if(loggedIn == true)
 		{
 			userService.clearToken(userService.findUserByeMail(userEmail)); // Clear password reset (in mail) token in case never used

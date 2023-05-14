@@ -24,8 +24,6 @@ public class SignupController {
 	@Autowired
 	private CurrencyService currencyService; // Ask preferred currency
 
-	
-
 	public SignupController() {}
 
 	@GetMapping("/signup") // get request

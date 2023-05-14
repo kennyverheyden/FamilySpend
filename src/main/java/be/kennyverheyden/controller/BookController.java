@@ -28,7 +28,6 @@ import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.UserService;
 
-
 @Controller
 public class BookController {
 
@@ -64,9 +63,6 @@ public class BookController {
 	@GetMapping("/book")
 	public String bookGet(Model model)
 	{
-		String userEmail = userDetails.getUsername();
-		//	When user is not logged on, the String is null
-
 		if(selectedMonth!=null) 
 		{
 			month=selectedMonth; // Set back the last user choice

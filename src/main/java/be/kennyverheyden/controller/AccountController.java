@@ -74,7 +74,7 @@ public class AccountController {
 		{
 			userService.deleteUser(userDetails.getUsername());
 			model.addAttribute("content", "account");
-			return "redirect:/main?logout";
+			return "redirect:/Logout";
 		}
 		catch (Exception e) {
 			model.addAttribute("error", e.getMessage());

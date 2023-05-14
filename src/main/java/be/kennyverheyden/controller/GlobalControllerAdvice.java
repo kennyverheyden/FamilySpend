@@ -33,6 +33,7 @@ public class GlobalControllerAdvice {
 		}
 	}
 
+	// Check isAdmin role
 	@ModelAttribute("isAdmin")
 	public boolean isAdmin()
 	{

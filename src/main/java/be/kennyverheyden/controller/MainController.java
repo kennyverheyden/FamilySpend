@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.UserService;
 
-
 @Controller
 public class MainController {
 

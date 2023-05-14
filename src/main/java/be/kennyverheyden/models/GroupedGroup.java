@@ -1,6 +1,5 @@
 package be.kennyverheyden.models;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
