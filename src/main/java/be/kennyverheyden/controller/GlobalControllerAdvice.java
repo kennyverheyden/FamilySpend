@@ -22,48 +22,33 @@ public class GlobalControllerAdvice {
 	@ModelAttribute("isLoggedIn")
 	public boolean isLoggedIn()
 	{
-		if(userDetails==null)
+		if(userDetails.getUser()!=null)
 		{
-			return false;
+			return true;
 		}
 		else
 		{
-			if(userDetails.getUser()!=null)
-			{
-				return true;
-			}
-			else
-			{
-				// User is not logged in
-				return false;
-			}
+			// User is not logged in
+			return false;
 		}
 	}
 
 	@ModelAttribute("isAdmin")
-	public boolean isAdmin() {
-
-		if(userDetails==null)
+	public boolean isAdmin()
+	{
+		if(userDetails.getUser()!=null)
 		{
-			return false;
-		}
-		else
-		{
-			if(userDetails.getUser()!=null)
-			{
-				if(userDetails.getUser().getUserRole().getRoleID()==1) {
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+			if(userDetails.getUser().getUserRole().getRoleID()==1) {
+				return true;
 			}
 			else
 			{
-				// User is not logged in
 				return false;
 			}
+		}
+		else
+		{
+			return false;
 		}
 	}
 

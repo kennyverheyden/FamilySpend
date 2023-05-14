@@ -25,7 +25,7 @@ public class PasswordResetController {
 	private  PasswordEncoder passwordEncoder;
 
 	public PasswordResetController() {
-		this.passwordEncoder =  new BCryptPasswordEncoder();
+		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 
 	@GetMapping("/passreset") // get request

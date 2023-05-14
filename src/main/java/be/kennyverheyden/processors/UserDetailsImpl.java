@@ -25,7 +25,6 @@ public class UserDetailsImpl implements UserDetails{
 		this.user = user;
 	}
 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		String role = user.getUserRole().getRoleName().toString();
@@ -35,7 +34,6 @@ public class UserDetailsImpl implements UserDetails{
 
 		return authorities;
 	}
-
 
 	@Override
 	public String getPassword() {
@@ -74,6 +72,5 @@ public class UserDetailsImpl implements UserDetails{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
 
 }
