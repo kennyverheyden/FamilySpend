@@ -163,8 +163,9 @@ public class CategoryController {
 	@PostMapping("/category/add") 
 	public String addCategoryPost(@RequestParam (required = false) String categoryName,@RequestParam (required = false) String groupName,@RequestParam (required = false) Integer inout, Model model, RedirectAttributes rm)
 	{
+		int maxAmountCatPerUser=50; // Allow 50  categories per user
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
-		if(categoryService.getCategories().size()<50) // Allow 50 per user
+		if(categoryService.getCategories().size()<maxAmountCatPerUser)
 		{
 			if(categoryName!="")
 			{
@@ -218,7 +219,7 @@ public class CategoryController {
 		else
 		{
 			model.addAttribute("content", "category");
-			rm.addFlashAttribute("message","Max amount categories reached");
+			rm.addFlashAttribute("message","Max amount of "+maxAmountCatPerUser+" categories reached");
 			return "redirect:/category";
 		}
 	}

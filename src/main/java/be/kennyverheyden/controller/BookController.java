@@ -97,7 +97,7 @@ public class BookController {
 		selectedMonth=month; // Keep the last user choice
 		if(year!=null)
 		{
-			selectedYear=year; // Keeop the last user choice
+			selectedYear=year; // Keep the last user choice
 		}
 		else
 		{
@@ -251,7 +251,6 @@ public class BookController {
 			String dayStr=date.substring(0,2);
 			String monthStr=date.substring(3,5);
 			String yearStr=date.substring(6,10);
-
 
 			int day= Integer.parseInt(dayStr);
 			int month =  Integer.parseInt(monthStr);

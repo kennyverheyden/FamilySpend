@@ -29,9 +29,7 @@ public class AccountController {
 	@GetMapping("/account") // get request
 	public String accountGet(Model model) {
 
-
 		User user = userService.findUserByeMail(userDetails.getUsername());
-
 		model.addAttribute("content", "account");
 		model.addAttribute("email",user.geteMail());  // Map content to html elements
 		model.addAttribute("firstName",user.getFirstName());  

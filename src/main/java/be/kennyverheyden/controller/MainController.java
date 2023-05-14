@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import be.kennyverheyden.models.User;
 import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.UserService;
 
@@ -22,10 +23,8 @@ public class MainController {
 	@GetMapping("/main")
 	public String mainGet(@RequestParam(required = false)String logout, Model model)
 	{
-		String userEmail = userDetails.getUsername();
-
-		// When user is logged in, the user will be directed to another page
-		model.addAttribute("welcomeName",userService.findUserByeMail(userEmail).getFirstName());
+		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
+		model.addAttribute("welcomeName",user.getFirstName());
 		model.addAttribute("content", "main");
 		return "index";
 	}

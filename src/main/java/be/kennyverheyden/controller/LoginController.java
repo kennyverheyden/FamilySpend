@@ -18,7 +18,6 @@ public class LoginController{
 	@Autowired
 	private UserService userService;
 
-
 	public LoginController() {}
 
 	@GetMapping("/login") // get request
