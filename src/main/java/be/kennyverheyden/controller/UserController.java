@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.models.UserRole;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
@@ -22,6 +23,8 @@ public class UserController {
 	private UserService userService;
 	@Autowired
 	private CurrencyService currencyService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	public UserController() {}
 	
@@ -66,7 +69,7 @@ public class UserController {
 
 		if(delete)
 		{
-			if(email.equals(userService.getUserEmail())) // You cannot delete your own admin account
+			if(email.equals(userDetails.getUsername())) // You cannot delete your own admin account
 			{
 				model.addAttribute("content", "admin");
 				rm.addFlashAttribute("message","You cannot delete your own account");

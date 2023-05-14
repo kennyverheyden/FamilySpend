@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.models.Month;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
@@ -34,6 +35,8 @@ public class CategoryController {
 	private UserService userService;
 	@Autowired
 	private BookService bookService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	Date date = new Date();
 	String monthDateFormat = "MM";
@@ -50,11 +53,11 @@ public class CategoryController {
 	public String categorieGet(Model model)
 	{
 
-		String userEmail = userService.getUserEmail();
+		String userEmail = userDetails.getUsername();
 		// When user is not logged on, the String is null
 
-		categoryService.loadCategories(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
-		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load categories from specific user
+		categoryService.loadCategories(userService.findUserByeMail(userDetails.getUsername())); // Collect and load categories from specific user
+		groupService.loadGroups(userService.findUserByeMail(userDetails.getUsername())); // Collect and load categories from specific user
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
 		model.addAttribute("groups",groupService.getGroups()); // Bind groups to Select options
 		model.addAttribute("content", "category");
@@ -64,16 +67,16 @@ public class CategoryController {
 	@GetMapping("/categorytotals")
 	public String categorieTotalsGet(Model model)
 	{
-		String userEmail = userService.getUserEmail();
+		String userEmail = userDetails.getUsername();
 
 		// Get Category by group by and totals
-		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		Long userID=userService.findUserByeMail(userDetails.getUsername()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
 		model.addAttribute("groupedCategories",groupedCategories);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
-		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
-		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("currency",userService.findUserByeMail(userDetails.getUsername()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userDetails.getUsername()).getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("content", "categorytotals");
 		return "index";
@@ -82,14 +85,14 @@ public class CategoryController {
 	@PostMapping("/categorytotals/totals") 
 	public String categoryTotalsPost(@RequestParam String month, String year, Model model, RedirectAttributes rm)
 	{
-		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		Long userID=userService.findUserByeMail(userDetails.getUsername()).getUserID();
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(userID,month,year);
 
 		model.addAttribute("content", "categorytotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
-		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
-		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("currency",userService.findUserByeMail(userDetails.getUsername()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userDetails.getUsername()).getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("groupedCategories", groupedCategories);
 		return "index";
@@ -106,7 +109,7 @@ public class CategoryController {
 
 		if(delete)
 		{
-			if(!bookService.bookingHasCategory(categoryID, userService.getUserEmail()))
+			if(!bookService.bookingHasCategory(categoryID, userDetails.getUsername()))
 			{
 				try
 				{
@@ -132,9 +135,9 @@ public class CategoryController {
 			if(categoryName!="")
 			{
 				String checkDuplicat = giveDuplicateIfExist(categoryName);
-				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName) || inout!=category.getInOut())
+				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userDetails.getUsername()), groupName) || inout!=category.getInOut())
 				{
-					categoryService.updateCategory(categoryID,categoryName,groupName,inout,userService.findUserByeMail(userService.getUserEmail()));
+					categoryService.updateCategory(categoryID,categoryName,groupName,inout,userService.findUserByeMail(userDetails.getUsername()));
 					model.addAttribute("content", "category");
 					rm.addFlashAttribute("message","Information succesfully updated");
 					return "redirect:/category";
@@ -168,11 +171,11 @@ public class CategoryController {
 					if(inout!=null)
 					{
 						String checkDuplicat = giveDuplicateIfExist(categoryName);
-						if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userService.getUserEmail()), groupName))
+						if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName, userService.findUserByeMail(userDetails.getUsername()), groupName))
 						{
 							try
 							{
-								categoryService.addCategory(categoryName,groupName,inout,userService.findUserByeMail(userService.getUserEmail()));
+								categoryService.addCategory(categoryName,groupName,inout,userService.findUserByeMail(userDetails.getUsername()));
 								model.addAttribute("content", "category");
 								rm.addFlashAttribute("message","Category succesfully added");
 								return "redirect:/category";
@@ -222,9 +225,9 @@ public class CategoryController {
 	{
 		// Check if categoryName already exist
 		String checkDuplicat = null;
-		if(categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userService.getUserEmail()))!=null)
+		if(categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userDetails.getUsername()))!=null)
 		{
-			checkDuplicat = categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userService.getUserEmail())).getCategoryName().toString();
+			checkDuplicat = categoryService.findCategoryByCategoryName(categoryName, userService.findUserByeMail(userDetails.getUsername())).getCategoryName().toString();
 		}
 		return checkDuplicat;
 	}

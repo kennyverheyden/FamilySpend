@@ -1,6 +1,8 @@
 package be.kennyverheyden.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.UserService;
 
 @Controller
@@ -16,13 +19,19 @@ public class PasswordResetController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
-	public PasswordResetController() {}
+	private  PasswordEncoder passwordEncoder;
+
+	public PasswordResetController() {
+		this.passwordEncoder =  new BCryptPasswordEncoder();
+	}
 
 	@GetMapping("/passreset") // get request
 	public String passResetGet(Model model) {
 
-		User user = userService.findUserByeMail(userService.getUserEmail());
+		User user = userService.findUserByeMail(userDetails.getUsername());
 		model.addAttribute("userEmail",user.geteMail());  // map content to html elements
 		model.addAttribute("content", "passreset"); 
 
@@ -33,7 +42,7 @@ public class PasswordResetController {
 	public String passResetPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
 
 		User user=userService.findUserByeMail(userEmail);
-		if(user.getSecret().equals(oldSecret))
+		if(passwordEncoder.matches(oldSecret,user.getSecret()))
 		{		
 			if(!secret.equals("") && !confirmSecret.equals(""))
 			{

@@ -1,18 +1,14 @@
 package be.kennyverheyden.services;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import be.kennyverheyden.models.Book;
 import be.kennyverheyden.models.Category;
-import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.models.User;

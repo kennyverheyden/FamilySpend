@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.models.Month;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.GroupService;
@@ -34,6 +35,8 @@ public class GroupController {
 	private UserService userService;
 	@Autowired
 	private BookService bookService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	Date date = new Date();
 	String monthDateFormat = "MM";
@@ -49,8 +52,8 @@ public class GroupController {
 	@GetMapping("/group")
 	public String groupGet(Model model)
 	{
-		String userEmail = userService.getUserEmail();
-		groupService.loadGroups(userService.findUserByeMail(userService.getUserEmail())); // Collect and load groups from specific user
+		String userEmail = userDetails.getUsername();
+		groupService.loadGroups(userService.findUserByeMail(userDetails.getUsername())); // Collect and load groups from specific user
 		model.addAttribute("groups",groupService.findGroupByUserUserID(userService.findUserByeMail(userEmail).getUserID()));
 		model.addAttribute("content", "group");
 		return "index";
@@ -59,16 +62,16 @@ public class GroupController {
 	@GetMapping("/grouptotals")
 	public String groupTotalsGet(Model model)
 	{
-		String userEmail = userService.getUserEmail();
+		String userEmail = userDetails.getUsername();
 
 		// Get group by groups and totals
-		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		Long userID=userService.findUserByeMail(userDetails.getUsername()).getUserID();
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month,year);
 		model.addAttribute("groupedGroups", groupedGroups);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
-		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
-		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("currency",userService.findUserByeMail(userDetails.getUsername()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userDetails.getUsername()).getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("content", "grouptotals");
 		return "index";
@@ -77,13 +80,13 @@ public class GroupController {
 	@PostMapping("/grouptotals/totals") 
 	public String groupTotalsPost(@RequestParam String month, String year, Model model, RedirectAttributes rm)
 	{
-		Long userID=userService.findUserByeMail(userService.getUserEmail()).getUserID();
+		Long userID=userService.findUserByeMail(userDetails.getUsername()).getUserID();
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(userID,month,year);
 		model.addAttribute("content", "grouptotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
-		model.addAttribute("currency",userService.findUserByeMail(userService.getUserEmail()).getCurrency().getCurrencySymbol());
-		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userService.getUserEmail()).getUserID())); // Dropdown filter
+		model.addAttribute("currency",userService.findUserByeMail(userDetails.getUsername()).getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(userService.findUserByeMail(userDetails.getUsername()).getUserID())); // Dropdown filter
 		model.addAttribute("year",year); // Dropdown selected option
 		model.addAttribute("groupedGroups", groupedGroups);
 		return "index";
@@ -99,7 +102,7 @@ public class GroupController {
 
 		if(delete)
 		{
-			if(!categoryService.categoryHasGroup(groupID, userService.getUserEmail()))
+			if(!categoryService.categoryHasGroup(groupID, userDetails.getUsername()))
 			{
 				try
 				{
@@ -129,7 +132,7 @@ public class GroupController {
 				{
 					try
 					{
-						groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userService.getUserEmail()));
+						groupService.updateGroup(groupID,groupName,userService.findUserByeMail(userDetails.getUsername()));
 						model.addAttribute("content", "group");
 						rm.addFlashAttribute("message","Information succesfully updated");
 						return "redirect:/group";
@@ -166,7 +169,7 @@ public class GroupController {
 				{
 					try
 					{
-						groupService.addGroup(groupName,userService.findUserByeMail(userService.getUserEmail()));
+						groupService.addGroup(groupName,userService.findUserByeMail(userDetails.getUsername()));
 						model.addAttribute("content", "group");
 						rm.addFlashAttribute("message","Group succesfully added");
 						return "redirect:/group";
@@ -202,9 +205,9 @@ public class GroupController {
 	{
 		// Check if groupName already exist
 		String checkDuplicat = null;
-		if(groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userService.getUserEmail()))!=null)
+		if(groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userDetails.getUsername()))!=null)
 		{
-			checkDuplicat = groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userService.getUserEmail())).getGroupName().toString();
+			checkDuplicat = groupService.findGroupByGroupName(groupName, userService.findUserByeMail(userDetails.getUsername())).getGroupName().toString();
 		}
 		return checkDuplicat;
 	}

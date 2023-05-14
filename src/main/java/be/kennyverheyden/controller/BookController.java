@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import be.kennyverheyden.models.Category;
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.models.User;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.BookService;
 import be.kennyverheyden.services.CategoryService;
 import be.kennyverheyden.services.UserService;
@@ -37,6 +38,8 @@ public class BookController {
 	private UserService userService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	// Get current month and year
 	Date date = new Date();
@@ -61,7 +64,7 @@ public class BookController {
 	@GetMapping("/book")
 	public String bookGet(Model model)
 	{
-		String userEmail = userService.getUserEmail();
+		String userEmail = userDetails.getUsername();
 		//	When user is not logged on, the String is null
 
 		if(selectedMonth!=null) 
@@ -73,7 +76,7 @@ public class BookController {
 			year=selectedYear; // Set back the last user choice
 		}
 
-		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
 		Collections.reverse(bookings); // Show newest first
 		bookService.loadBooks(user);
@@ -104,7 +107,7 @@ public class BookController {
 		{
 			year = Integer.toString(LocalDate.now().getYear());
 		}
-		User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
 		Collections.reverse(bookings); // Show newest first
 		bookService.loadBooks(user);
@@ -148,7 +151,7 @@ public class BookController {
 				{
 					try
 					{
-						User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+						User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 						bookService.updateBook(bookID, date, amount, description, categoryName, user);
 						model.addAttribute("content", "book");
 						rm.addFlashAttribute("message","Booking succesfully updated");
@@ -192,7 +195,7 @@ public class BookController {
 			{
 				try
 				{
-					User user=userService.findUserByeMail(userService.getUserEmail()); // Get user information
+					User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 					bookService.addBook(amount, addDate, description, category.getCategoryName(), user);
 					model.addAttribute("content", "book");
 					rm.addFlashAttribute("message","Booking succesfully updated");
@@ -231,7 +234,7 @@ public class BookController {
 		}
 		try
 		{
-			bookService.deleteMonthBook(userService.findUserByeMail(userService.getUserEmail()).getUserID(), month, year);
+			bookService.deleteMonthBook(userService.findUserByeMail(userDetails.getUsername()).getUserID(), month, year);
 			model.addAttribute("content", "book");
 			rm.addFlashAttribute("message","Month bookings deleted");
 			return "redirect:/book";

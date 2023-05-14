@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
@@ -19,6 +20,8 @@ public class AccountController {
 	private UserService userService;
 	@Autowired
 	private CurrencyService currencyService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	public AccountController() {}
 
@@ -27,7 +30,7 @@ public class AccountController {
 	public String accountGet(Model model) {
 
 
-		User user = userService.findUserByeMail(userService.getUserEmail());
+		User user = userService.findUserByeMail(userDetails.getUsername());
 
 		model.addAttribute("content", "account");
 		model.addAttribute("email",user.geteMail());  // Map content to html elements
@@ -69,7 +72,7 @@ public class AccountController {
 	public String deleteAccountPost(Model model, RedirectAttributes rm){
 		try
 		{
-			userService.deleteUser(userService.getUserEmail());
+			userService.deleteUser(userDetails.getUsername());
 			model.addAttribute("content", "account");
 			return "redirect:/main?logout";
 		}

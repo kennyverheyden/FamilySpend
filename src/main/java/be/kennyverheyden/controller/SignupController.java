@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import be.kennyverheyden.processors.LoginProcessor;
 import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 import jakarta.mail.MessagingException;
@@ -22,16 +20,16 @@ public class SignupController {
 
 	@Autowired
 	private UserService userService;
-	@Autowired
-	private LoginProcessor loginProcessor;
+
 	@Autowired
 	private CurrencyService currencyService; // Ask preferred currency
+
+	
 
 	public SignupController() {}
 
 	@GetMapping("/signup") // get request
 	public String signupGet(Model model) {
-		String userEmail = userService.getUserEmail();
 
 		model.addAttribute("currencies",currencyService.findAllCurrencies()); // Option for currency
 		model.addAttribute("content", "signup");
@@ -52,9 +50,6 @@ public class SignupController {
 					//boolean loggedIn = false;
 					// Register user
 					userService.register(userEmail, secret, name, firstName, role, currencyFK, getSiteURL(request));
-					//loginProcessor.setUserEmail(userEmail);
-					//loginProcessor.setSecret(secret);
-					//loggedIn = loginProcessor.login();
 					model.addAttribute("content", "process_register");
 					rm.addFlashAttribute("welcomeName",firstName);
 					return "redirect:/process_register";

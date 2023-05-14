@@ -2,15 +2,70 @@ package be.kennyverheyden.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import be.kennyverheyden.models.Month;
+import be.kennyverheyden.processors.UserDetailsImpl;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
 	public GlobalControllerAdvice() {}
+
+	@Autowired
+	UserDetailsImpl userDetails;
+
+	// Check loggedIn status
+	@ModelAttribute("isLoggedIn")
+	public boolean isLoggedIn()
+	{
+		if(userDetails==null)
+		{
+			return false;
+		}
+		else
+		{
+			if(userDetails.getUser()!=null)
+			{
+				return true;
+			}
+			else
+			{
+				// User is not logged in
+				return false;
+			}
+		}
+	}
+
+	@ModelAttribute("isAdmin")
+	public boolean isAdmin() {
+
+		if(userDetails==null)
+		{
+			return false;
+		}
+		else
+		{
+			if(userDetails.getUser()!=null)
+			{
+				if(userDetails.getUser().getUserRole().getRoleID()==1) {
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				// User is not logged in
+				return false;
+			}
+		}
+	}
 
 	// Used for html select option text and values
 	@ModelAttribute("months")

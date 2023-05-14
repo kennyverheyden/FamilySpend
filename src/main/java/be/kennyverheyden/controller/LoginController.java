@@ -7,17 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import be.kennyverheyden.processors.LoginProcessor;
+import be.kennyverheyden.services.UserService;
 
 @Controller
 public class LoginController{
 
 	@Autowired
 	private LoginProcessor loginProcessor;
+	@Autowired
+	private UserService userService;
 
-	
-	
+
 	public LoginController() {}
 
 	@GetMapping("/login") // get request
@@ -35,13 +36,13 @@ public class LoginController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 
 		if(loggedIn == true)
 		{
-			System.out.println("login: "+loggedIn);
+			userService.clearToken(userService.findUserByeMail(userEmail)); // Clear password reset (in mail) token in case never used
 			model.addAttribute("content", "main");
-			return "index";
+			return "redirect:/main";
 		}
 		else
 		{

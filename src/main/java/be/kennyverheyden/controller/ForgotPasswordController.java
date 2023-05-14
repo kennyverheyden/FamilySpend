@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.mail.javamail.JavaMailSender;
-import be.kennyverheyden.Utility;
+
 import be.kennyverheyden.models.User;
+import be.kennyverheyden.processors.Utility;
 import be.kennyverheyden.services.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

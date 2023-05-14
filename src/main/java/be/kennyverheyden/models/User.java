@@ -65,7 +65,7 @@ public class User {
 		return secret;
 	}
 	public void setSecret(String secret) {
-		secret = secret;
+		this.secret = secret;
 	}
 	public String getCreation() {
 		return creation;

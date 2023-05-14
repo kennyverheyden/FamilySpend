@@ -13,10 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
-
 import be.kennyverheyden.models.User;
 import be.kennyverheyden.models.UserRole;
 import be.kennyverheyden.processors.UserDetailsImpl;
@@ -43,12 +40,12 @@ public class UserService implements UserDetailsService{
 	private CurrencyService currencyService;
 	@Autowired
 	private JavaMailSender mailSender;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	private  PasswordEncoder passwordEncoder;
 	
-	private String userEmail;
-
-
+	
 	public UserService() {
 		this.passwordEncoder =  new BCryptPasswordEncoder();
 	}
@@ -60,7 +57,11 @@ public class UserService implements UserDetailsService{
 		if(user==null) {
 			throw new UsernameNotFoundException(username);
 		}
-		return new UserDetailsImpl(user);
+		else
+		{
+			userDetails.setUser(user);
+		}
+		return userDetails;
 	}
 
 	public List<User> findAll() {
@@ -209,6 +210,7 @@ public class UserService implements UserDetailsService{
 		user.seteMail(userEmail); // = username
 		String encodedPassword = this.passwordEncoder.encode(secret);
 		user.setSecret(encodedPassword);
+		secret=null;
 		user.setName(name);
 		user.setFirstName(firstName);
 		user.setUserRole(userRoleRepository.findById(role).get());
@@ -346,15 +348,6 @@ public class UserService implements UserDetailsService{
 			user.setResetPasswordToken(null);
 			userRepository.save(user);
 		}
-	}
-
-	
-	public String getUserEmail() {
-		return userEmail;
-	}
-
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
 	}
 
 }

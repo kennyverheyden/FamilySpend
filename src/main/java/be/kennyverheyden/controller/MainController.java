@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.UserService;
 
 
@@ -14,13 +15,15 @@ public class MainController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserDetailsImpl userDetails;
 
 	public MainController() {}
 
 	@GetMapping("/main")
 	public String mainGet(@RequestParam(required = false)String logout, Model model)
 	{
-		String userEmail = userService.getUserEmail();
+		String userEmail = userDetails.getUsername();
 
 		// When user is logged in, the user will be directed to another page
 		model.addAttribute("welcomeName",userService.findUserByeMail(userEmail).getFirstName());
