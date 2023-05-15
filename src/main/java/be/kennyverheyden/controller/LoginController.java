@@ -25,7 +25,6 @@ public class LoginController{
 	@Autowired
 	private UserService userService;
 
-
 	int maxLoginAttempts=5;
 	List<String> userEmails = new ArrayList(); // Store failed login attempts same userEmail
 
@@ -44,49 +43,56 @@ public class LoginController{
 		try {
 			loggedIn = loginProcessor.login(userEmail, secret);
 		} catch (Exception e) {
+			// Catch bad credentials exception
 			int loginAttempts=0; // Count failed logins in the list
 			userEmails.add(userEmail); // Add to failed login list
 			for(int i=0;i<userEmails.size();i++) // Check to list
 			{
-				if(userEmails.get(i).equalsIgnoreCase(userEmail));
+				if(userEmails.get(i).equalsIgnoreCase(userEmail)); // Check the list with previous failed logins with specific username(email)
 				{
 					loginAttempts++;
 				}
 			}
-			if(loginAttempts==maxLoginAttempts)
+			if(loginAttempts==maxLoginAttempts) // If max amount failed logins reached
 			{
 				User user = userService.findUserByeMail(userEmail);
 				// If user exist with given userName (userEmail)
 				// Admin account can not disabled
 				if(user!=null && user.getUserRole().getRoleID()!= 1)
 				{
-					user.setEnabled(0); // Int 0 = false
-					userService.updateUser(user);
+					user.setEnabled(0); // Int 0 = false - Set user account disable
+					userService.updateUser(user); // Update user account in database
 				}
 			}
+			// Back to login page with error msg
 			model.addAttribute("content", "login");
 			rm.addFlashAttribute("message","Your credentials are incorrect");
-			return "redirect:/login";
+			return "redirect:/login"; // Back to login page
 		}
 
 		if(loggedIn == true)
 		{
-			User user = userService.findUserByeMail(userEmail);
-			if(user.isEnabled()!=0)
+			User user = userService.findUserByeMail(userEmail); // Get user 
+			if(user.isEnabled()!=0) // Check if user account is enable
 			{
+				// Logged in success - Redirect to main page
 				userService.clearToken(userService.findUserByeMail(userEmail)); // Clear password reset (in mail) token in case never used
-				userEmails.clear();
+				userEmails.clear(); // Clear the failed login attempts list
 				model.addAttribute("content", "main");
-				return "redirect:/main";
+				return "redirect:/main"; // Return to logged in page
 			}
 			else
 			{
+				// When account is blocked
 				request.logout();
 				model.addAttribute("content", "login");
-				rm.addFlashAttribute("message","Account inactive or blocked, please contact the admin");
-				return "redirect:/login";
+				rm.addFlashAttribute("message","Your credentials are incorrect"); // Show msg when account is blocked
+				//rm.addFlashAttribute("message","Account inactive or blocked, please contact the admin"); // Show msg when account is blocked
+				return "redirect:/login"; // Back to login page
 			}
 		}
+		
+		// Default return
 		model.addAttribute("content", "login");
 		rm.addFlashAttribute("message","Your credentials are incorrect");
 		return "redirect:/login";

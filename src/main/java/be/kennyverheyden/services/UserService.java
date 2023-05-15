@@ -198,6 +198,7 @@ public class UserService implements UserDetailsService{
 		User user = this.findUserByeMail(userEmail);
 		String encodedPassword = this.passwordEncoder.encode(secret);
 		user.setSecret(encodedPassword);
+		user.setEnabled(1); // Enable account, when account is blocked after max amount failed login attempts
 		userRepository.save(user);
 	}
 

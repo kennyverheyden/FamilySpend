@@ -24,7 +24,7 @@ public class LoginProcessor {
 		secret=null; // Clear plain password
 		AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
 		auth= authenticationManager.authenticate(auth);
-
+		
 		SecurityContext sc = SecurityContextHolder.getContext();
 		sc.setAuthentication(auth);
 		//			System.out.println(sc.getAuthentication().getName());
