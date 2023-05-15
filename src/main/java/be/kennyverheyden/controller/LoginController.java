@@ -79,7 +79,7 @@ public class LoginController{
 				userService.clearToken(userService.findUserByeMail(userEmail)); // Clear password reset (in mail) token in case never used
 				userEmails.clear(); // Clear the failed login attempts list
 				model.addAttribute("content", "main");
-				return "redirect:/main"; // Return to logged in page
+				return "redirect:/main";
 			}
 			else
 			{

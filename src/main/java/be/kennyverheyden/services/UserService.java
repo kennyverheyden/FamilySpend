@@ -197,8 +197,6 @@ public class UserService implements UserDetailsService{
 	public void updateSecret(String userEmail, String secret) {
 		User user = this.findUserByeMail(userEmail);
 		String encodedPassword = this.passwordEncoder.encode(secret);
-		user.setSecret(encodedPassword);
-		user.setEnabled(1); // Enable account, when account is blocked after max amount failed login attempts
 		userRepository.save(user);
 	}
 
@@ -340,6 +338,7 @@ public class UserService implements UserDetailsService{
 		String encodedPassword = passwordEncoder.encode(newPassword);
 		user.setSecret(encodedPassword);
 		user.setResetPasswordToken(null);
+		user.setEnabled(1); // Enable account, when account is blocked after max amount failed login attempts
 		userRepository.save(user);
 	}
 

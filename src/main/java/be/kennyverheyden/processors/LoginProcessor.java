@@ -17,18 +17,14 @@ public class LoginProcessor {
 
 	public LoginProcessor () {}
 
-
 	public boolean login(String userEmail, String secret) throws Exception
 	{
 		Authentication auth = new UsernamePasswordAuthenticationToken(userEmail,secret);
 		secret=null; // Clear plain password
 		AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
 		auth= authenticationManager.authenticate(auth);
-		
 		SecurityContext sc = SecurityContextHolder.getContext();
 		sc.setAuthentication(auth);
-		//			System.out.println(sc.getAuthentication().getName());
-		//			System.out.println(sc.getAuthentication().getAuthorities());
 		return auth.isAuthenticated();
 	}
 
