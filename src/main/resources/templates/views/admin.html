@@ -39,10 +39,9 @@ Rolename<br>
 <br>
 
 <!-- Users list -->     
-<span style="font-size:12px;"><strong>* Only 10 users are preloaded, use the search button to find users </strong></span>
 <div class="table">
 
-<form action="/admin/users" style="border:1px solid #000000;" method="post" class="tr" th:each="user, index: ${users}" th:unless="${index.index > 9}">
+<form action="/admin/users" method="post" class="tr" th:each="user, index: ${users}" th:unless="${index.index > 9}">
 
 <span class="td" style="padding:12px;vertical-align:top;">
 <strong>Username/role</strong><br>
@@ -56,14 +55,17 @@ Rolename<br>
 </select><br><br>
 <strong>Password</strong><br>
 <input type="password" name="secret">
+<br><br>
 </span>
 
 <span class="td" style="padding:12px;vertical-align:top;">
 <strong>Name/First name</strong><br>
 <input th:value="${user.getName}" type="text" name="name"><br>
-<input th:value="${user.getFirstName}" type="text" name="firstName"><br><br>
+<input th:value="${user.getFirstName}" type="text" name="firstName"><br>
+Created: <span th:text="${user.getCreation}"></span><br>
 <strong>Delete?</strong>
  &nbsp; &nbsp;<input type="checkbox" th:id="${index.index}"  name="delete" th:onclick="'javascript:changeSubmitButton(' + ${index.index} + ')'">
+ <br><br>
 </span>
 <span class="td" style="padding:12px;vertical-align:top;">
 			<strong>Currency:</strong><br>
@@ -87,6 +89,7 @@ Rolename<br>
     		</select>
 <br><br>
 <button type="submit" th:id="${'submit'+index.index}" th:onclick="'javascript:show_alert(' + ${index.index} + ')'" style="width:100px;">Edit</button>
+<br><br>
 </span>
 
 </form>

@@ -44,12 +44,12 @@ public class UserService implements UserDetailsService{
 	private UserDetailsImpl userDetails;
 
 	private  PasswordEncoder passwordEncoder;
-	
-	
+
+
 	public UserService() {
 		this.passwordEncoder =  new BCryptPasswordEncoder();
 	}
-	
+
 	// Part of Spring security
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -270,6 +270,10 @@ public class UserService implements UserDetailsService{
 		}
 	}
 
+	public void updateUser(User user) {
+		userRepository.save(user);
+	}
+
 	// Delete the user and all his content in the DB
 	public void deleteUser(String userEmail)
 	{
@@ -278,8 +282,6 @@ public class UserService implements UserDetailsService{
 		userRepository.deleteCategoriesFromUser(user.getUserID());
 		userRepository.deleteGroupsFromUser(user.getUserID());
 		userRepository.delete(user);
-//		this.userEmail=null;
-//		this.secret=false;
 	}
 
 	public void deleteUserByAdmin(String userEmail)

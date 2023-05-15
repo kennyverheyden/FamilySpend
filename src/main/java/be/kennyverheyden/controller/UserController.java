@@ -30,13 +30,8 @@ public class UserController {
 
 	@GetMapping("/admin") // get request
 	public String usersGet(Model model) {
-
-		List<User> users = userService.findAll();
 		List<UserRole> roles = userService.findUserRoles();
-
-		model.addAttribute("users",users);  // map content to html elements
 		model.addAttribute("roles",roles);  // map content to html elements
-		model.addAttribute("currencies",currencyService.findAllCurrencies());
 		model.addAttribute("content", "admin");
 		return "index";
 	}
