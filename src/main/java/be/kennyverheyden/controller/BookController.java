@@ -184,7 +184,10 @@ public class BookController {
 			Category category=categoryService.findCategoryByCategoryID(categoryID); 
 			if(category.getInOut()!=0) // 0=income
 			{
-				amount=amount-(amount*2); // Make number negative
+				if(amount>0)
+				{
+					amount=amount-(amount*2); // Make number negative
+				}
 			}
 
 			if(dateValidator(addDate))
