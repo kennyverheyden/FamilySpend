@@ -132,8 +132,8 @@ input[type=email]:focus {
     <a href="/" class="w3-bar-item w3-button w3-padding-large">Home</a>
    	<a th:if="${isLoggedIn}!=true" href="/intro" class="w3-bar-item w3-button w3-padding-large">Introduction</a>
     <a th:if="${isLoggedIn}==true" href="/book" class="w3-bar-item w3-button w3-padding-large">Book</a>
-    <a th:if="${isLoggedIn}==true" href="/category" class="w3-bar-item w3-button w3-padding-large">Category</a>
-    <a th:if="${isLoggedIn}==true" href="/group" class="w3-bar-item w3-button w3-padding-large">Group</a>
+    <a th:if="${isLoggedIn}==true" href="/categorytotals" class="w3-bar-item w3-button w3-padding-large">Category</a>
+    <a th:if="${isLoggedIn}==true" href="/grouptotals" class="w3-bar-item w3-button w3-padding-large">Group</a>
     <a th:if="${isLoggedIn}==true" href="/main" class="w3-bar-item w3-button w3-padding-large">Account</a>
    	<a th:if="${isAdmin}==true" href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
    	<a href="/help" class="w3-bar-item w3-button w3-padding-large">Help</a>
