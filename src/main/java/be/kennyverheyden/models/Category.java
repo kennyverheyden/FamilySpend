@@ -18,8 +18,8 @@ public class Category {
 	@Column(name="categoryName")
 	private String categoryName;
 
-	@Column(name="inOut")
-	private int inOut; // Boolean - 0 or 1 for false or true
+	@Column(name="inOrOut")
+	private int inOrOut; // Boolean - 0 or 1 for false or true
 
 	@OneToOne
 	@JoinColumn(name="userFK")
@@ -31,10 +31,10 @@ public class Category {
 
 	public Category() {}
 
-	public Category(String categoryName, int inOut)
+	public Category(String categoryName, int inOrOut)
 	{
 		this.categoryName=categoryName;
-		this.inOut=inOut;
+		this.inOrOut=inOrOut;
 	}
 
 	public String getCategoryName() {
@@ -45,12 +45,12 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
-	public int getInOut() {
-		return inOut;
+	public int getInOrOut() {
+		return inOrOut;
 	}
 
-	public void setInOut(int inOut) {
-		this.inOut = inOut;
+	public void setInOrOut(int inOrOut) {
+		this.inOrOut = inOrOut;
 	}
 
 	public User getUser() {

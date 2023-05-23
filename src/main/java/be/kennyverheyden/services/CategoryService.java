@@ -136,7 +136,7 @@ public class CategoryService {
 			{
 				category.setCategoryName(categoryName);
 				category.setGroup(groupService.findGroupByGroupName(groupName,user));
-				category.setInOut(inout);
+				category.setInOrOut(inout);
 				categoryRepository.save(category);
 			}
 		}
@@ -148,7 +148,7 @@ public class CategoryService {
 		category.setCategoryName(categoryName);
 		category.setUser(user);
 		category.setGroup(groupService.findGroupByGroupName(groupName,user));
-		category.setInOut(inout);
+		category.setInOrOut(inout);
 		categories.add(category);
 		categoryRepository.save(category);
 	}

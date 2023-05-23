@@ -136,7 +136,7 @@ public class CategoryController {
 			if(categoryName!="")
 			{
 				String checkDuplicat = giveDuplicateIfExist(categoryName);
-				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName,user,groupName) || inout!=category.getInOut())
+				if(!categoryName.equalsIgnoreCase(checkDuplicat) || !categoryService.groupInCategoryIsEqual(categoryName,user,groupName) || inout!=category.getInOrOut())
 				{
 					categoryService.updateCategory(categoryID,categoryName,groupName,inout,user);
 					model.addAttribute("content", "category");

@@ -182,7 +182,7 @@ public class BookController {
 			// If booking is not income, make number negative
 			// Determined by category
 			Category category=categoryService.findCategoryByCategoryID(categoryID); 
-			if(category.getInOut()!=0) // 0=income
+			if(category.getInOrOut()!=0) // 0=income
 			{
 				if(amount>0)
 				{

@@ -229,7 +229,7 @@ public class UserService implements UserDetailsService{
 	private void sendVerificationEmail(User user, String siteURL)
 			throws MessagingException, UnsupportedEncodingException {
 		String toAddress = user.geteMail();
-		String fromAddress = "contact@kennyverheyden.be";
+		String fromAddress = "familyspend@kennyverheyden.be";
 		String senderName = "FamilySpend";
 		String subject = "Please verify your registration";
 		String content = "Dear [[name]],<br>"
