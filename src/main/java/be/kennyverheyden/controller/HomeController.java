@@ -21,5 +21,17 @@ public class HomeController {
 		model.addAttribute("content", "privacy");
 		return "index";
 	}
+	
+	@GetMapping("/intro") //
+	public String introGet(Model model) {
+		model.addAttribute("content", "intro");
+		return "index";
+	}
+	
+	@GetMapping("/help") //
+	public String helpGet(Model model) {
+		model.addAttribute("content", "help");
+		return "index";
+	}
 
 }

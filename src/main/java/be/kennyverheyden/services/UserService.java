@@ -194,9 +194,9 @@ public class UserService implements UserDetailsService{
 	}
 
 	// Change password
-	public void updateSecret(String userEmail, String secret) {
-		User user = this.findUserByeMail(userEmail);
+	public void updateSecret(User user, String secret) {
 		String encodedPassword = this.passwordEncoder.encode(secret);
+		user.setSecret(encodedPassword);
 		userRepository.save(user);
 	}
 

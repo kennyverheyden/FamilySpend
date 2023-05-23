@@ -39,16 +39,16 @@ public class PasswordResetController {
 	}
 
 	@PostMapping("/passreset") 
-	public String passResetPost(@RequestParam (required = false) String userEmail, @RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
+	public String passResetPost(@RequestParam (required = false) String oldSecret, @RequestParam (required = false) String secret, @RequestParam (required = false) String confirmSecret, Model model, RedirectAttributes rm){
 
-		User user=userService.findUserByeMail(userEmail);
+		User user = userService.findUserByeMail(userDetails.getUsername());
 		if(passwordEncoder.matches(oldSecret,user.getSecret()))
 		{		
 			if(!secret.equals("") && !confirmSecret.equals(""))
 			{
 				if(secret.equals(confirmSecret))
 				{
-					userService.updateSecret(userEmail, confirmSecret);
+					userService.updateSecret(user, confirmSecret);
 					model.addAttribute("content", "passreset");
 					rm.addFlashAttribute("message","Password succesfully changed");
 					return "redirect:passreset";
