@@ -65,6 +65,7 @@ public class LoginController{
 				}
 			}
 			// Back to login page with error msg
+			request.logout();
 			model.addAttribute("content", "login");
 			rm.addFlashAttribute("message","Your credentials are incorrect");
 			return "redirect:/login"; // Back to login page
@@ -91,7 +92,7 @@ public class LoginController{
 				return "redirect:/login"; // Back to login page
 			}
 		}
-		
+
 		// Default return
 		model.addAttribute("content", "login");
 		rm.addFlashAttribute("message","Your credentials are incorrect");
