@@ -130,14 +130,14 @@ input[type=email]:focus {
   <!-- Navbar on small screens -->
   <div id="navDemo" class="w3-bar-block w3-white w3-hide w3-hide-large w3-hide-medium w3-large">
     <a href="/" class="w3-bar-item w3-button w3-padding-large">Home</a>
-   	<a th:if="${isLoggedIn}!=true" href="/intro" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Introduction</a>
+   	<a th:if="${isLoggedIn}!=true" href="/intro" class="w3-bar-item w3-button w3-padding-large">Introduction</a>
     <a th:if="${isLoggedIn}==true" href="/book" class="w3-bar-item w3-button w3-padding-large">Book</a>
     <a th:if="${isLoggedIn}==true" href="/category" class="w3-bar-item w3-button w3-padding-large">Category</a>
     <a th:if="${isLoggedIn}==true" href="/group" class="w3-bar-item w3-button w3-padding-large">Group</a>
     <a th:if="${isLoggedIn}==true" href="/main" class="w3-bar-item w3-button w3-padding-large">Account</a>
    	<a th:if="${isAdmin}==true" href="/admin" class="w3-bar-item w3-button w3-padding-large">Admin</a>
    	<a href="/help" class="w3-bar-item w3-button w3-padding-large">Help</a>
-   	<a th:if="${isLoggedIn}!=true" href="/login" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white">Login</a>
+   	<a th:if="${isLoggedIn}!=true" href="/login" class="w3-bar-item w3-button w3-padding-large">Login</a>
     <a th:if="${isLoggedIn}==true" href="/logout" class="w3-bar-item w3-button w3-padding-large">Log out</a>
   </div>
 </div>
