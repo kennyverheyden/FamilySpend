@@ -25,8 +25,8 @@ public class LoginController{
 	@Autowired
 	private UserService userService;
 
-	int maxLoginAttempts=5;
 	List<String> userEmails = new ArrayList(); // Store failed login attempts same userEmail
+	int maxLoginAttempts=5;
 
 	public LoginController() {}
 
@@ -38,7 +38,9 @@ public class LoginController{
 
 	@PostMapping("/login/submit") 
 	public String loginPost(@RequestParam String userEmail, @RequestParam String secret, Model model, RedirectAttributes rm,  HttpServletRequest request) throws ServletException {
+
 		boolean loggedIn = false;
+		String errorMsg="Your credentials are incorrect";
 
 		try {
 			loggedIn = loginProcessor.login(userEmail, secret);
@@ -60,15 +62,10 @@ public class LoginController{
 				// Admin account can not disabled
 				if(user!=null && user.getUserRole().getRoleID()!= 1)
 				{
-					user.setEnabled(0); // Int 0 = false - Set user account disable
+					user.setEnabled(0); // int 0 = false - Set user account disable
 					userService.updateUser(user); // Update user account in database
 				}
 			}
-			// Back to login page with error msg
-			request.logout();
-			model.addAttribute("content", "login");
-			rm.addFlashAttribute("message","Your credentials are incorrect");
-			return "redirect:/login"; // Back to login page
 		}
 
 		if(loggedIn == true)
@@ -82,21 +79,13 @@ public class LoginController{
 				model.addAttribute("content", "main");
 				return "redirect:/main";
 			}
-			else
-			{
-				// When account is blocked
-				request.logout();
-				model.addAttribute("content", "login");
-				rm.addFlashAttribute("message","Your credentials are incorrect"); // Show msg when account is blocked
-				//rm.addFlashAttribute("message","Account inactive or blocked, please contact the admin"); // Show msg when account is blocked
-				return "redirect:/login"; // Back to login page
-			}
 		}
 
 		// Default return
+		request.logout();
 		model.addAttribute("content", "login");
-		rm.addFlashAttribute("message","Your credentials are incorrect");
-		return "redirect:/login";
+		rm.addFlashAttribute("message",errorMsg);
+		return "redirect:/login"; // Back to login page
 	}
 
 }

@@ -32,11 +32,6 @@ Select category<br>
     </option>
 </select>
 
-</span><span class="w3-text-grey td" style="vertical-align:top;">
-
-<br>
-<button type="submit" style="width:100px;font-size:14px;">Add record</button>
-
 </span>
 </div>
 <div class="tr">
@@ -51,6 +46,15 @@ Description <span style="font-size:10px;">(not required)</span><br>
 <input type="text" name="description" style="width:170px;">
 
 </span><span class="w3-text-grey td" style="vertical-align:top;">
+
+</span>
+</div>
+<div class="tr">
+<span class="w3-text-grey td" style="vertical-align:top;">
+<br>
+<button type="submit" style="width:100px;font-size:14px;">Add record</button>
+</span>
+<span class="w3-text-grey td" style="vertical-align:top;">
 
 </span>
 </div>
@@ -97,7 +101,7 @@ Description <span style="font-size:10px;">(not required)</span><br>
 
 <!--  Print month results -->
 <p>
-Income: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(income, 1, 'DEFAULT', 2, 'DEFAULT')}"  style="font-weight:bold;"></span> | Spending: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(spending, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;"></span> | Result: <span th:text="${currency}"></span> <span th:if="${result}>=0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:green;font-size:16px;"></span><span th:if="${result}<0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:red;font-size:16px;"></span>
+Income: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(income, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;"></span> | Spending: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDecimal(spending, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;"></span> | Result: <span th:text="${currency}"></span> <span th:if="${result}>=0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:green;font-size:16px;"></span><span th:if="${result}<0" th:text="${#numbers.formatDecimal(result, 1, 'DEFAULT', 2, 'DEFAULT')}" style="font-weight:bold;color:red;font-size:16px;"></span>
 </p>
 <!--  End print month results -->
 
@@ -117,7 +121,7 @@ Date<br>
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 <strong> <span th:text="${currency}"></span> </strong>
 
-<br><input type="text" th:if="${book.amount}>=0" th:value="${#numbers.formatDecimal(book.amount, 1, 'DEFAULT', 2, 'DEFAULT')}" name="stramount" style="width:80px; text-align:right;color:green;font-weight:bold;"><input type="text" th:if="${book.amount}<0" th:value="${#numbers.formatDecimal(book.amount,0,2,'COMMA')}" name="stramount" style="width:80px; text-align:right;color:red;font-weight:bold;">
+<br><input type="text" th:if="${book.amount}>=0" th:value="${#numbers.formatDecimal(book.amount, 1, 'DEFAULT', 2, 'DEFAULT')}" name="stramount" style="width:80px; text-align:right;color:green;font-weight:bold;"><input type="text" th:if="${book.amount}<0" th:value="${#numbers.formatDecimal(book.amount, 1, 'DEFAULT', 2, 'DEFAULT')}" name="stramount" style="width:80px; text-align:right;color:red;font-weight:bold;">
 
 </span><span class="w3-text-grey td" style="padding-left:2px;">
 Category<br>
