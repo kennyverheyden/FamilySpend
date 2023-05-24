@@ -125,6 +125,7 @@ public class BookController {
 	@PostMapping("/book/update")
 	public String bookUpdatePost(@RequestParam (required = false) Long bookID, @RequestParam (required = false) String date, @RequestParam (required = false) String stramount, @RequestParam (required = false) String description, Boolean delete, @RequestParam (required = false) String categoryName, Model model, RedirectAttributes rm) throws ParseException
 	{
+		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		if(delete==null) // Avoid error Cannot invoke "java.lang.Boolean.booleanValue()" because "delete" is null
 		{
 			delete=false;
@@ -138,8 +139,28 @@ public class BookController {
 		}
 		else
 		{	
-			NumberFormat format =  NumberFormat.getInstance(Locale.getDefault());
-			Number number = format.parse(stramount);
+			Number number =0;
+			if(user.getCurrency().getCurrencySymbol()=="€")
+			{
+				NumberFormat format =  NumberFormat.getInstance(Locale.FRANCE); // Format conversion from input field
+				number = format.parse(stramount);
+			}
+			else if(user.getCurrency().getCurrencySymbol()=="$")
+			{
+				NumberFormat format =  NumberFormat.getInstance(Locale.US); // Format conversion from input field
+				number = format.parse(stramount);
+			}
+			else if(user.getCurrency().getCurrencySymbol()=="£")
+			{
+				NumberFormat format =  NumberFormat.getInstance(Locale.US); // Format conversion from input field
+				number = format.parse(stramount);
+			}
+			else
+			{
+				NumberFormat format =  NumberFormat.getInstance(Locale.getDefault()); // Format conversion from input field
+				number = format.parse(stramount);
+			}
+
 			double amount = number.doubleValue();
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
@@ -147,7 +168,6 @@ public class BookController {
 				{
 					try
 					{
-						User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 						bookService.updateBook(bookID, date, amount, description, categoryName, user);
 						model.addAttribute("content", "book");
 						rm.addFlashAttribute("message","Booking succesfully updated");

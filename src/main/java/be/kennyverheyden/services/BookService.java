@@ -231,7 +231,7 @@ public class BookService {
 		books = bookRepository.findBookByUserUserID(user.getUserID());
 	}
 
-	public void updateBook(Long bookID, String date, Double amount, String description, String categoryName, User user) {
+	public void updateBook(Long bookID, String date, double amount, String description, String categoryName, User user) {
 		categoryService.loadCategories(userService.findUserByeMail(userDetails.getUsername())); // Collect and load categories from specific user
 		Book book = this.findBookBybookID(bookID);
 		book.setDate(date);
