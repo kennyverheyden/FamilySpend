@@ -74,7 +74,7 @@ public class BookController {
 
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
-		Collections.reverse(bookings); // Show newest first
+		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
@@ -105,8 +105,33 @@ public class BookController {
 		}
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
-		Collections.reverse(bookings); // Show newest first
+		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
+		model.addAttribute("books",bookings); // Read bookings to html
+		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
+		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
+		model.addAttribute("month", month);
+		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
+		model.addAttribute("spending",bookService.monthResultSpending(user, month, year));
+		model.addAttribute("result",bookService.monthResult(user, month, year));
+		model.addAttribute("currency",user.getCurrency().getCurrencySymbol());
+		model.addAttribute("years",bookService.getYears(user.getUserID())); // Dropdown filter
+		model.addAttribute("year",year); // Dropdown selected option
+		model.addAttribute("currentDate",currentDate); // Add booking date field
+		model.addAttribute("content", "book");
+		return "index";
+	}
+
+	@PostMapping("/book/catFilter")
+	public String bookCatFilterPost(@RequestParam (required = false) Long categoryID, Model model, RedirectAttributes rm)
+	{
+		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
+		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
+		if(categoryID!=null)
+		{
+			bookings = bookService.findBookbycategoryID(bookings,categoryID);
+		}
+		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
@@ -139,6 +164,8 @@ public class BookController {
 		}
 		else
 		{	
+
+			// Localization
 			Number number =0;
 			if(user.getCurrency().getCurrencySymbol()=="€")
 			{
@@ -152,7 +179,7 @@ public class BookController {
 			}
 			else if(user.getCurrency().getCurrencySymbol()=="£")
 			{
-				NumberFormat format =  NumberFormat.getInstance(Locale.US); // Format conversion from input field
+				NumberFormat format =  NumberFormat.getInstance(Locale.UK); // Format conversion from input field
 				number = format.parse(stramount);
 			}
 			else
@@ -160,8 +187,8 @@ public class BookController {
 				NumberFormat format =  NumberFormat.getInstance(Locale.getDefault()); // Format conversion from input field
 				number = format.parse(stramount);
 			}
-
 			double amount = number.doubleValue();
+
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
 				if(this.dateValidator(date))

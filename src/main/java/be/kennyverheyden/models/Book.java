@@ -9,25 +9,25 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity(name="tblBook")
-public class Book {
+public class Book implements Comparable<Book> { // Book is comparable - sort by date
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long bookID;
-	
+
 	@Column(name="date")
 	String date;
-	
+
 	@Column(name="amount")
 	double amount;
-	
+
 	@Column(name="description")
 	String description;
-	
+
 	@OneToOne
 	@JoinColumn(name="categoryFK")
 	Category category;
-	
+
 	@OneToOne
 	@JoinColumn(name="userFK")
 	User user;
@@ -75,5 +75,11 @@ public class Book {
 	public long getBookID() {
 		return bookID;
 	}
-	
+
+	// Sort by date (Compare)
+	@Override
+	public int compareTo(Book o) {
+		return this.getDate().compareTo(o.getDate());
+	}
+
 }

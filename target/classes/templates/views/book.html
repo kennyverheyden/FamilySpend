@@ -105,8 +105,34 @@ Income: <span th:text="${currency}"></span> <span th:text="${#numbers.formatDeci
 </p>
 <!--  End print month results -->
 
+<div class="table">
+<div class="tr">
+<form action="/book/catFilter" method="post">
+<span class="w3-text-grey td" style="vertical-align:middle;font-size:16px;font-weight:bold;">
 
-<h5><span th:text="${month_long}"></span> <span th:text="${year}"></span></h5>
+<span th:text="${month_long}"></span> <span th:text="${year}"></span>
+
+</span>
+<span class="w3-text-grey td" style="vertical-align:middle;">
+
+<strong>Filter on category</strong><br>
+<select name="categoryID" style="width:170px;">
+<option selected value="">Select category</option>
+    <option
+            th:each="category : ${categories}"
+            th:text="${category.getCategoryName}"
+            th:value="${category.getCategoryID}">
+    </option>
+</select>
+<br><br>
+</span><span class="w3-text-grey td" style="vertical-align:middle;">
+
+<button type="submit" style="width:100px;font-size:12px;">Filter</button>
+
+</span>
+</form>
+</div>
+</div>
 
 <!-- Show bookings -->
 <div class="table">

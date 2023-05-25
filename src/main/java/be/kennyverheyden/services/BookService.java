@@ -57,6 +57,21 @@ public class BookService {
 		return filteredBooks;
 	}
 
+	// Filter by category
+	public List<Book> findBookbycategoryID(List<Book> books, Long categoryID)
+	{
+		List<Book> filteredBooksBycategory = new ArrayList();
+		for(Book book:books)
+		{
+			if(book.getCategory().getCategoryID()==categoryID)
+			{
+				filteredBooksBycategory.add(book);
+			}
+		}
+		return filteredBooksBycategory;
+	}
+
+
 	// Get the years
 	public List<String> getYears (Long userID) {
 		List<Book> books = bookRepository.findBookByUserUserID(userID); // Get all the books

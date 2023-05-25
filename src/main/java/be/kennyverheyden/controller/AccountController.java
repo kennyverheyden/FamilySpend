@@ -12,6 +12,7 @@ import be.kennyverheyden.models.User;
 import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AccountController {
@@ -62,17 +63,18 @@ public class AccountController {
 			// Check if all fields are filled in
 			model.addAttribute("content", "account");
 			rm.addFlashAttribute("message","Fill in all fields");
-			return "redirect:account";
+			return "redirect:/account";
 		}
 	}
 
 	@PostMapping("/account/delete") 
-	public String deleteAccountPost(Model model, RedirectAttributes rm){
+	public String deleteAccountPost(Model model, RedirectAttributes rm, HttpServletRequest request){
 		try
 		{
 			userService.deleteUser(userDetails.getUsername());
+			request.logout();
 			model.addAttribute("content", "account");
-			return "redirect:/Logout";
+			return "redirect:/login";
 		}
 		catch (Exception e) {
 			model.addAttribute("error", e.getMessage());
