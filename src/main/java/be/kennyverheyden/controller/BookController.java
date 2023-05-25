@@ -74,6 +74,7 @@ public class BookController {
 
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
+		Collections.reverse(bookings); // When you add record with same date, newest is at top
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
@@ -105,6 +106,7 @@ public class BookController {
 		}
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
+		Collections.reverse(bookings); // When you add record with same date, newest is at top
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
@@ -131,6 +133,7 @@ public class BookController {
 		{
 			bookings = bookService.findBookbycategoryID(bookings,categoryID);
 		}
+		Collections.reverse(bookings); // When you add record with same date, newest is at top
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		model.addAttribute("books",bookings); // Read bookings to html
 		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
