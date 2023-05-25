@@ -164,30 +164,9 @@ public class BookController {
 		}
 		else
 		{	
-
 			// Localization
-			Number number =0;
-			if(user.getCurrency().getCurrencySymbol()=="€")
-			{
-				NumberFormat format =  NumberFormat.getInstance(Locale.FRANCE); // Format conversion from input field
-				number = format.parse(stramount);
-			}
-			else if(user.getCurrency().getCurrencySymbol()=="$")
-			{
-				NumberFormat format =  NumberFormat.getInstance(Locale.US); // Format conversion from input field
-				number = format.parse(stramount);
-			}
-			else if(user.getCurrency().getCurrencySymbol()=="£")
-			{
-				NumberFormat format =  NumberFormat.getInstance(Locale.UK); // Format conversion from input field
-				number = format.parse(stramount);
-			}
-			else
-			{
-				NumberFormat format =  NumberFormat.getInstance(Locale.getDefault()); // Format conversion from input field
-				number = format.parse(stramount);
-			}
-			double amount = number.doubleValue();
+			stramount = stramount.replace(",",".");
+			double amount = Float.parseFloat(stramount);
 
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
