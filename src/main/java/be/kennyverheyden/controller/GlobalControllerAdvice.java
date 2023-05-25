@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.context.annotation.SessionScope;
 
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.processors.UserDetailsImpl;
 
+@SessionScope
 @ControllerAdvice
 public class GlobalControllerAdvice {
 

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.User;
@@ -16,6 +17,7 @@ import be.kennyverheyden.processors.UserDetailsImpl;
 import be.kennyverheyden.services.CurrencyService;
 import be.kennyverheyden.services.UserService;
 
+@SessionScope
 @Controller
 public class UserController {
 
