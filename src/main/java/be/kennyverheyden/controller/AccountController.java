@@ -71,15 +71,24 @@ public class AccountController {
 
 	@PostMapping("/account/delete") 
 	public String deleteAccountPost(Model model, RedirectAttributes rm, HttpServletRequest request){
-		try
+		if(!userDetails.getUsername().equals("test@test.com"))
 		{
-			userService.deleteUser(userDetails.getUsername());
-			request.logout();
-			model.addAttribute("content", "account");
-			return "redirect:/login";
+			try
+			{
+				userService.deleteUser(userDetails.getUsername());
+				request.logout();
+				model.addAttribute("content", "account");
+				return "redirect:/login";
+			}
+			catch (Exception e) {
+				model.addAttribute("error", e.getMessage());
+				return "redirect:/account";
+			}
 		}
-		catch (Exception e) {
-			model.addAttribute("error", e.getMessage());
+		else
+		{
+			model.addAttribute("content", "account");
+			rm.addFlashAttribute("message","You cannot delete the demo account");
 			return "redirect:/account";
 		}
 	}

@@ -50,10 +50,19 @@ public class PasswordResetController {
 			{
 				if(secret.equals(confirmSecret))
 				{
-					userService.updateSecret(user, confirmSecret);
-					model.addAttribute("content", "passreset");
-					rm.addFlashAttribute("message","Password succesfully changed");
-					return "redirect:passreset";
+					if(!user.geteMail().equals("test@test.com"))
+					{
+						userService.updateSecret(user, confirmSecret);
+						model.addAttribute("content", "passreset");
+						rm.addFlashAttribute("message","Password succesfully changed");
+						return "redirect:passreset";
+					}
+					else
+					{
+						model.addAttribute("content", "passwordreset");
+						rm.addFlashAttribute("message","You cannot change the demo account password");
+						return "redirect:passreset";
+					}
 				}
 				else
 				{

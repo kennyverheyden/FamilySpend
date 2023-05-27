@@ -106,7 +106,7 @@ public class UserController {
 		{
 			if(!name.equals("") && !firstName.equals(""))
 			{
-				if(email.equals("kenny.verheyden@gmail.com") && !userRole.equals("Admin") || email.equals("test@test.com") && !userRole.equals("Admin") ) {
+				if(email.equals("kenny.verheyden@gmail.com") && !userRole.equals("Admin")) {
 
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","You cannot change the role of the primary admin account");
