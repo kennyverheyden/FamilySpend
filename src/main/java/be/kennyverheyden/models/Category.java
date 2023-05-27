@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity(name="tblCategory")
-public class Category {
+public class Category implements Comparable<Category> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,6 +71,11 @@ public class Category {
 
 	public long getCategoryID() {
 		return categoryID;
+	}
+	
+	@Override
+	public int compareTo(Category c) {
+		return this.getCategoryName().compareTo(c.getCategoryName());
 	}
 
 }

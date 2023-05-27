@@ -2,6 +2,7 @@ package be.kennyverheyden.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.kennyverheyden.models.Category;
+import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedCategory;
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.models.User;
@@ -57,8 +59,15 @@ public class CategoryController {
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		categoryService.loadCategories(user); // Collect and load categories from specific user
 		groupService.loadGroups(user); // Collect and load categories from specific user
-		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID()));
-		model.addAttribute("groups",groupService.getGroups()); // Bind groups to Select options
+		List<Category> categories = categoryService.findCategoryByUserUserID(user.getUserID());
+		Collections.sort(categories);
+		model.addAttribute("categories",categories);
+
+		// Bind groups to Select options
+		List<Group> groups = groupService.getGroups();
+		Collections.sort(groups);
+		model.addAttribute("groups",groupService.getGroups());
+
 		model.addAttribute("content", "category");
 		return "index";
 	}
@@ -69,6 +78,7 @@ public class CategoryController {
 		// Get Category by group by and totals
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(user.getUserID(),month,year);
+		Collections.sort(groupedCategories);
 		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
 		model.addAttribute("spending",bookService.monthResultSpending(user, month, year));
 		model.addAttribute("result",bookService.monthResult(user, month, year));
@@ -87,6 +97,7 @@ public class CategoryController {
 	{
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List<GroupedCategory> groupedCategories = bookService.bookGroupByCategoryMonth(user.getUserID(),month,year);
+		Collections.sort(groupedCategories);
 		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
 		model.addAttribute("spending",bookService.monthResultSpending(user, month, year));
 		model.addAttribute("result",bookService.monthResult(user, month, year));

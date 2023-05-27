@@ -78,7 +78,12 @@ public class BookController {
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
-		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
+
+		// Read categories for select option in html
+		List<Category> categories = categoryService.findCategoryByUserUserID(user.getUserID());
+		Collections.sort(categories);
+		model.addAttribute("categories",categories); 
+
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month)); // Print month title
 		model.addAttribute("month", month); // Set the month
 		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
@@ -110,7 +115,12 @@ public class BookController {
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		bookService.loadBooks(user);
 		model.addAttribute("books",bookings); // Read bookings to html
-		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
+
+		// Read categories for select option in html
+		List<Category> categories = categoryService.findCategoryByUserUserID(user.getUserID());
+		Collections.sort(categories);
+		model.addAttribute("categories",categories); 
+
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
 		model.addAttribute("income",bookService.monthResultIncome(user, month, year));
@@ -136,7 +146,12 @@ public class BookController {
 		Collections.reverse(bookings); // When you add record with same date, newest is at top
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		model.addAttribute("books",bookings); // Read bookings to html
-		model.addAttribute("categories",categoryService.findCategoryByUserUserID(user.getUserID())); // Read categories for select option in html
+
+		// Read categories for select option in html
+		List<Category> categories = categoryService.findCategoryByUserUserID(user.getUserID());
+		Collections.sort(categories);
+		model.addAttribute("categories",categories); 
+
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month", month);
 		model.addAttribute("income",bookService.monthResultIncome(user, month, year));

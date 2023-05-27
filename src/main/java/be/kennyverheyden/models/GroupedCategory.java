@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class GroupedCategory {
+public class GroupedCategory implements Comparable<GroupedCategory> {
 
 	@Id
 	private Long id;
@@ -40,5 +40,10 @@ public class GroupedCategory {
 	
 	public void addAmount(double amount) {
 		this.total = total+amount;
+	}
+	
+	@Override
+	public int compareTo(GroupedCategory g) {
+		return this.getCategoryName().compareTo(g.getCategoryName());
 	}
 }

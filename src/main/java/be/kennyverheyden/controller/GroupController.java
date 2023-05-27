@@ -2,6 +2,7 @@ package be.kennyverheyden.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import be.kennyverheyden.models.Group;
 import be.kennyverheyden.models.GroupedGroup;
 import be.kennyverheyden.models.Month;
 import be.kennyverheyden.models.User;
@@ -54,7 +57,9 @@ public class GroupController {
 	{
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		groupService.loadGroups(user); // Collect and load groups from specific user
-		model.addAttribute("groups",groupService.findGroupByUserUserID(user.getUserID()));
+		List<Group> groups = groupService.findGroupByUserUserID(user.getUserID());
+		Collections.sort(groups); 
+		model.addAttribute("groups",groups);
 		model.addAttribute("content", "group");
 		return "index";
 	}
@@ -65,6 +70,7 @@ public class GroupController {
 		// Get group by groups and totals
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(user.getUserID(),month,year);
+		Collections.sort(groupedGroups);
 		model.addAttribute("groupedGroups", groupedGroups);
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);
@@ -80,6 +86,7 @@ public class GroupController {
 	{
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List<GroupedGroup> groupedGroups = bookService.bookGroupByGroupMonth(user.getUserID(),month,year);
+		Collections.sort(groupedGroups);
 		model.addAttribute("content", "grouptotals");
 		model.addAttribute("month_long",Month.getMonthByStringNumber(month));
 		model.addAttribute("month",month);

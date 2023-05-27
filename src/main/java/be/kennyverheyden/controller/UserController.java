@@ -28,10 +28,21 @@ public class UserController {
 	@Autowired
 	private UserDetailsImpl userDetails;
 
+	//Store search parameter to keep the info on screen while editing
+	private String email;
+	private String name;
+	private String firstName;
+	private String roleName;
+
 	public UserController() {}
 
 	@GetMapping("/admin") // get request
 	public String usersGet(Model model) {
+		//Store search parameter to keep the info on screen while editing
+		List<User> foundUsers = userService.findUsers(email, name, firstName, roleName);
+		model.addAttribute("users",foundUsers);  // map content to html elements
+		model.addAttribute("currencies",currencyService.findAllCurrencies());
+
 		List<UserRole> roles = userService.findUserRoles();
 		model.addAttribute("roles",roles);  // map content to html elements
 		model.addAttribute("content", "admin");
@@ -41,6 +52,8 @@ public class UserController {
 	// Admin can search for users
 	@PostMapping("/admin/find") 
 	public String findUsersPost(@RequestParam (required = false) String email, @RequestParam (required = false) String name, @RequestParam (required = false) String firstName, @RequestParam (required = false) String roleName, Model model, RedirectAttributes rm){
+		//Store search parameter to keep the info on screen while editing
+		this.email=email;this.name=name;this.firstName=firstName;this.roleName=roleName;
 
 		List<User> foundUsers = userService.findUsers(email, name, firstName, roleName);
 		List<UserRole> roles = userService.findUserRoles(); // List is used for dropdown select box
@@ -74,7 +87,7 @@ public class UserController {
 			}
 			else
 			{
-				if(email.equals("kenny.verheyden@gmail.com")) // You cannot delete the primary admin account
+				if(email.equals("kenny.verheyden@gmail.com") || email.equals("test@test.com")) // You cannot delete the primary admin account
 				{
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","You cannot delete the primary admin account");
@@ -93,7 +106,7 @@ public class UserController {
 		{
 			if(!name.equals("") && !firstName.equals(""))
 			{
-				if(email.equals("kenny.verheyden@gmail.com") && !userRole.equals("Admin")) {
+				if(email.equals("kenny.verheyden@gmail.com") && !userRole.equals("Admin") || email.equals("test@test.com") && !userRole.equals("Admin") ) {
 
 					model.addAttribute("content", "admin");
 					rm.addFlashAttribute("message","You cannot change the role of the primary admin account");

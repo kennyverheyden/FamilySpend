@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 @Entity(name="tblGroup")
-public class Group {
+public class Group implements Comparable<Group> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +51,11 @@ public class Group {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	@Override
+	public int compareTo(Group g) {
+		return this.getGroupName().compareTo(g.getGroupName());
 	}
 	
 }
