@@ -44,6 +44,6 @@ public class GroupedCategory implements Comparable<GroupedCategory> {
 	
 	@Override
 	public int compareTo(GroupedCategory g) {
-		return this.getCategoryName().compareTo(g.getCategoryName());
+		return this.getCategoryName().compareToIgnoreCase(g.getCategoryName());
 	}
 }

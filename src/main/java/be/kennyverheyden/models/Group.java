@@ -55,7 +55,7 @@ public class Group implements Comparable<Group> {
 	
 	@Override
 	public int compareTo(Group g) {
-		return this.getGroupName().compareTo(g.getGroupName());
+		return this.getGroupName().compareToIgnoreCase(g.getGroupName());
 	}
 	
 }
