@@ -139,10 +139,22 @@ public class BookController {
 	{
 		User user=userService.findUserByeMail(userDetails.getUsername()); // Get user information
 		List bookings = bookService.findBookByUserUserIDperMonth(user.getUserID(),month,year); // Get filtered book lines from user per month
+
+		// Find bookings by category
 		if(categoryID!=null)
 		{
 			bookings = bookService.findBookbycategoryID(bookings,categoryID);
 		}
+
+		if(selectedMonth!=null) 
+		{
+			month=selectedMonth; // Set back the last user choice
+		}
+		if(selectedYear!=null)
+		{
+			year=selectedYear; // Set back the last user choice
+		}
+
 		Collections.reverse(bookings); // When you add record with same date, newest is at top
 		Collections.sort(bookings,Collections.reverseOrder()); // Sort by date
 		model.addAttribute("books",bookings); // Read bookings to html
