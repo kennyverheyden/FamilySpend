@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -196,9 +197,26 @@ public class BookController {
 		else
 		{	
 			// Localization
-			stramount = stramount.replace(",",".");
-			double amount = Float.parseFloat(stramount);
-
+			// Replace comma by dot
+			double amount=0;
+			if(stramount.substring(stramount.length()-3).charAt(0)==',')
+			{
+				stramount=stramount.replace(".",""); // remove dots
+				StringBuilder string = new StringBuilder(stramount);
+				string.setCharAt(stramount.length()-3, '.'); // replace comma by dot
+				amount = Float.parseFloat(string.toString());
+			}
+			else if(stramount.substring(stramount.length()-3).charAt(0)=='.')
+			{
+				stramount=stramount.replace(",",""); // remove dots
+				StringBuilder string = new StringBuilder(stramount);
+				amount = Float.parseFloat(string.toString());
+			}
+			else
+			{
+				amount = Float.parseFloat(stramount);
+			}
+			
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
 				if(this.dateValidator(date))
