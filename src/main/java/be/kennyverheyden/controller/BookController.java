@@ -199,24 +199,33 @@ public class BookController {
 			// Localization
 			// Replace comma by dot
 			double amount=0;
-			if(stramount.substring(stramount.length()-3).charAt(0)==',')
+			try
 			{
-				stramount=stramount.replace(".",""); // remove dots
-				StringBuilder string = new StringBuilder(stramount);
-				string.setCharAt(stramount.length()-3, '.'); // replace comma by dot
-				amount = Float.parseFloat(string.toString());
+				if(stramount.substring(stramount.length()-3).charAt(0)==',')
+				{
+					stramount=stramount.replace(".",""); // remove dots
+					StringBuilder string = new StringBuilder(stramount);
+					string.setCharAt(stramount.length()-3, '.'); // replace comma by dot
+					amount = Float.parseFloat(string.toString());
+				}
+				else if(stramount.substring(stramount.length()-3).charAt(0)=='.')
+				{
+					stramount=stramount.replace(",",""); // remove dots
+					StringBuilder string = new StringBuilder(stramount);
+					amount = Float.parseFloat(string.toString());
+				}
+				else
+				{
+					amount = Float.parseFloat(stramount);
+				}
 			}
-			else if(stramount.substring(stramount.length()-3).charAt(0)=='.')
+			catch(java.lang.NumberFormatException e)
 			{
-				stramount=stramount.replace(",",""); // remove dots
-				StringBuilder string = new StringBuilder(stramount);
-				amount = Float.parseFloat(string.toString());
+				model.addAttribute("content", "book");
+				rm.addFlashAttribute("message","Enter a valid number");
+				return "redirect:/book";
 			}
-			else
-			{
-				amount = Float.parseFloat(stramount);
-			}
-			
+
 			if(date!="" || amount!=0 || description!="" || categoryName!="")
 			{
 				if(this.dateValidator(date))
@@ -229,7 +238,8 @@ public class BookController {
 						return "redirect:/book";
 					}
 					catch (Exception e) {
-						model.addAttribute("error", e.getMessage());
+						model.addAttribute("content", "book");
+						rm.addFlashAttribute("message",e.getMessage());
 						return "redirect:/book";
 					}
 				}
