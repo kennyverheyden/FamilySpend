@@ -1,6 +1,6 @@
 # FamilySpend
 
-URL <a href="https://familyspend.online">https://familyspend.online</a> 
+URL <a href="https://familyspend.kennyverheyden.be">familyspend.kennyverheyden.be</a> 
 
 <a href="https://github.com/kennyverheyden/FamilySpend/tree/main/Docs">Inception Document</a> (written in Dutch)<br>
 <strong>Test user</strong> | login: test@test.com | password: test
